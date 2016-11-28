@@ -22,3 +22,12 @@ void SET_BACKGROUNDED(id settings, BOOL value)
 		object_setInstanceVariable(settings, "_backgrounded", (void*)NO);
 #endif
 }
+/*
+
+		Long way to go boys
+		gonna be a several month project
+		May include snippets from MUltiplexer
+		Credits to Elijah Frederickson for original code
+		good luck to me
+
+*/
