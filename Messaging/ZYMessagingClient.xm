@@ -31,7 +31,7 @@ extern BOOL allowClosingReachabilityNatively;
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/mobile/Containers/Bundle/Application"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/mobile/Containers/Bundle/Application"])
 		{
-			NSLog(@"[ReachApp] valid process for ZYMessagingClient");
+			HBLogDebug(@"[ReachApp] valid process for ZYMessagingClient");
 			sharedInstance->allowedProcess = YES;
 		}
 	);

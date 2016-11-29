@@ -1,5 +1,5 @@
 #import "headers.h"
-#import "RAMessagingClient.h"
+#import "ZYMessagingClient.h"
 
 BOOL allowClosingReachabilityNatively = NO;
 
@@ -12,7 +12,7 @@ BOOL allowClosingReachabilityNatively = NO;
         return;
     }
 
-    if ([RAMessagingClient.sharedInstance isBeingHosted])
+    if ([ZYMessagingClient.sharedInstance isBeingHosted])
     {
         HBLogDebug(@"[ReachApp] stopping reachability from closing because hosted");
         return;

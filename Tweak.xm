@@ -1,3 +1,4 @@
+#define ZYPEN_CORE 1
 #import "headers.h"
 #include <execinfo.h>
 

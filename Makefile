@@ -1,3 +1,4 @@
+DEBUG = 1
 ARCHS = armv7 armv7s arm64
 CFLAGS += -fobjc-arc
 TARGET = iphone:clang:9.3:9.3
@@ -6,9 +7,9 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Zypen
 Zypen_FILES = $(wildcard *.xm) $(wildcard *.mm) $(wildcard *.m) \
+		$(wildcard Gestures/*.xm) $(wildcard Gestures/*.mm) $(wildcard Gestures/*.m) \
 		$(wildcard ReachApp/*.xm) $(wildcard ReachApp/*.mm) $(wildcard ReachApp/*.m) \
 		$(wildcard widgets/Reachability/*.xm) $(wildcard widgets/Reachability/*.mm) $(wildcard widgets/Reachability/*.m) \
-		$(wildcard KeyboardSupport/*.xm) $(wildcard KeyboardSupport/*.mm) $(wildcard KeyboardSupport/*.m) \
 		$(wildcard Messaging/*.xm) $(wildcard Messaging/*.mm) $(wildcard Messaging/*.m)
 Zypen_FRAMEWORKS = UIKit QuartzCore CoreGraphics CoreImage
 Zypen_PRIVATE_FRAMEWORKS = GraphicsServices BackBoardServices AppSupport IOKit

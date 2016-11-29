@@ -8,13 +8,13 @@
 #include <sys/sysctl.h>
 #import <notify.h>
 #import "headers.h"
-#import "RAWidgetSectionManager.h"
+#import "ZYWidgetSectionManager.h"
 #import "ZYSettings.h"
-#import "RAAppSliderProviderView.h"
-#import "RADesktopManager.h"
-#import "RADesktopWindow.h"
+#import "ZYAppSliderProviderView.h"
+#import "ZYDesktopManager.h"
+#import "ZYDesktopWindow.h"
 #import "ZYMessagingServer.h"
-#import "RAAppSwitcherModelWrapper.h"
+#import "ZYAppSwitcherModelWrapper.h"
 
 #define SPRINGBOARD ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"])
 
@@ -54,28 +54,28 @@ BOOL wasEnabled = NO;
 
 - (void)enableExpirationTimerForEndedInteraction
 {
-    if ([RASettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedInstance disableAutoDismiss])
         return;
     %orig;
 }
 
 - (void)_handleSignificantTimeChanged
 {
-    if ([RASettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedInstance disableAutoDismiss])
         return;
     %orig;
 }
 
 - (void)_keepAliveTimerFired:(unsafe_id)arg1
 {
-    if ([RASettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedInstance disableAutoDismiss])
         return;
     %orig;
 }
 
 - (void)_setKeepAliveTimerForDuration:(double)arg1
 {
-    if ([RASettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedInstance disableAutoDismiss])
         return;
     %orig;
 }
@@ -90,25 +90,25 @@ BOOL wasEnabled = NO;
     {
         wasEnabled = NO;
         // Notify both top and bottom apps Reachability is closing
-        if ([view isKindOfClass:[RAAppSliderProviderView class]])
+        if ([view isKindOfClass:[ZYAppSliderProviderView class]])
         {
-            [RAMessagingServer.sharedInstance endResizingApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [RAMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [(RAAppSliderProviderView*)view unload];
+            [ZYMessagingServer.sharedInstance endResizingApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [(ZYAppSliderProviderView*)view unload];
             [view removeFromSuperview];
             view = nil;
         }
         if (lastBundleIdentifier && lastBundleIdentifier.length > 0)
         {
-            [RAMessagingServer.sharedInstance endResizingApp:lastBundleIdentifier completion:nil];
-            [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:lastBundleIdentifier completion:nil];
-            [RAMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:lastBundleIdentifier completion:nil];
-            [RAMessagingServer.sharedInstance setHosted:NO forIdentifier:lastBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance endResizingApp:lastBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:lastBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:lastBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance setHosted:NO forIdentifier:lastBundleIdentifier completion:nil];
         }
         if (currentBundleIdentifier)
-            [RAMessagingServer.sharedInstance endResizingApp:currentBundleIdentifier completion:nil];
-        [GET_SBWORKSPACE RA_closeCurrentView];
+            [ZYMessagingServer.sharedInstance endResizingApp:currentBundleIdentifier completion:nil];
+        [GET_SBWORKSPACE ZY_closeCurrentView];
     }
 
 }
@@ -132,14 +132,14 @@ BOOL wasEnabled = NO;
 %hook SBReachabilitySettings
 -(CGFloat) reachabilityDefaultKeepAlive
 {
-    if ([RASettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedInstance disableAutoDismiss])
         return 9999999999;
     return %orig;
 }
 
 -(CGFloat) reachabilityInteractiveKeepAlive
 {
-    if ([RASettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedInstance disableAutoDismiss])
         return 9999999999;
     return %orig;
 }
@@ -180,22 +180,22 @@ id SBWorkspace$sharedInstance;
     %orig;
 }
 
-%new -(void) RA_closeCurrentView
+%new -(void) ZY_closeCurrentView
 {
-    if ([view isKindOfClass:[RAAppSliderProviderView class]])
+    if ([view isKindOfClass:[ZYAppSliderProviderView class]])
     {
-        [RAMessagingServer.sharedInstance endResizingApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-        [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-        [RAMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-        [(RAAppSliderProviderView*)view unload];
+        [ZYMessagingServer.sharedInstance endResizingApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+        [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+        [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+        [(ZYAppSliderProviderView*)view unload];
         [view removeFromSuperview];
         view = nil;
     }
 
-    [RAMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:currentBundleIdentifier completion:nil];
-    [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:currentBundleIdentifier completion:nil];
+    [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:currentBundleIdentifier completion:nil];
+    [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:currentBundleIdentifier completion:nil];
 
-    if ([RASettings.sharedInstance showNCInstead])
+    if ([ZYSettings.sharedInstance showNCInstead])
     {
         showingNC = NO;
         UIWindow *window = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
@@ -210,9 +210,9 @@ id SBWorkspace$sharedInstance;
     {
         SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:lastBundleIdentifier];
 
-        if ([view isKindOfClass:[RAAppSliderProviderView class]])
+        if ([view isKindOfClass:[ZYAppSliderProviderView class]])
         {
-            [((RAAppSliderProviderView*)view) unload];
+            [((ZYAppSliderProviderView*)view) unload];
         }
 
         // Give them a little time to receive the notifications...
@@ -257,7 +257,7 @@ id SBWorkspace$sharedInstance;
 
     %orig;
 
-    if (![RASettings.sharedInstance reachabilityEnabled] && wasEnabled == NO)
+    if (![ZYSettings.sharedInstance reachabilityEnabled] && wasEnabled == NO)
     {
         return;
     }
@@ -267,26 +267,26 @@ id SBWorkspace$sharedInstance;
         wasEnabled = NO;
 
         // Notify both top and bottom apps Reachability is closing
-        if ([view isKindOfClass:[RAAppSliderProviderView class]])
+        if ([view isKindOfClass:[ZYAppSliderProviderView class]])
         {
-            [RAMessagingServer.sharedInstance endResizingApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [RAMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [(RAAppSliderProviderView*)view unload];
+            [ZYMessagingServer.sharedInstance endResizingApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [(ZYAppSliderProviderView*)view unload];
             [view removeFromSuperview];
             view = nil;
         }
         if (lastBundleIdentifier && lastBundleIdentifier.length > 0)
         {
-            [RAMessagingServer.sharedInstance endResizingApp:lastBundleIdentifier completion:nil];
-            [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:lastBundleIdentifier completion:nil];
-            [RAMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:lastBundleIdentifier completion:nil];
-            [RAMessagingServer.sharedInstance setHosted:NO forIdentifier:lastBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance endResizingApp:lastBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:lastBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:lastBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance setHosted:NO forIdentifier:lastBundleIdentifier completion:nil];
         }
         if (currentBundleIdentifier)
-            [RAMessagingServer.sharedInstance endResizingApp:currentBundleIdentifier completion:nil];
+            [ZYMessagingServer.sharedInstance endResizingApp:currentBundleIdentifier completion:nil];
 
-        [self RA_closeCurrentView];
+        [self ZY_closeCurrentView];
         if (draggerView)
             draggerView = nil;
     }
@@ -295,7 +295,7 @@ id SBWorkspace$sharedInstance;
 - (void) handleReachabilityModeActivated
 {
     %orig;
-    if (![RASettings.sharedInstance reachabilityEnabled])
+    if (![ZYSettings.sharedInstance reachabilityEnabled])
         return;
     wasEnabled = YES;
 
@@ -310,7 +310,7 @@ id SBWorkspace$sharedInstance;
     grabberCenter_X = draggerView.center.x;
 
     UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
-    if ([RASettings.sharedInstance showNCInstead])
+    if ([ZYSettings.sharedInstance showNCInstead])
     {
         showingNC = YES;
 
@@ -324,7 +324,7 @@ id SBWorkspace$sharedInstance;
         [ncViewController performSelector:@selector(hostWillPresent)];
         [ncViewController performSelector:@selector(hostDidPresent)];
 
-        if ([RASettings.sharedInstance enableRotation])
+        if ([ZYSettings.sharedInstance enableRotation])
         {
             [w _setRotatableViewOrientation:[UIApplication sharedApplication].statusBarOrientation updateStatusBar:YES duration:0.0 force:YES];
         }
@@ -335,15 +335,15 @@ id SBWorkspace$sharedInstance;
         if (!currentBundleIdentifier)
             return;
 
-        if ([RASettings.sharedInstance showWidgetSelector])
+        if ([ZYSettings.sharedInstance showWidgetSelector])
         {
-            [self RA_showWidgetSelector];
+            [self ZY_showWidgetSelector];
         }
         else
         {
             SBApplication *app = nil;
             FBScene *scene = nil;
-            NSMutableArray *bundleIdentifiers = [[RAAppSwitcherModelWrapper appSwitcherAppIdentiferList] mutableCopy];
+            NSMutableArray *bundleIdentifiers = [[ZYAppSwitcherModelWrapper appSwitcherAppIdentiferList] mutableCopy];
             while (scene == nil && bundleIdentifiers.count > 0)
             {
                 lastBundleIdentifier = bundleIdentifiers[0];
@@ -363,7 +363,7 @@ id SBWorkspace$sharedInstance;
             if (lastBundleIdentifier == nil || lastBundleIdentifier.length == 0)
                 return;
 
-            [self RA_launchTopAppWithIdentifier:lastBundleIdentifier];
+            [self ZY_launchTopAppWithIdentifier:lastBundleIdentifier];
         }
     }
 
@@ -377,18 +377,18 @@ id SBWorkspace$sharedInstance;
     recognizer.delegate = (id<UIGestureRecognizerDelegate>)self;
     [draggerView addGestureRecognizer:recognizer];
 
-    UILongPressGestureRecognizer *recognizer2 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(RA_handleLongPress:)];
+    UILongPressGestureRecognizer *recognizer2 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(ZY_handleLongPress:)];
     recognizer2.delegate = (id<UILongPressGestureRecognizerDelegate>)self;
     [draggerView addGestureRecognizer:recognizer2];
 
-    UITapGestureRecognizer *recognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(RA_detachAppAndClose:)];
+    UITapGestureRecognizer *recognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ZY_detachAppAndClose:)];
     recognizer3.numberOfTapsRequired = 2;
     recognizer3.delegate = (id<UIGestureRecognizerDelegate>)self;
     [draggerView addGestureRecognizer:recognizer3];
 
     [w addSubview:draggerView];
 
-    if ([RASettings.sharedInstance showBottomGrabber])
+    if ([ZYSettings.sharedInstance showBottomGrabber])
     {
         bottomDraggerView = [[UIView alloc] initWithFrame:CGRectMake(
             (UIScreen.mainScreen.bounds.size.width / 2) - (knobWidth / 2),
@@ -405,10 +405,10 @@ id SBWorkspace$sharedInstance;
     [self updateViewSizes:draggerView.center animate:NO];
 }
 
-%new -(void)RA_showWidgetSelector
+%new -(void)ZY_showWidgetSelector
 {
     if (view)
-        [self RA_closeCurrentView];
+        [self ZY_closeCurrentView];
 
     UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
     //CGSize iconSize = [%c(SBIconView) defaultIconImageSize];
@@ -425,7 +425,7 @@ id SBWorkspace$sharedInstance;
     }
     padding = (w.frame.size.width - (numIconsPerLine * fullSize.width)) / numIconsPerLine;
 
-    UIView *widgetSelectorView = [[RAWidgetSectionManager sharedInstance] createViewForEnabledSectionsWithBaseFrame:w.frame preferredIconSize:fullSize iconsThatFitPerLine:numIconsPerLine spacing:padding];
+    UIView *widgetSelectorView = [[ZYWidgetSectionManager sharedInstance] createViewForEnabledSectionsWithBaseFrame:w.frame preferredIconSize:fullSize iconsThatFitPerLine:numIconsPerLine spacing:padding];
     widgetSelectorView.frame = (CGRect){ { 0, 0 }, widgetSelectorView.frame.size };
     //widgetSelectorView.frame = w.frame;
 
@@ -435,7 +435,7 @@ id SBWorkspace$sharedInstance;
         [w addSubview:widgetSelectorView];
     view = widgetSelectorView;
 
-    if ([RASettings.sharedInstance autoSizeWidgetSelector])
+    if ([ZYSettings.sharedInstance autoSizeWidgetSelector])
     {
         CGFloat moddedHeight = widgetSelectorView.frame.size.height;
         if (old_grabberCenterY == -1)
@@ -490,23 +490,23 @@ CGFloat startingY = -1;
         draggerView.alpha = 0.3;
         bottomDraggerView.alpha = 0.3;
         if (startingY != -1 && fabs(grabberCenter_Y - startingY) < 3)
-            [self RA_handleLongPress:nil];
+            [self ZY_handleLongPress:nil];
         startingY = -1;
         [self updateViewSizes:view.center animate:YES];
     }
 }
 
-%new -(void) RA_handleLongPress:(UILongPressGestureRecognizer*)gesture
+%new -(void) ZY_handleLongPress:(UILongPressGestureRecognizer*)gesture
 {
-    [self RA_showWidgetSelector];
+    [self ZY_showWidgetSelector];
 }
 
-%new -(void) RA_detachAppAndClose:(UITapGestureRecognizer*)gesture
+%new -(void) ZY_detachAppAndClose:(UITapGestureRecognizer*)gesture
 {
     NSString *ident = lastBundleIdentifier;
-    if ([view isKindOfClass:[RAAppSliderProviderView class]])
+    if ([view isKindOfClass:[ZYAppSliderProviderView class]])
     {
-        RAAppSliderProviderView *temp = (RAAppSliderProviderView*)view;
+        ZYAppSliderProviderView *temp = (ZYAppSliderProviderView*)view;
         ident = temp.currentBundleIdentifier;
         [temp unload];
     }
@@ -515,7 +515,7 @@ CGFloat startingY = -1;
         return;
 
     [self handleReachabilityModeDeactivated];
-    [RADesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
+    [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
 }
 
 %new - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
@@ -525,7 +525,7 @@ CGFloat startingY = -1;
     return YES;
 }
 
-%new -(void) RA_updateViewSizes
+%new -(void) ZY_updateViewSizes
 {
     [self updateViewSizes:draggerView.center animate:YES];
 }
@@ -549,13 +549,13 @@ CGFloat startingY = -1;
 
     }
 
-    if ([view isKindOfClass:[RAAppSliderProviderView class]])
+    if ([view isKindOfClass:[ZYAppSliderProviderView class]])
     {
-        RAAppSliderProviderView *sliderView = (RAAppSliderProviderView*)view;
+        ZYAppSliderProviderView *sliderView = (ZYAppSliderProviderView*)view;
         sliderView.frame = topFrame;
     }
 
-    /*if ([RASettings.sharedInstance flipTopAndBottom])
+    /*if ([ZYSettings.sharedInstance flipTopAndBottom])
     {
         CGRect tmp = topFrame;
         topFrame = bottomFrame;
@@ -579,20 +579,20 @@ CGFloat startingY = -1;
             view.frame = topFrame;
     }
 
-    if ([RASettings.sharedInstance showNCInstead])
+    if ([ZYSettings.sharedInstance showNCInstead])
     {
         if (ncViewController)
             ncViewController.view.frame = (CGRect) { { 0, 0 }, topFrame.size };
     }
-    else if (lastBundleIdentifier != nil || [view isKindOfClass:[RAAppSliderProviderView class]])
+    else if (lastBundleIdentifier != nil || [view isKindOfClass:[ZYAppSliderProviderView class]])
     {
         // Notify clients
 
         CGFloat width = - 1, height = -1;
 
-        if ([view isKindOfClass:[RAAppSliderProviderView class]])
+        if ([view isKindOfClass:[ZYAppSliderProviderView class]])
         {
-            RAAppSliderProviderView *sliderView = (RAAppSliderProviderView*)view;
+            ZYAppSliderProviderView *sliderView = (ZYAppSliderProviderView*)view;
             //width = sliderView.clientFrame.size.width;
             //height = sliderView.clientFrame.size.height;
 
@@ -634,21 +634,21 @@ CGFloat startingY = -1;
         }
 
         NSString *targetIdentifier = lastBundleIdentifier;
-        if ([view isKindOfClass:[RAAppSliderProviderView class]])
-            targetIdentifier = [((RAAppSliderProviderView*)view) currentBundleIdentifier];
+        if ([view isKindOfClass:[ZYAppSliderProviderView class]])
+            targetIdentifier = [((ZYAppSliderProviderView*)view) currentBundleIdentifier];
 
         if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft)
-            [RAMessagingServer.sharedInstance moveApp:targetIdentifier toOrigin:CGPointMake(bottomWindow.frame.size.height, 0) completion:nil];
+            [ZYMessagingServer.sharedInstance moveApp:targetIdentifier toOrigin:CGPointMake(bottomWindow.frame.size.height, 0) completion:nil];
 
-        [RAMessagingServer.sharedInstance resizeApp:targetIdentifier toSize:CGSizeMake(width, height) completion:nil];
+        [ZYMessagingServer.sharedInstance resizeApp:targetIdentifier toSize:CGSizeMake(width, height) completion:nil];
     }
 
-    if ([view isKindOfClass:[%c(FBWindowContextHostWrapperView) class]] == NO && [view isKindOfClass:[RAAppSliderProviderView class]] == NO)
+    if ([view isKindOfClass:[%c(FBWindowContextHostWrapperView) class]] == NO && [view isKindOfClass:[ZYAppSliderProviderView class]] == NO)
         return; // only resize when the app is being shown. That way it's more like native Reachability
 
-    [RAMessagingServer.sharedInstance setHosted:YES forIdentifier:currentBundleIdentifier completion:nil];
+    [ZYMessagingServer.sharedInstance setHosted:YES forIdentifier:currentBundleIdentifier completion:nil];
 
-    [RAMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
+    [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
 
     CGFloat width = -1, height = -1;
 
@@ -663,21 +663,21 @@ CGFloat startingY = -1;
         width = bottomWindow.frame.size.height;
         height = bottomWindow.frame.size.width;
 
-        [RAMessagingServer.sharedInstance moveApp:currentBundleIdentifier toOrigin:CGPointMake(bottomWindow.frame.origin.y, 0) completion:nil];
+        [ZYMessagingServer.sharedInstance moveApp:currentBundleIdentifier toOrigin:CGPointMake(bottomWindow.frame.origin.y, 0) completion:nil];
     }
     else
     {
         width = bottomWindow.frame.size.width;
         height = bottomWindow.frame.size.height;
     }
-    [RAMessagingServer.sharedInstance resizeApp:currentBundleIdentifier toSize:CGSizeMake(width, height) completion:nil];
-    [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:YES forApp:currentBundleIdentifier completion:nil];
+    [ZYMessagingServer.sharedInstance resizeApp:currentBundleIdentifier toSize:CGSizeMake(width, height) completion:nil];
+    [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:YES forApp:currentBundleIdentifier completion:nil];
 
-    if ([RASettings.sharedInstance unifyStatusBar])
-        [RAMessagingServer.sharedInstance forceStatusBarVisibility:NO forApp:currentBundleIdentifier completion:nil];
+    if ([ZYSettings.sharedInstance unifyStatusBar])
+        [ZYMessagingServer.sharedInstance forceStatusBarVisibility:NO forApp:currentBundleIdentifier completion:nil];
 }
 
-%new -(void) RA_launchTopAppWithIdentifier:(NSString*) bundleIdentifier
+%new -(void) ZY_launchTopAppWithIdentifier:(NSString*) bundleIdentifier
 {
     UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
     SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:lastBundleIdentifier];
@@ -685,10 +685,10 @@ CGFloat startingY = -1;
     if (app == nil)
         return;
 
-    [RAMessagingServer.sharedInstance setHosted:YES forIdentifier:app.bundleIdentifier completion:nil];
-    [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:YES forApp:app.bundleIdentifier completion:nil];
-    [RAMessagingServer.sharedInstance rotateApp:app.bundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
-    [RAMessagingServer.sharedInstance forceStatusBarVisibility:YES forApp:app.bundleIdentifier completion:nil];
+    [ZYMessagingServer.sharedInstance setHosted:YES forIdentifier:app.bundleIdentifier completion:nil];
+    [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:YES forApp:app.bundleIdentifier completion:nil];
+    [ZYMessagingServer.sharedInstance rotateApp:app.bundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
+    [ZYMessagingServer.sharedInstance forceStatusBarVisibility:YES forApp:app.bundleIdentifier completion:nil];
 
     if (![app pid] || [app mainScene] == nil)
     {
@@ -697,13 +697,13 @@ CGFloat startingY = -1;
         [[%c(FBProcessManager) sharedInstance] createApplicationProcessForBundleID:bundleIdentifier];
 
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [self RA_launchTopAppWithIdentifier:bundleIdentifier];
+            [self ZY_launchTopAppWithIdentifier:bundleIdentifier];
             [self updateViewSizes:draggerView.center animate:YES];
         });
         return;
     }
 
-    [RAAppSwitcherModelWrapper addIdentifierToFront:bundleIdentifier];
+    [ZYAppSwitcherModelWrapper addIdentifierToFront:bundleIdentifier];
 
     FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
 
@@ -719,16 +719,16 @@ CGFloat startingY = -1;
     else
         [w addSubview:view];
 
-    //if ([RASettings.sharedInstance enableRotation] && ![RASettings.sharedInstance scalingRotationMode])
+    //if ([ZYSettings.sharedInstance enableRotation] && ![ZYSettings.sharedInstance scalingRotationMode])
     {
-        [RAMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
+        [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
     }
-    /*else if ([RASettings.sharedInstance scalingRotationMode] && [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
+    /*else if ([ZYSettings.sharedInstance scalingRotationMode] && [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
     {
         overrideDisableForStatusBar = YES;
         // Force portrait
-        [RAMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:UIInterfaceOrientationPortrait completion:nil];
-        [RAMessagingServer.sharedInstance rotateApp:currentBundleIdentifier toOrientation:UIInterfaceOrientationPortrait completion:nil];
+        [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:UIInterfaceOrientationPortrait completion:nil];
+        [ZYMessagingServer.sharedInstance rotateApp:currentBundleIdentifier toOrientation:UIInterfaceOrientationPortrait completion:nil];
         // Scale app
         CGFloat scale = view.frame.size.width / UIScreen.mainScreen.bounds.size.height;
         pre_topAppTransform = MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform;
@@ -755,18 +755,18 @@ CGFloat startingY = -1;
     overrideDisableForStatusBar = NO;
 }
 
-%new -(void) RA_setView:(UIView*)view_ preferredHeight:(CGFloat)pHeight
+%new -(void) ZY_setView:(UIView*)view_ preferredHeight:(CGFloat)pHeight
 {
     view_.hidden = NO;
     UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
     if (view)
     {
-        if ([view isKindOfClass:[RAAppSliderProviderView class]])
+        if ([view isKindOfClass:[ZYAppSliderProviderView class]])
         {
-            [RAMessagingServer.sharedInstance endResizingApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [RAMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:[((RAAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
-            [(RAAppSliderProviderView*)view unload];
+            [ZYMessagingServer.sharedInstance endResizingApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
+            [(ZYAppSliderProviderView*)view unload];
         }
         [view removeFromSuperview];
         view = nil;
@@ -781,16 +781,16 @@ CGFloat startingY = -1;
     draggerView.hidden = NO;
     draggerView.center = center;
 
-    if ([view isKindOfClass:[RAAppSliderProviderView class]])
+    if ([view isKindOfClass:[ZYAppSliderProviderView class]])
     {
-        NSString *targetIdentifier = ((RAAppSliderProviderView*)view).currentBundleIdentifier;
-        [RAMessagingServer.sharedInstance setShouldUseExternalKeyboard:YES forApp:targetIdentifier completion:nil];
-        [RAMessagingServer.sharedInstance rotateApp:targetIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
-        [RAMessagingServer.sharedInstance forceStatusBarVisibility:YES forApp:targetIdentifier completion:nil];
+        NSString *targetIdentifier = ((ZYAppSliderProviderView*)view).currentBundleIdentifier;
+        [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:YES forApp:targetIdentifier completion:nil];
+        [ZYMessagingServer.sharedInstance rotateApp:targetIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
+        [ZYMessagingServer.sharedInstance forceStatusBarVisibility:YES forApp:targetIdentifier completion:nil];
     }
 }
 
-%new -(void) RA_animateWidgetSelectorOut:(id)completion
+%new -(void) ZY_animateWidgetSelectorOut:(id)completion
 {
     [UIView animateWithDuration:0.3
     animations:^{
@@ -810,14 +810,14 @@ CGFloat startingY = -1;
     if (app)
     {
         // before we re-assign view...
-        [self RA_animateWidgetSelectorOut:^(BOOL a){
+        [self ZY_animateWidgetSelectorOut:^(BOOL a){
             [view removeFromSuperview];
             view = nil;
 
             lastBundleIdentifier = app.bundleIdentifier;
-            [self RA_launchTopAppWithIdentifier:app.bundleIdentifier];
+            [self ZY_launchTopAppWithIdentifier:app.bundleIdentifier];
 
-            if ([RASettings.sharedInstance autoSizeWidgetSelector])
+            if ([ZYSettings.sharedInstance autoSizeWidgetSelector])
             {
                 if (old_grabberCenterY == -1)
                     old_grabberCenterY = UIScreen.mainScreen.bounds.size.height * 0.3;
