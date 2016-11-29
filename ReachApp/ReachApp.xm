@@ -9,11 +9,11 @@
 #import <notify.h>
 #import "headers.h"
 #import "RAWidgetSectionManager.h"
-#import "RASettings.h"
+#import "ZYSettings.h"
 #import "RAAppSliderProviderView.h"
 #import "RADesktopManager.h"
 #import "RADesktopWindow.h"
-#import "RAMessagingServer.h"
+#import "ZYMessagingServer.h"
 #import "RAAppSwitcherModelWrapper.h"
 
 #define SPRINGBOARD ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"])

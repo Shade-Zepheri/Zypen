@@ -1,7 +1,7 @@
 #import <objc/runtime.h>
 #import "ZYReachabilityManager.h"
 #import "headers.h"
-#import "ZYAppSliderProviderView.h"
+#import "RAAppSliderProviderView.h"
 #import "ZYMessagingServer.h"
 
 @implementation ZYReachabilityManager
