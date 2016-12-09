@@ -1,12 +1,12 @@
-#import "ZYDesktopWindow.h"
+//#import "ZYDesktopWindow.h"
 
 @interface ZYSnapshotProvider : NSObject {
 	NSCache *imageCache;
 }
 +(id) sharedInstance;
 
--(UIImage*) snapshotForDesktop:(ZYDesktopWindow*)desktop;
--(void) forceReloadSnapshotOfDesktop:(ZYDesktopWindow*)desktop;
+//-(UIImage*) snapshotForDesktop:(ZYDesktopWindow*)desktop;
+//-(void) forceReloadSnapshotOfDesktop:(ZYDesktopWindow*)desktop;
 
 -(UIImage*) storedSnapshotOfMissionControl;
 -(void) storeSnapshotOfMissionControl:(UIWindow*)window;

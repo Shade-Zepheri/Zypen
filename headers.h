@@ -282,3 +282,135 @@ extern "C" void BKSHIDServicesCancelTouchesOnMainDisplay();
 @property(retain, nonatomic) UIColor *backgroundColorWhileNotHosting;
 @property(retain, nonatomic) UIColor *backgroundColorWhileHosting;
 @end
+
+@interface SBReachabilityManager : NSObject {
+
+	NSHashTable* _observers;
+	BOOL _reachabilityModeActive;
+	unsigned long long _reachabilityExtensionGenerationCount;
+	BOOL _reachabilityModeEnabled;
+	NSMutableSet* _temporaryDisabledReasons;
+}
+
+@property (nonatomic,readonly) BOOL reachabilityModeActive;              //@synthesize reachabilityModeActive=_reachabilityModeActive - In the implementation block
+@property (assign,nonatomic) BOOL reachabilityEnabled;
+@property (readonly) unsigned long long hash;
+@property (readonly) Class superclass;
+@property (copy,readonly) NSString * description;
+@property (copy,readonly) NSString * debugDescription;
++(BOOL)reachabilitySupported;
++(id)sharedInstance;
+-(void)_handleReachabilityActivated;
+-(void)_handleReachabilityDeactivated;
+-(void)_handleSignificantTimeChanged;
+-(void)cancelPendingReachabilityRequests;
+-(void)deactivateReachabilityModeForObserver:(id)arg1 ;
+-(void)_pingKeepAliveWithDuration:(double)arg1 interactedBeforePing:(BOOL)arg2 initialKeepAliveTime:(double)arg3 ;
+-(void)_toggleReachabilityModeWithRequestingObserver:(id)arg1 ;
+-(void)triggerDidTriggerReachability:(id)arg1 ;
+-(BOOL)reachabilityEnabled;
+-(void)setReachabilityEnabled:(BOOL)arg1 ;
+-(void)setReachabilityTemporarilyDisabled:(BOOL)arg1 forReason:(id)arg2 ;
+-(BOOL)reachabilityModeActive;
+-(void)dealloc;
+-(id)init;
+-(void)addObserver:(id)arg1 ;
+-(void)removeObserver:(id)arg1 ;
+-(void)_notifyObserversReachabilityModeActive:(BOOL)arg1 excludingObserver:(id)arg2 ;
+-(void)_setKeepAliveTimer;
+-(void)_updateReachabilityModeActive:(BOOL)arg1 withRequestingObserver:(id)arg2 ;
+@end
+
+@interface FBProcessManager : NSObject {
+
+	NSHashTable* _observers;
+	NSMapTable* _processesByPID;
+	NSMapTable* _processesByBundleID;
+	NSMutableDictionary* _workspacesByClientIdentity;
+	int _workspaceLocked;
+	int _workspaceLockedToken;
+
+}
+
+@property (readonly) unsigned long long hash;
+@property (readonly) Class superclass;
+@property (copy,readonly) NSString * description;
+@property (copy,readonly) NSString * debugDescription;
++(id)sharedInstance;
+-(void)dealloc;
+-(id)init;
+-(NSString *)description;
+-(void)addObserver:(id)arg1 ;
+-(void)removeObserver:(id)arg1 ;
+-(BOOL)ping;
+-(id)applicationProcessForPID:(int)arg1 ;
+-(id)applicationProcessesForBundleIdentifier:(id)arg1 ;
+-(void)_setPreferredForegroundApplicationProcess:(id)arg1 ;
+-(id)allApplicationProcesses;
+-(id)_systemServiceClientAdded:(id)arg1 ;
+-(void)noteProcess:(id)arg1 didUpdateState:(id)arg2 ;
+-(void)noteProcessDidExit:(id)arg1 ;
+-(id)processForPID:(int)arg1 ;
+-(id)_serviceClientAddedWithConnection:(id)arg1 ;
+-(void)applicationProcessWillLaunch:(id)arg1 ;
+-(BOOL)_isWorkspaceLocked;
+-(id)workspaceForSceneClientWithIdentity:(id)arg1 ;
+-(void)_updateWorkspaceLockedState;
+-(id)_processesQueue_processesForBundleIdentifier:(id)arg1 ;
+-(id)processesForBundleIdentifier:(id)arg1 ;
+-(id)_processesQueue_processForPID:(int)arg1 ;
+-(void)_queue_evaluateForegroundEventRouting;
+-(id)createApplicationProcessForBundleID:(id)arg1 withExecutionContext:(id)arg2 ;
+-(void)_queue_addProcess:(id)arg1 completion:(/*^block*/id)arg2 ;
+-(id)_serviceClientAddedWithPID:(int)arg1 isUIApp:(BOOL)arg2 isExtension:(BOOL)arg3 bundleID:(id)arg4 ;
+-(void)_queue_removeProcess:(id)arg1 withBundleID:(id)arg2 pid:(int)arg3 ;
+-(void)_queue_notifyObserversUsingBlock:(/*^block*/id)arg1 completion:(/*^block*/id)arg2 ;
+-(void)invalidateClientWorkspace:(id)arg1 ;
+-(id)currentProcess;
+-(id)allProcesses;
+-(id)createApplicationProcessForBundleID:(id)arg1 ;
+@end
+
+@interface UIApplication ()
+- (void)_handleKeyUIEvent:(id)arg1;
+-(UIStatusBar*) statusBar;
+- (id)_mainScene;
+- (BOOL)_isSupportedOrientation:(int)arg1;
+
+// SpringBoard methods
+-(BOOL)launchApplicationWithIdentifier:(id)identifier suspended:(BOOL)suspended;
+-(SBApplication*) _accessibilityFrontMostApplication;
+-(void)setWantsOrientationEvents:(BOOL)events;
+-(void)_relaunchSpringBoardNow;
+
+- (void)_setStatusBarHidden:(BOOL)arg1 animationParameters:(id)arg2 changeApplicationFlag:(BOOL)arg3;
+
+-(void) ZY_forceRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation isReverting:(BOOL)reverting;
+-(void) ZY_forceStatusBarVisibility:(BOOL)visible orRevert:(BOOL)revert;
+-(void) ZY_updateWindowsForSizeChange:(CGSize)size isReverting:(BOOL)revert;
+
+- (void)applicationDidResume;
+- (void)_sendWillEnterForegroundCallbacks;
+- (void)suspend;
+- (void)applicationWillSuspend;
+- (void)_setSuspended:(BOOL)arg1;
+- (void)applicationSuspend;
+- (void)_deactivateForReason:(int)arg1 notify:(BOOL)arg2;
+@end
+
+@interface SBWorkspace : NSObject
++(id) sharedInstance;
+-(BOOL) isUsingReachApp;
+- (void)_exitReachabilityModeWithCompletion:(id)arg1;
+- (void)_disableReachabilityImmediately:(_Bool)arg1;
+- (void)handleReachabilityModeDeactivated;
+-(void) ZY_animateWidgetSelectorOut:(id)completion;
+-(void) ZY_setView:(UIView*)view preferredHeight:(CGFloat)preferredHeight;
+-(void) ZY_launchTopAppWithIdentifier:(NSString*) bundleIdentifier;
+-(void) ZY_showWidgetSelector;
+-(void) updateViewSizes:(CGPoint)center animate:(BOOL)animate;
+-(void) ZY_closeCurrentView;
+-(void) ZY_handleLongPress:(UILongPressGestureRecognizer*)gesture;
+-(void) ZY_updateViewSizes;
+-(void) appViewItemTap:(id)sender;
+@end

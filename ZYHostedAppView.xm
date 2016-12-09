@@ -3,6 +3,7 @@
 #import "Messaging/ZYMessagingServer.h"
 #import "ZYSnapshotProvider.h"
 #import "dispatch_after_cancel.h"
+#import "headers.h"
 
 NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 
@@ -83,8 +84,13 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     {
         isPreloading = NO;
         HBLogDebug(@"[ReachApp] maxed out preload attempts for app %@", app.bundleIdentifier);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:LOCALIZE(@"MULTIPLEXER") message:[NSString stringWithFormat:@"Unable to start app %@", app.displayName] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Zypen"
+                               message:[NSString stringWithFormat:@"Unable to start app %@", app.displayName]
+                               preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                          handler:^(UIAlertAction * action) {}];
+        [alert addAction:defaultAction];
+        [self.inputViewController presentViewController:alert animated:YES completion:nil];
         return;
     }
 
@@ -159,7 +165,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         isForemostAppLabel.font = [UIFont systemFontOfSize:36];
         isForemostAppLabel.numberOfLines = 0;
         isForemostAppLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        isForemostAppLabel.text = [NSString stringWithFormat:LOCALIZE(@"ACTIVE_APP_WARNING"),self.app.displayName];
+        isForemostAppLabel.text = [NSString stringWithFormat:@"%@\n is currently open",self.app.displayName];
         [self addSubview:isForemostAppLabel];
         return;
     }
@@ -299,17 +305,12 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         self.userInteractionEnabled = NO;
     }
 
-    if (isForemostAppLabel)
-    {
+    if (isForemostAppLabel) {
         [isForemostAppLabel removeFromSuperview];
         isForemostAppLabel = nil;
     }
 
-    if ([ZYSpringBoardKeyboardActivation.sharedInstance.currentIdentifier isEqual:self.bundleIdentifier])
-        [ZYSpringBoardKeyboardActivation.sharedInstance hideKeyboard];
-
-    if (contextHostManager)
-    {
+    if (contextHostManager) {
         [contextHostManager disableHostingForRequester:@"reachapp"];
         contextHostManager = nil;
     }
