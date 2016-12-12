@@ -1,5 +1,6 @@
 #import "headers.h"
 #import "ZYSnapshotProvider.h"
+#import "Windows/ZYDesktopWindow.h"
 
 @implementation ZYSnapshotProvider
 +(id) sharedInstance
@@ -165,7 +166,7 @@
 		//Calculate the size of the rotated view's containing box for our drawing space
 		static UIView *rotatedViewBox = [[UIView alloc] init];
 		rotatedViewBox.frame = CGRectMake(0,0,oldImage.size.width, oldImage.size.height);
-		CGAffineTransform t = CGAffineTransformMakeRotation(DEGREES_TO_ZYDIANS(degrees));
+		CGAffineTransform t = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
 		rotatedViewBox.transform = t;
 		rotatedSize = rotatedViewBox.frame.size;
 	});

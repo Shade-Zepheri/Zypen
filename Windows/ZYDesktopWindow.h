@@ -1,25 +1,25 @@
 #import "ZYHostedAppView.h"
 
-@class RAWindowBar;
+@class ZYWindowBar;
 
-@interface RADesktopWindow : UIWindow {
+@interface ZYDesktopWindow : UIWindow {
 	UIInterfaceOrientation lastKnownOrientation;
 	NSMutableArray *appViews;
 
 	BOOL dontClearForcedPhoneState;
 }
 
--(RAWindowBar*) addAppWithView:(RAHostedAppView*)view animated:(BOOL)animated;
--(RAWindowBar*) createAppWindowForSBApplication:(SBApplication*)app animated:(BOOL)animated;
--(RAWindowBar*) createAppWindowWithIdentifier:(NSString*)identifier animated:(BOOL)animated;
+-(ZYWindowBar*) addAppWithView:(ZYHostedAppView*)view animated:(BOOL)animated;
+-(ZYWindowBar*) createAppWindowForSBApplication:(SBApplication*)app animated:(BOOL)animated;
+-(ZYWindowBar*) createAppWindowWithIdentifier:(NSString*)identifier animated:(BOOL)animated;
 
--(void) addExistingWindow:(RAWindowBar*)window;
+-(void) addExistingWindow:(ZYWindowBar*)window;
 -(void) removeAppWithIdentifier:(NSString*)identifier animated:(BOOL)animated;
 -(void) removeAppWithIdentifier:(NSString*)identifier animated:(BOOL)animated forceImmediateUnload:(BOOL)force;
 
 -(NSArray*) hostedWindows;
 -(BOOL) isAppOpened:(NSString*)identifier;
--(RAWindowBar*) windowForIdentifier:(NSString*)identifier;
+-(ZYWindowBar*) windowForIdentifier:(NSString*)identifier;
 
 -(UIInterfaceOrientation) currentOrientation;
 -(CGFloat) baseRotationForOrientation;

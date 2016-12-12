@@ -1,6 +1,7 @@
 #line 1 "ZYSnapshotProvider.xm"
 #import "headers.h"
 #import "ZYSnapshotProvider.h"
+#import "Windows/ZYDesktopWindow.h"
 
 
 #include <substrate.h>
@@ -23,10 +24,10 @@
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class SBDisplayItem; @class SBUIController; @class SBWallpaperController; @class SBApplicationController; 
+@class SBUIController; @class SBDisplayItem; @class SBWallpaperController; @class SBApplicationController; 
 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBApplicationController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBApplicationController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBWallpaperController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBWallpaperController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBUIController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBUIController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBDisplayItem(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBDisplayItem"); } return _klass; }
-#line 4 "ZYSnapshotProvider.xm"
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBApplicationController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBApplicationController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBWallpaperController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBWallpaperController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBDisplayItem(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBDisplayItem"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBUIController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBUIController"); } return _klass; }
+#line 5 "ZYSnapshotProvider.xm"
 @implementation ZYSnapshotProvider
 
 +(id) sharedInstance {
@@ -191,7 +192,7 @@ static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _
 		
 		static UIView *rotatedViewBox = [[UIView alloc] init];
 		rotatedViewBox.frame = CGRectMake(0,0,oldImage.size.width, oldImage.size.height);
-		CGAffineTransform t = CGAffineTransformMakeRotation(DEGREES_TO_ZYDIANS(degrees));
+		CGAffineTransform t = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
 		rotatedViewBox.transform = t;
 		rotatedSize = rotatedViewBox.frame.size;
 	});
@@ -326,4 +327,4 @@ static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _
 	[imageCache removeAllObjects];
 }
 @end
-#line 303 "ZYSnapshotProvider.xm"
+#line 304 "ZYSnapshotProvider.xm"

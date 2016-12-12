@@ -414,3 +414,58 @@ extern "C" void BKSHIDServicesCancelTouchesOnMainDisplay();
 -(void) ZY_updateViewSizes;
 -(void) appViewItemTap:(id)sender;
 @end
+
+@interface SBAppSwitcherSnapshotView : UIView
+- (void)setOrientation:(long long)arg1 orientationBehavior:(int)arg2;
+- (void)_loadSnapshotAsync;
+- (void)_loadZoomUpSnapshotSync;
+- (void)_loadSnapshotSync;
+- (id)initWithDisplayItem:(id)arg1 application:(id)arg2 orientation:(long long)arg3 preferringDownscaledSnapshot:(_Bool)arg4 async:(_Bool)arg5 withQueue:(id)arg6;
+@end
+
+@interface SBUIController : NSObject
++(id) sharedInstance;
++ (id)_zoomViewWithSplashboardLaunchImageForApplication:(id)arg1 sceneID:(id)arg2 screen:(id)arg3 interfaceOrientation:(long long)arg4 includeStatusBar:(_Bool)arg5 snapshotFrame:(struct CGRect *)arg6;
+-(id) switcherController;
+- (id)_appSwitcherController;
+-(void) activateApplicationAnimated:(SBApplication*)app;
+- (id)switcherWindow;
+- (void)_animateStatusBarForSuspendGesture;
+- (void)_showControlCenterGestureCancelled;
+- (void)_showControlCenterGestureFailed;
+- (void)_hideControlCenterGrabber;
+- (void)_showControlCenterGestureEndedWithLocation:(CGPoint)arg1 velocity:(CGPoint)arg2;
+- (void)_showControlCenterGestureChangedWithLocation:(CGPoint)arg1 velocity:(CGPoint)arg2 duration:(CGFloat)arg3;
+- (void)_showControlCenterGestureBeganWithLocation:(CGPoint)arg1;
+- (void)restoreContentUpdatingStatusBar:(_Bool)arg1;
+-(void) restoreContentAndUnscatterIconsAnimated:(BOOL)arg1;
+- (_Bool)shouldShowControlCenterTabControlOnFirstSwipe;- (_Bool)isAppSwitcherShowing;
+-(BOOL) _activateAppSwitcher;
+- (void)_releaseTransitionOrientationLock;
+- (void)_releaseSystemGestureOrientationLock;
+- (void)releaseSwitcherOrientationLock;
+- (void)_lockOrientationForSwitcher;
+- (void)_lockOrientationForSystemGesture;
+- (void)_lockOrientationForTransition;
+- (void)_dismissSwitcherAnimated:(_Bool)arg1;
+- (void)dismissSwitcherAnimated:(_Bool)arg1;
+- (void)_dismissAppSwitcherImmediately;
+- (void)dismissSwitcherForAlert:(id)arg1;
+
+- (void)activateApplication:(id)arg1;
+@end
+
+@interface SBWallpaperController
++(id) sharedInstance;
+-(void) beginRequiringWithReason:(NSString*)reason;
+-(void) endRequiringWithReason:(NSString*)reason;
+@end
+
+@interface UIScreen (Wut)
+- (CGRect)_referenceBounds;
+- (CGPoint)convertPoint:(CGPoint)arg1 toCoordinateSpace:(id)arg2;
++ (CGPoint)convertPoint:(CGPoint)arg1 toView:(id)arg2;
+
+-(CGRect)_interfaceOrientedBounds; // ios 8
+-(CGRect)ZY_interfaceOrientedBounds; // ios 8 + 9 (wrapper)
+@end

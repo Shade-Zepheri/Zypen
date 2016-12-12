@@ -1,4 +1,4 @@
-//#import "ZYDesktopWindow.h"
+#import "Windows/ZYDesktopWindow.h"
 
 @interface ZYSnapshotProvider : NSObject {
 	NSCache *imageCache;
