@@ -1,4 +1,4 @@
-#import "headers.h"
+#import "../headers.h"
 #import "ZYGestureManager.h"
 #import "ZYGestureCallback.h"
 

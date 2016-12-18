@@ -1,8 +1,8 @@
 #import <objc/runtime.h>
 #import "ZYReachabilityManager.h"
-#import "headers.h"
-#import "RAAppSliderProviderView.h"
-#import "ZYMessagingServer.h"
+#import "../headers.h"
+#import "../ZYAppSliderProviderView.h"
+#import "../Messaging/ZYMessagingServer.h"
 
 @implementation ZYReachabilityManager
 +(id) sharedInstance

@@ -1,7 +1,6 @@
-DEBUG = 1
-ARCHS = armv7 armv7s arm64
-CFLAGS += -fobjc-arc
-TARGET = iphone:clang:9.3:9.3
+ARCHS = arm64
+CFLAGS += -fobjc-arc -O2 -Wno-deprecated-declarations -ferror-limit=200
+TARGET = iphone:9.2
 
 include $(THEOS)/makefiles/common.mk
 

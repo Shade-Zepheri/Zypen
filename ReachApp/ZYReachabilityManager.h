@@ -1,4 +1,4 @@
-#import "ZYWidget.h"
+#import "../widgets/Reachability/ZYWidget.h"
 
 @class ZYAppSliderProviderView;
 

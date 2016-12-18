@@ -7,14 +7,14 @@
 #include <dlfcn.h>
 #include <sys/sysctl.h>
 #import <notify.h>
-#import "headers.h"
-#import "ZYWidgetSectionManager.h"
-#import "ZYSettings.h"
-#import "ZYAppSliderProviderView.h"
-#import "ZYDesktopManager.h"
-#import "ZYDesktopWindow.h"
-#import "ZYMessagingServer.h"
-#import "ZYAppSwitcherModelWrapper.h"
+#import "../headers.h"
+#import "../widgets/Reachability/ZYWidgetSectionManager.h"
+#import "../ZYSettings.h"
+#import "../ZYAppSliderProviderView.h"
+#import "../Windows/ZYDesktopManager.h"
+#import "../Windows/ZYDesktopWindow.h"
+#import "../Messaging/ZYMessagingServer.h"
+#import "../ZYAppSwitcherModelWrapper.h"
 
 #define SPRINGBOARD ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"])
 
@@ -54,28 +54,28 @@ BOOL wasEnabled = NO;
 
 - (void)enableExpirationTimerForEndedInteraction
 {
-    if ([ZYSettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedSettings disableAutoDismiss])
         return;
     %orig;
 }
 
 - (void)_handleSignificantTimeChanged
 {
-    if ([ZYSettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedSettings disableAutoDismiss])
         return;
     %orig;
 }
 
 - (void)_keepAliveTimerFired:(unsafe_id)arg1
 {
-    if ([ZYSettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedSettings disableAutoDismiss])
         return;
     %orig;
 }
 
 - (void)_setKeepAliveTimerForDuration:(double)arg1
 {
-    if ([ZYSettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedSettings disableAutoDismiss])
         return;
     %orig;
 }
@@ -132,14 +132,14 @@ BOOL wasEnabled = NO;
 %hook SBReachabilitySettings
 -(CGFloat) reachabilityDefaultKeepAlive
 {
-    if ([ZYSettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedSettings disableAutoDismiss])
         return 9999999999;
     return %orig;
 }
 
 -(CGFloat) reachabilityInteractiveKeepAlive
 {
-    if ([ZYSettings.sharedInstance disableAutoDismiss])
+    if ([ZYSettings.sharedSettings disableAutoDismiss])
         return 9999999999;
     return %orig;
 }
@@ -195,7 +195,7 @@ id SBWorkspace$sharedInstance;
     [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:currentBundleIdentifier completion:nil];
     [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:currentBundleIdentifier completion:nil];
 
-    if ([ZYSettings.sharedInstance showNCInstead])
+    if ([ZYSettings.sharedSettings showNCInstead])
     {
         showingNC = NO;
         UIWindow *window = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
@@ -257,7 +257,7 @@ id SBWorkspace$sharedInstance;
 
     %orig;
 
-    if (![ZYSettings.sharedInstance reachabilityEnabled] && wasEnabled == NO)
+    if (![ZYSettings.sharedSettings reachabilityEnabled] && wasEnabled == NO)
     {
         return;
     }
@@ -295,7 +295,7 @@ id SBWorkspace$sharedInstance;
 - (void) handleReachabilityModeActivated
 {
     %orig;
-    if (![ZYSettings.sharedInstance reachabilityEnabled])
+    if (![ZYSettings.sharedSettings reachabilityEnabled])
         return;
     wasEnabled = YES;
 
@@ -310,7 +310,7 @@ id SBWorkspace$sharedInstance;
     grabberCenter_X = draggerView.center.x;
 
     UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
-    if ([ZYSettings.sharedInstance showNCInstead])
+    if ([ZYSettings.sharedSettings showNCInstead])
     {
         showingNC = YES;
 
@@ -324,7 +324,7 @@ id SBWorkspace$sharedInstance;
         [ncViewController performSelector:@selector(hostWillPresent)];
         [ncViewController performSelector:@selector(hostDidPresent)];
 
-        if ([ZYSettings.sharedInstance enableRotation])
+        if ([ZYSettings.sharedSettings enableRotation])
         {
             [w _setRotatableViewOrientation:[UIApplication sharedApplication].statusBarOrientation updateStatusBar:YES duration:0.0 force:YES];
         }
@@ -335,7 +335,7 @@ id SBWorkspace$sharedInstance;
         if (!currentBundleIdentifier)
             return;
 
-        if ([ZYSettings.sharedInstance showWidgetSelector])
+        if ([ZYSettings.sharedSettings showWidgetSelector])
         {
             [self ZY_showWidgetSelector];
         }
@@ -378,7 +378,7 @@ id SBWorkspace$sharedInstance;
     [draggerView addGestureRecognizer:recognizer];
 
     UILongPressGestureRecognizer *recognizer2 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(ZY_handleLongPress:)];
-    recognizer2.delegate = (id<UILongPressGestureRecognizerDelegate>)self;
+    recognizer2.delegate = (id<UIGestureRecognizerDelegate>)self;
     [draggerView addGestureRecognizer:recognizer2];
 
     UITapGestureRecognizer *recognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ZY_detachAppAndClose:)];
@@ -388,7 +388,7 @@ id SBWorkspace$sharedInstance;
 
     [w addSubview:draggerView];
 
-    if ([ZYSettings.sharedInstance showBottomGrabber])
+    if ([ZYSettings.sharedSettings showBottomGrabber])
     {
         bottomDraggerView = [[UIView alloc] initWithFrame:CGRectMake(
             (UIScreen.mainScreen.bounds.size.width / 2) - (knobWidth / 2),
@@ -435,7 +435,7 @@ id SBWorkspace$sharedInstance;
         [w addSubview:widgetSelectorView];
     view = widgetSelectorView;
 
-    if ([ZYSettings.sharedInstance autoSizeWidgetSelector])
+    if ([ZYSettings.sharedSettings autoSizeWidgetSelector])
     {
         CGFloat moddedHeight = widgetSelectorView.frame.size.height;
         if (old_grabberCenterY == -1)
@@ -579,7 +579,7 @@ CGFloat startingY = -1;
             view.frame = topFrame;
     }
 
-    if ([ZYSettings.sharedInstance showNCInstead])
+    if ([ZYSettings.sharedSettings showNCInstead])
     {
         if (ncViewController)
             ncViewController.view.frame = (CGRect) { { 0, 0 }, topFrame.size };
@@ -673,7 +673,7 @@ CGFloat startingY = -1;
     [ZYMessagingServer.sharedInstance resizeApp:currentBundleIdentifier toSize:CGSizeMake(width, height) completion:nil];
     [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:YES forApp:currentBundleIdentifier completion:nil];
 
-    if ([ZYSettings.sharedInstance unifyStatusBar])
+    if ([ZYSettings.sharedSettings unifyStatusBar])
         [ZYMessagingServer.sharedInstance forceStatusBarVisibility:NO forApp:currentBundleIdentifier completion:nil];
 }
 
@@ -817,7 +817,7 @@ CGFloat startingY = -1;
             lastBundleIdentifier = app.bundleIdentifier;
             [self ZY_launchTopAppWithIdentifier:app.bundleIdentifier];
 
-            if ([ZYSettings.sharedInstance autoSizeWidgetSelector])
+            if ([ZYSettings.sharedSettings autoSizeWidgetSelector])
             {
                 if (old_grabberCenterY == -1)
                     old_grabberCenterY = UIScreen.mainScreen.bounds.size.height * 0.3;

@@ -1,6 +1,5 @@
-#import "ZYHostedAppView.h"
-
-@class ZYWindowBar;
+#import "../ZYHostedAppView.h"
+#import "ZYWindowBar.h"
 
 @interface ZYDesktopWindow : UIWindow {
 	UIInterfaceOrientation lastKnownOrientation;
