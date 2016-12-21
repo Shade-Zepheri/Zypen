@@ -57,7 +57,7 @@ extern BOOL allowClosingReachabilityNatively;
 
 	_currentData = data; // Initialize data
 
-	serverCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.efrederickson.reachapp.messaging.server"];
+	serverCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.shade.zypen.messaging.server"];
 
     void* handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
     if (handle)
@@ -228,7 +228,7 @@ void updateFrontmostApp(CFNotificationCenterRef center,
 	else
 	{
 		[ZYMessagingClient sharedInstance];
-    	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadClientData, (__bridge CFStringRef)[NSString stringWithFormat:@"com.efrederickson.reachapp.clientupdate-%@",NSBundle.mainBundle.bundleIdentifier], NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-    	CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, &updateFrontmostApp, CFSTR("com.efrederickson.reachapp.frontmostAppDidUpdate"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+    	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadClientData, (__bridge CFStringRef)[NSString stringWithFormat:@"com.shade.zypen.clientupdate-%@",NSBundle.mainBundle.bundleIdentifier], NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+    	CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, &updateFrontmostApp, CFSTR("com.shade.zypen.frontmostAppDidUpdate"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 	}
 }

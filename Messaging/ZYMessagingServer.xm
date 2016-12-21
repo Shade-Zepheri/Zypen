@@ -34,7 +34,7 @@ extern BOOL launchNextOpenIntoWindow;
 
 -(void) loadServer
 {
-    messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.efrederickson.reachapp.messaging.server"];
+    messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.shade.zypen.messaging.server"];
 
     void* handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
     if (handle)
@@ -140,7 +140,7 @@ extern BOOL launchNextOpenIntoWindow;
 		if (window)
 		{
 			ZYDesktopManager.sharedInstance.lastUsedWindow = window;
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.efrederickson.reachapp.frontmostAppDidUpdate"), NULL, (__bridge CFDictionaryRef)@{ @"bundleIdentifier": bundleIdentifier }, YES);
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.shade.zypen.frontmostAppDidUpdate"), NULL, (__bridge CFDictionaryRef)@{ @"bundleIdentifier": bundleIdentifier }, YES);
 		}
 	}
 
@@ -298,7 +298,7 @@ extern BOOL launchNextOpenIntoWindow;
 		return;
 	}
 
-	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge CFStringRef)[NSString stringWithFormat:@"com.efrederickson.reachapp.clientupdate-%@",identifier], nil, nil, YES);
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge CFStringRef)[NSString stringWithFormat:@"com.shade.zypen.clientupdate-%@",identifier], nil, nil, YES);
 
 	if (tries <= 4)
 	{

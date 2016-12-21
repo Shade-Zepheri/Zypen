@@ -24,7 +24,7 @@ BOOL isShowing = NO;
     _size = [[notif.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
 
     IF_NOT_SPRINGBOARD {
-        CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.efrederickson.reachapp.keyboard.didShow"), NULL, NULL, true);
+        CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.shade.zypen.keyboard.didShow"), NULL, NULL, true);
         [ZYMessagingClient.sharedInstance notifyServerOfKeyboardSizeUpdate:_size];
 
         if ([ZYMessagingClient.sharedInstance shouldUseExternalKeyboard])
@@ -41,7 +41,7 @@ BOOL isShowing = NO;
     _visible = NO;
 
     IF_NOT_SPRINGBOARD {
-        CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.efrederickson.reachapp.keyboard.didHide"), NULL, NULL, true);
+        CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.shade.zypen.keyboard.didHide"), NULL, NULL, true);
         if ([ZYMessagingClient.sharedInstance shouldUseExternalKeyboard] || isShowing)
         {
             isShowing = NO;
@@ -117,7 +117,7 @@ void externalKeyboardDidHide(CFNotificationCenterRef center, void *observer, CFS
     // Just SpringBoard
     IF_SPRINGBOARD
     {
-        CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, externalKeyboardDidShow, CFSTR("com.efrederickson.reachapp.keyboard.didShow"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, externalKeyboardDidHide, CFSTR("com.efrederickson.reachapp.keyboard.didHide"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, externalKeyboardDidShow, CFSTR("com.shade.zypen.keyboard.didShow"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, externalKeyboardDidHide, CFSTR("com.shade.zypen.keyboard.didHide"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     }
 }

@@ -778,3 +778,53 @@ typedef NS_ENUM(NSInteger, UIScreenEdgePanRecognizerType) {
 + (id)_applicationIconImageForBundleIdentifier:(id)arg1 format:(int)arg2;
 - (UIImage*) _flatImageWithColor: (UIColor*) color;
 @end
+
+typedef struct {
+    BOOL itemIsEnabled[25];
+    char timeString[64];
+    int gsmSignalStrengthRaw;
+    int gsmSignalStrengthBars;
+    char serviceString[100];
+    char serviceCrossfadeString[100];
+    char serviceImages[2][100];
+    char operatorDirectory[1024];
+    unsigned serviceContentType;
+    int wifiSignalStrengthRaw;
+    int wifiSignalStrengthBars;
+    unsigned dataNetworkType;
+    int batteryCapacity;
+    unsigned batteryState;
+    char batteryDetailString[150];
+    int bluetoothBatteryCapacity;
+    int thermalColor;
+    unsigned thermalSunlightMode : 1;
+    unsigned slowActivity : 1;
+    unsigned syncActivity : 1;
+    char activityDisplayId[256];
+    unsigned bluetoothConnected : 1;
+    unsigned displayRawGSMSignal : 1;
+    unsigned displayRawWifiSignal : 1;
+    unsigned locationIconType : 1;
+    unsigned quietModeInactive : 1;
+    unsigned tetheringConnectionCount;
+} StatusBarData;
+
+@interface UIStatusBar : UIView
++ (CGFloat)heightForStyle:(int)arg1 orientation:(int)arg2;
+- (void)setOrientation:(int)arg1;
+- (void)requestStyle:(int)arg1;
+-(void) forceUpdateToData:(StatusBarData*)arg1 animated:(BOOL)arg2;
+@end
+
+@interface UIStatusBarServer
++(StatusBarData*) getStatusBarData;
+@end
+
+@interface SBNotificationCenterController : NSObject
++(id) sharedInstance;
+-(BOOL) isVisible;
+@end
+
+@interface UIStatusBarItem : NSObject
+-(NSString*)indicatorName;
+@end
