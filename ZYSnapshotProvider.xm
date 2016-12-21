@@ -1,6 +1,6 @@
 #import "headers.h"
 #import "ZYSnapshotProvider.h"
-#import "Windows/ZYDesktopWindow.h"
+#import "ZYDesktopWindow.h"
 
 @implementation ZYSnapshotProvider
 +(id) sharedInstance

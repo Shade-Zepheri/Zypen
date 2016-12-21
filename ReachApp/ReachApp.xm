@@ -7,14 +7,14 @@
 #include <dlfcn.h>
 #include <sys/sysctl.h>
 #import <notify.h>
-#import "../headers.h"
-#import "../widgets/Reachability/ZYWidgetSectionManager.h"
-#import "../ZYSettings.h"
-#import "../ZYAppSliderProviderView.h"
-#import "../Windows/ZYDesktopManager.h"
-#import "../Windows/ZYDesktopWindow.h"
-#import "../Messaging/ZYMessagingServer.h"
-#import "../ZYAppSwitcherModelWrapper.h"
+#import "headers.h"
+#import "ZYWidgetSectionManager.h"
+#import "ZYSettings.h"
+#import "ZYAppSliderProviderView.h"
+#import "ZYDesktopManager.h"
+#import "ZYDesktopWindow.h"
+#import "ZYMessagingServer.h"
+#import "ZYAppSwitcherModelWrapper.h"
 
 #define SPRINGBOARD ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"])
 

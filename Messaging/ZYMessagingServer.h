@@ -1,6 +1,6 @@
-#import "../headers.h"
+#import "headers.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
-#import "ZYMessaging.h"
+#include "ZYMessaging.h"
 
 @interface ZYMessagingServer : NSObject {
 	CPDistributedMessagingCenter *messagingCenter;
@@ -12,8 +12,8 @@
 
 -(void) loadServer;
 
--(ZYMessageAppData)getDataForIdentifier:(NSString*)identifier;
--(void)setData:(ZYMessageAppData)data forIdentifier:(NSString*)identifier;
+-(struct ZYMessageAppData)getDataForIdentifier:(NSString*)identifier;
+-(void)setData:(struct ZYMessageAppData)data forIdentifier:(NSString*)identifier;
 -(void) sendStoredDataToApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback;
 
 -(void) resizeApp:(NSString*)identifier toSize:(CGSize)size completion:(ZYMessageCompletionCallback)callback;

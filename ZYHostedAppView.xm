@@ -1,6 +1,6 @@
 #import "ZYHostedAppView.h"
 #import "ZYHostManager.h"
-#import "Messaging/ZYMessagingServer.h"
+#import "ZYMessagingServer.h"
 #import "ZYSnapshotProvider.h"
 #import "dispatch_after_cancel.h"
 #import "headers.h"

@@ -1,4 +1,4 @@
- #import "../headers.h"
+ #import "headers.h"
 
 @class ZYGestureCallback;
 

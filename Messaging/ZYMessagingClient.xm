@@ -72,7 +72,7 @@ extern BOOL allowClosingReachabilityNatively;
 -(void) alertUser:(NSString*)description
 {
 #if DEBUG
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:LOCALIZE(@"MULTIPLEXER") message:description delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Zypen" message:description delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
 #endif
 }

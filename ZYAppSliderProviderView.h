@@ -1,6 +1,6 @@
 #import "headers.h"
 #import "ZYHostedAppView.h"
-#import "Gestures/ZYGestureManager.h"
+#import "ZYGestureManager.h"
 
 @class ZYAppSliderProvider;
 

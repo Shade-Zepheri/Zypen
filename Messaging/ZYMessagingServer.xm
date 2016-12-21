@@ -111,7 +111,7 @@ extern BOOL launchNextOpenIntoWindow;
 	else if ([identifier isEqual:ZYMessagingOpenURLKMessageName])
 	{
 		NSURL *url = [NSURL URLWithString:info[@"url"]];
-		BOOL openInWindow = [ZYSettings.sharedInstance openLinksInWindows]; // [info[@"openInWindow"] boolValue];
+		BOOL openInWindow = [ZYSettings.sharedSettings openLinksInWindows]; // [info[@"openInWindow"] boolValue];
 		if (openInWindow)
 			launchNextOpenIntoWindow = YES;
 
@@ -213,15 +213,8 @@ extern BOOL launchNextOpenIntoWindow;
 	}
 }
 
--(void) alertUser:(NSString*)description
-{
-#if DEBUG
-	if ([ZYSettings.sharedInstance debug_showIPCMessages])
-	{
-	    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:LOCALIZE(@"MULTIPLEXER") message:description delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    	[alert show];
-    }
-#endif
+-(void) alertUser:(NSString*)description {
+
 }
 
 -(ZYMessageAppData) getDataForIdentifier:(NSString*)identifier

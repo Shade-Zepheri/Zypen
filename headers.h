@@ -22,6 +22,9 @@
 
 #define ZY_BASE_PATH @"/Library/Zypen"
 
+#import "ZYThemeManager.h"
+#define THEMED(x) [[objc_getClass("ZYThemeManager") sharedInstance] currentTheme].x
+
 #import "ZYSBWorkspaceFetcher.h"
 #define GET_SBWORKSPACE [ZYSBWorkspaceFetcher getCurrentSBWorkspaceImplementationInstanceForThisOS]
 
@@ -62,7 +65,16 @@ extern BOOL $__IS_SPRINGBOARD;
 #define kBGModeBluetoothPeripheral     @"bluetooth-peripheral"
 // newsstand-content
 
-//extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
+void BKSHIDServicesCancelTouchesOnMainDisplay();
+
+#ifdef __cplusplus
+}
+#endif
 
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 #define DEGREES_TO_RADIANS(radians) ((radians) * (M_PI / 180))
@@ -85,8 +97,6 @@ return sharedInstance;
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
-
-//extern "C" void BKSHIDServicesCancelTouchesOnMainDisplay();
 
 @interface SBAppSwitcherModel : NSObject
 +(id)sharedInstance;
@@ -147,6 +157,7 @@ return sharedInstance;
 - (void)resumeToQuit;
 - (void)_sendDidLaunchNotification:(_Bool)arg1;
 - (void)notifyResumeActiveForReason:(long long)arg1;
+-(UIInterfaceOrientation)statusBarOrientation;
 
 @property(readwrite, nonatomic) int pid;
 @end
@@ -473,10 +484,6 @@ return sharedInstance;
 -(CGRect)ZY_interfaceOrientedBounds; // ios 8 + 9 (wrapper)
 @end
 
-@interface UIWindow ()
--(void)_setRotatableViewOrientation:(long long)arg1 updateStatusBar:(BOOL)arg2 duration:(double)arg3 force:(BOOL)arg4;
-@end
-
 @protocol SBIconViewDelegate, SBIconViewLocker;
 @class SBIconImageContainerView, SBIconBadgeImage;
 
@@ -698,4 +705,76 @@ return sharedInstance;
 - (void)iconLaunchEnabledDidChange:(id)iconLaunchEnabled;
 - (SBIconImageView*)_iconImageView;
 
+@end
+
+typedef NS_ENUM(NSInteger, UIScreenEdgePanRecognizerType) {
+    UIScreenEdgePanRecognizerTypeMultitasking,
+    UIScreenEdgePanRecognizerTypeNavigation,
+    UIScreenEdgePanRecognizerTypeOther
+};
+
+@protocol _UIScreenEdgePanRecognizerDelegate;
+
+@interface _UIScreenEdgePanRecognizer : NSObject
+- (id)initWithType:(UIScreenEdgePanRecognizerType)type;
+- (void)incorporateTouchSampleAtLocation:(CGPoint)location timestamp:(double)timestamp modifier:(NSInteger)modifier interfaceOrientation:(UIInterfaceOrientation)orientation;
+- (void)incorporateTouchSampleAtLocation:(CGPoint)location timestamp:(double)timestamp modifier:(NSInteger)modifier interfaceOrientation:(UIInterfaceOrientation)orientation forceState:(int)arg5;
+- (void)reset;
+@property (nonatomic, assign) id <_UIScreenEdgePanRecognizerDelegate> delegate;
+@property (nonatomic, readonly) NSInteger state;
+@property (nonatomic) UIRectEdge targetEdges;
+@property (nonatomic) CGRect screenBounds;
+@end
+
+@protocol _UIScreenEdgePanRecognizerDelegate <NSObject>
+@optional
+- (void)screenEdgePanRecognizerStateDidChange:(_UIScreenEdgePanRecognizer *)screenEdgePanRecognizer;
+@end
+
+@interface SBAppToAppWorkspaceTransaction
+- (void)begin;
+- (id)initWithAlertManager:(id)alertManager exitedApp:(id)app;
+- (id)initWithAlertManager:(id)arg1 from:(id)arg2 to:(id)arg3 withResult:(id)arg4;
+- (id)initWithTransitionRequest:(id)arg1;
+@end
+
+@interface FBWorkspaceEvent : NSObject
++ (instancetype)eventWithName:(NSString *)label handler:(id)handler;
+@end
+
+@interface FBWorkspaceEventQueue : NSObject
++ (instancetype)sharedInstance;
+- (void)executeOrAppendEvent:(FBWorkspaceEvent *)event;
+@end
+
+@interface UIKeyboard : UIView
++ (BOOL)isOnScreen;
++ (CGSize)keyboardSizeForInterfaceOrientation:(UIInterfaceOrientation)orientation;
++ (CGRect)defaultFrameForInterfaceOrientation:(UIInterfaceOrientation)orientation;
++ (id)activeKeyboard;
+
+- (BOOL)isMinimized;
+- (void)minimize;
+@end
+
+@interface UITextEffectsWindow : UIWindow
++ (instancetype)sharedTextEffectsWindow;
+- (unsigned int)contextID;
+@end
+
+@interface UIWindow ()
++(instancetype) keyWindow;
+-(id) firstResponder;
++ (void)setAllWindowsKeepContextInBackground:(BOOL)arg1;
+- (void)_setRotatableViewOrientation:(UIInterfaceOrientation)orientation duration:(CGFloat)duration force:(BOOL)force;
+- (void)_setRotatableViewOrientation:(int)arg1 updateStatusBar:(BOOL)arg2 duration:(double)arg3 force:(BOOL)arg4;
+- (void)_rotateWindowToOrientation:(int)arg1 updateStatusBar:(BOOL)arg2 duration:(double)arg3 skipCallbacks:(BOOL)arg4;
+- (unsigned int)_contextId;
+-(UIInterfaceOrientation) _windowInterfaceOrientation;
+@end
+
+@interface UIImage ()
++ (id)_applicationIconImageForBundleIdentifier:(id)arg1 format:(int)arg2 scale:(float)arg3;
++ (id)_applicationIconImageForBundleIdentifier:(id)arg1 format:(int)arg2;
+- (UIImage*) _flatImageWithColor: (UIColor*) color;
 @end

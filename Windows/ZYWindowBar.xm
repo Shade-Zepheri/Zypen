@@ -122,7 +122,7 @@ extern BOOL allowOpenApp;
     buttonSize = tmp;
     spacing = (height - buttonSize) / 2.0;
 
-    if (![ZYSettings.sharedInstance onlyShowWindowBarIconsOnOverlay])
+    if (![ZYSettings.sharedSettings onlyShowWindowBarIconsOnOverlay])
     {
 	    /*
 	        alignment:
@@ -362,7 +362,7 @@ extern BOOL allowOpenApp;
 
 -(BOOL) isLocked
 {
-	if ([ZYSettings.sharedInstance windowRotationLockMode] == 0)
+	if ([ZYSettings.sharedSettings windowRotationLockMode] == 0)
 	{
 		return sizingLocked;
 	}
@@ -374,7 +374,7 @@ extern BOOL allowOpenApp;
 
 -(void) sizingLockButtonTap:(id)arg1
 {
-	if ([ZYSettings.sharedInstance windowRotationLockMode] == 0)
+	if ([ZYSettings.sharedSettings windowRotationLockMode] == 0)
 	{
 		sizingLocked = !sizingLocked;
 	}
@@ -442,7 +442,7 @@ extern BOOL allowOpenApp;
     	else
     		rotateSnapDegrees = 270 - currentRotation;
 
-    	if ([ZYSettings.sharedInstance snapRotation])
+    	if ([ZYSettings.sharedSettings snapRotation])
 	    	[UIView animateWithDuration:0.2 animations:^{
 		    	self.transform = CGAffineTransformRotate(self.transform, DEGREES_TO_RADIANS(rotateSnapDegrees));
 		    }];
@@ -450,7 +450,7 @@ extern BOOL allowOpenApp;
 		if (!appRotationLocked)
 	    	[attachedView rotateToOrientation:[self.desktop appOrientationRelativeToThisOrientation:currentRotation]];
 
-		if ([ZYSettings.sharedInstance snapWindows] && [ZYWindowSnapDataProvider shouldSnapWindow:self])
+		if ([ZYSettings.sharedSettings snapWindows] && [ZYWindowSnapDataProvider shouldSnapWindow:self])
 		{
 			[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES];
 			isSnapped = YES;
@@ -497,7 +497,7 @@ extern BOOL allowOpenApp;
 
 - (void)handleRotate:(UIRotationGestureRecognizer *)gesture
 {
-	if ([ZYSettings.sharedInstance alwaysEnableGestures] == NO && self.isOverlayShowing == NO)
+	if ([ZYSettings.sharedSettings alwaysEnableGestures] == NO && self.isOverlayShowing == NO)
 		return;
 
     if (gesture.state == UIGestureRecognizerStateChanged)
@@ -595,7 +595,7 @@ extern BOOL allowOpenApp;
 		enableLongPress = YES;
 		[self saveWindowInfo];
 
-		if ([ZYSettings.sharedInstance snapWindows] && [ZYWindowSnapDataProvider shouldSnapWindow:self])
+		if ([ZYSettings.sharedSettings snapWindows] && [ZYWindowSnapDataProvider shouldSnapWindow:self])
 		{
 			[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES completion:^{
 				[self removePotentialSnapShadow];
@@ -624,7 +624,7 @@ extern BOOL allowOpenApp;
 
 - (void)handlePinch:(UIPinchGestureRecognizer *)gesture
 {
-	if ([ZYSettings.sharedInstance alwaysEnableGestures] == NO && self.isOverlayShowing == NO)
+	if ([ZYSettings.sharedSettings alwaysEnableGestures] == NO && self.isOverlayShowing == NO)
 		return;
 
     switch (gesture.state) {
@@ -690,10 +690,10 @@ extern BOOL allowOpenApp;
 
 -(void) updatePotentialSnapShadow
 {
-	if (![ZYSettings.sharedInstance snapWindows])
+	if (![ZYSettings.sharedSettings snapWindows])
 		return;
 
-	if (![ZYSettings.sharedInstance showSnapHelper])
+	if (![ZYSettings.sharedSettings showSnapHelper])
 		return;
 
 	if (!snapShadowView)

@@ -1,5 +1,5 @@
-#import "../headers.h"
-#import "../Messaging/ZYMessagingClient.h"
+#import "headers.h"
+#import "ZYMessagingClient.h"
 
 BOOL allowClosingReachabilityNatively = NO;
 

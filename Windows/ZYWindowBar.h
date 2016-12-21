@@ -1,5 +1,5 @@
-#import "../headers.h"
-#import "../ZYHostedAppView.h"
+#import "headers.h"
+#import "ZYHostedAppView.h"
 
 @class ZYDesktopWindow;
 

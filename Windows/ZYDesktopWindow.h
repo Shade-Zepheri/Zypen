@@ -1,4 +1,4 @@
-#import "../ZYHostedAppView.h"
+#import "ZYHostedAppView.h"
 #import "ZYWindowBar.h"
 
 @interface ZYDesktopWindow : UIWindow {

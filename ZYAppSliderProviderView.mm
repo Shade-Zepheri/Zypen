@@ -1,6 +1,6 @@
 #import "ZYAppSliderProviderView.h"
 #import "ZYHostedAppView.h"
-#import "Gestures/ZYGestureManager.h"
+#import "ZYGestureManager.h"
 #import "ZYAppSliderProvider.h"
 #include <execinfo.h>
 
