@@ -36,4 +36,22 @@
 	self.table.tableHeaderView.frame = frame;
 }
 
+- (void)resetData {
+		UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Zypen"
+                               message:@"Please confirm your choice to reset all settings & respring."
+                               preferredStyle:UIAlertControllerStyleAlert];
+		UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+		  handler:^(UIAlertAction * action) {
+				CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.shade.zypen/ResetSettings"), nil, nil, YES);
+		}];
+
+		UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
+			handler:^(UIAlertAction * action) {
+		}];
+
+		[alert addAction:defaultAction];
+		[alert addAction:cancelAction];
+		[self presentViewController:alert animated:YES completion:nil];
+}
+
 @end

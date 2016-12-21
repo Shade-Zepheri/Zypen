@@ -14,55 +14,9 @@
 				<key>PostNotification</key>
 				<string>com.shade.zypen/ReloadPrefs</string>
 				<key>key</key>
-				<string>reachabilityEnabled</string>
+				<string>autoSizeAppChooser</string>
 				<key>label</key>
-				<string>Enabled</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSGroupCell</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSSwitchCell</string>
-				<key>default</key>
-				<false/>
-				<key>defaults</key>
-				<string>com.shade.zypen</string>
-				<key>PostNotification</key>
-				<string>com.shade.zypen/ReloadPrefs</string>
-				<key>key</key>
-				<string>showNCInstead</string>
-				<key>label</key>
-				<string>Show NC Instead of App</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSSwitchCell</string>
-				<key>default</key>
-				<true/>
-				<key>defaults</key>
-				<string>com.shade.zypen</string>
-				<key>PostNotification</key>
-				<string>com.shade.zypen/ReloadPrefs</string>
-				<key>key</key>
-				<string>disableAutoDismiss</string>
-				<key>label</key>
-				<string>Disable Auto-dismiss</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSSwitchCell</string>
-				<key>default</key>
-				<true/>
-				<key>defaults</key>
-				<string>com.shade.zypen</string>
-				<key>PostNotification</key>
-				<string>com.shade.zypen/ReloadPrefs</string>
-				<key>key</key>
-				<string>homeButtonClosesReachability</string>
-				<key>label</key>
-				<string>Home Button Closes Reachability</string>
+				<string>Auto-size Widget Chooser</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -78,20 +32,80 @@
 				<key>PostNotification</key>
 				<string>com.shade.zypen/ReloadPrefs</string>
 				<key>key</key>
-				<string>showAppSelector</string>
+				<string>showRecents</string>
 				<key>label</key>
-				<string>Display Widget Selector</string>
+				<string>Display Recent Apps</string>
 			</dict>
 			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.shade.zypen</string>
+				<key>PostNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+				<key>key</key>
+				<string>showFavorites</string>
+				<key>label</key>
+				<string>Display Favorite Apps</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+			</dict>
+			<dict>
+				<key>bundle</key>
+				<string>AppList</string>
 				<key>cell</key>
 				<string>PSLinkCell</string>
+				<key>isController</key>
+				<true/>
 				<key>label</key>
-				<string>Options</string>
-				<key>detail</key>
-				<string>ZYPAppChooserOptionsListController</string>
+				<string>Favorites</string>
+				<key>ALSettingsPath</key>
+				<string>/var/mobile/Library/Preferences/com.shade.zypen.plist</string>
+				<key>ALSettingsKeyPrefix</key>
+				<string>Favorites-</string>
+				<key>ALChangeNotification</key>
+				<string>com.shade.splyce/ReloadPrefs</string>
+				<key>ALSettingsDefaultValue</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.shade.zypen</string>
+				<key>PostNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+				<key>key</key>
+				<string>showAllAppsInAppChooser</string>
+				<key>label</key>
+				<string>Display All Apps</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.shade.zypen</string>
+				<key>PostNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+				<key>key</key>
+				<string>pagingEnabled</string>
+				<key>label</key>
+				<string>Pagination</string>
 			</dict>
 		</array>
 		<key>title</key>
-		<string>Options</string>
+		<string>App Chooser Options</string>
 	</dict>
 </plist>

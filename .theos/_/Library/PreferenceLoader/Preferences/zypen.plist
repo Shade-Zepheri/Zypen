@@ -1,21 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>entry</key>
-	<dict>
-		<key>bundle</key>
-		<string>zypen</string>
-		<key>cell</key>
-		<string>PSLinkCell</string>
-		<key>detail</key>
-		<string>ZYPRootListController</string>
-		<key>icon</key>
-		<string>icon.png</string>
-		<key>isController</key>
-		<true/>
-		<key>label</key>
-		<string>Zypen</string>
-	</dict>
-</dict>
-</plist>
+{
+	entry = {
+		bundle = zypen;
+		cell = PSLinkCell;
+		detail = ZYPRootListController;
+		icon = icon.png;
+		isController = 1;
+		label = Zypen;
+	};
+}

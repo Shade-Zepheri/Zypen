@@ -11,3 +11,7 @@
 @interface ZYPAboutController : PSListController
 
 @end
+
+@interface ZYPAppChooserOptionsListController : PSListController
+
+@end

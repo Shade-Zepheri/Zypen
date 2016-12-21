@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = zypen
-zypen_FILES = ZYPRootListController.m ZYPOptionsController.m ZYPAboutController.m
+zypen_FILES = ZYPRootListController.m ZYPOptionsController.m ZYPAboutController.m ZYPAppChooserOptionsListController.m
 zypen_INSTALL_PATH = /Library/PreferenceBundles
 zypen_FRAMEWORKS = UIKit Social
 zypen_PRIVATE_FRAMEWORKS = Preferences

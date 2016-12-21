@@ -3,13 +3,11 @@
 #include <execinfo.h>
 
 BOOL $__IS_SPRINGBOARD = NO;
-%ctor
-{
+%ctor {
 	$__IS_SPRINGBOARD = [NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"];
 }
 
-void SET_BACKGROUNDED(id settings, BOOL value)
-{
+void SET_BACKGROUNDED(id settings, BOOL value) {
 #if __has_feature(objc_arc)
 	// stupid ARC...
     ptrdiff_t bgOffset = ivar_getOffset(class_getInstanceVariable([settings class], "_backgrounded"));

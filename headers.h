@@ -395,7 +395,6 @@ return sharedInstance;
 -(BOOL)launchApplicationWithIdentifier:(id)identifier suspended:(BOOL)suspended;
 -(SBApplication*) _accessibilityFrontMostApplication;
 -(void)setWantsOrientationEvents:(BOOL)events;
--(void)_relaunchSpringBoardNow;
 
 - (void)_setStatusBarHidden:(BOOL)arg1 animationParameters:(id)arg2 changeApplicationFlag:(BOOL)arg3;
 
@@ -827,4 +826,54 @@ typedef struct {
 
 @interface UIStatusBarItem : NSObject
 -(NSString*)indicatorName;
+@end
+
+@interface SBToAppsWorkspaceTransaction : NSObject
+-(NSArray*) toApplications;
+@end
+
+@interface SBWorkspaceDeactivatingEntity : NSObject
+@property(nonatomic) long long layoutRole; // @synthesize layoutRole=_layoutRole;
++ (id)entity;
+@end
+
+@interface SBWorkspaceApplicationTransitionContext : NSObject
+@property(nonatomic) _Bool animationDisabled; // @synthesize animationDisabled=_animationDisabled;
+- (void)setEntity:(id)arg1 forLayoutRole:(int)arg2;
+@end
+
+@interface SBMainWorkspaceTransitionRequest : NSObject
+- (id)initWithDisplay:(id)arg1;
+@end
+
+@interface SBControlCenterController : UIViewController
++ (id)sharedInstance;
+@property(nonatomic, getter=isPresented) _Bool presented; // @synthesize presented=_presented;
+@property(nonatomic, getter=isUILocked) _Bool UILocked; // @synthesize UILocked=_uiLocked;
+- (void)dismissAnimated:(_Bool)arg1;
+- (void)presentAnimated:(_Bool)arg1;
+- (void)presentAnimated:(_Bool)arg1 completion:(id)arg2;
+- (void)hideGrabberAnimated:(_Bool)arg1 completion:(id)arg2;
+- (void)hideGrabberAnimated:(_Bool)arg1;
+- (void)showGrabberAnimated:(_Bool)arg1;
+- (void)preventDismissalOnLock:(_Bool)arg1 forReason:(id)arg2;
+- (void)_dismissOnLock;
+- (void)_uiRelockedNotification:(id)arg1;
+- (void)_lockStateChangedNotification:(id)arg1;
+- (_Bool)isGrabberVisible;
+- (_Bool)isPresentingControllerTransitioning;
+- (_Bool)isVisible;
+- (void)loadView;
+- (_Bool)handleMenuButtonTap;
+- (void)removeObserver:(id)arg1;
+- (void)addObserver:(id)arg1;
+- (_Bool)isAvailableWhileLocked;
+
+// iOS 9
+- (_Bool)_shouldShowGrabberOnFirstSwipe;
+@end
+
+@interface FBSystemService : NSObject
+- (id)sharedInstance;
+- (void)exitAndRelaunch:(bool)arg1;
 @end
