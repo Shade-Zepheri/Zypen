@@ -5,8 +5,7 @@
 #import "headers.h"
 
 @implementation ZYCompatibilitySystem
-+(NSString*) aggregateSystemInfo
-{
++ (NSString*)aggregateSystemInfo {
 	NSMutableString *ret = [[NSMutableString alloc] init];
 
     struct utsname systemInfo;
@@ -18,19 +17,18 @@
     return ret;
 }
 
-+(void) showWarning:(NSString*)info
-{
++ (void)showWarning:(NSString*)info {
 	NSString *message = [NSString stringWithFormat:@"System info: %@\n\nWARNING: POTENTIAL INCOMPATIBILITY DETECTED\n%@", [self aggregateSystemInfo], info];
 
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplexer Compatibility" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	[alert show];
 }
 
-+(void) showError:(NSString*)info
-{
++ (void)showError:(NSString*)info {
 	NSString *message = [NSString stringWithFormat:@"System info: %@\n\n***ERROR***: POTENTIAL INCOMPATIBILITY DETECTED\n%@", [self aggregateSystemInfo], info];
 
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplexer Compatibility" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	[alert show];
 }
+
 @end

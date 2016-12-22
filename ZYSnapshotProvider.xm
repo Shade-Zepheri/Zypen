@@ -3,8 +3,7 @@
 #import "ZYDesktopWindow.h"
 
 @implementation ZYSnapshotProvider
-+(id) sharedInstance
-{
++(id) sharedInstance {
 	SHARED_INSTANCE2(ZYSnapshotProvider, sharedInstance->imageCache = [NSCache new]);
 }
 

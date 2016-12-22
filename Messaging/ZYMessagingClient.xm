@@ -14,8 +14,7 @@ extern BOOL allowClosingReachabilityNatively;
 @implementation ZYMessagingClient
 @synthesize allowedProcess;
 
-+(instancetype) sharedInstance
-{
++(instancetype) sharedInstance {
 	IF_SPRINGBOARD {
 		@throw [NSException exceptionWithName:@"IsSpringBoardException" reason:@"Cannot use ZYMessagingClient in SpringBoard" userInfo:nil];
 	}

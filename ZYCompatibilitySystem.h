@@ -1,8 +1,4 @@
-@interface ZYCompatibilitySystem : NSObject {
-
-}
-//+(instancetype) sharedInstance;
-
-+(void) showWarning:(NSString*)info;
-+(void) showError:(NSString*)info;
+@interface ZYCompatibilitySystem : NSObject
++ (void)showWarning:(NSString*)info;
++ (void)showError:(NSString*)info;
 @end

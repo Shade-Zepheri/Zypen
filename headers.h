@@ -877,3 +877,49 @@ typedef struct {
 - (id)sharedInstance;
 - (void)exitAndRelaunch:(bool)arg1;
 @end
+
+@interface LSApplicationProxy
++ (id)applicationProxyForIdentifier:(id)arg1;
+- (NSArray*)UIBackgroundModes;
+@property (nonatomic, readonly) NSURL *appStoreReceiptURL;
+@property (nonatomic, readonly) NSURL *bundleContainerURL;
+@property (nonatomic, readonly) NSURL *bundleURL;
+@end
+
+@class NSMapTable;
+
+@interface SBIconViewMap : NSObject {
+	NSMapTable* _iconViewsForIcons;
+	id<SBIconViewDelegate> _iconViewdelegate;
+	NSMapTable* _recycledIconViewsByType;
+	NSMapTable* _labels;
+	NSMapTable* _badges;
+}
+@property (nonatomic,readonly) SBIconModel* iconModel;
++ (SBIconViewMap *)switcherMap;
++ (SBIconViewMap *)homescreenMap;
++ (Class)iconViewClassForIcon:(SBIcon *)icon location:(int)location;
+- (id)init;
+- (void)dealloc;
+- (SBIconView *)mappedIconViewForIcon:(SBIcon *)icon;
+- (SBIconView *)_iconViewForIcon:(SBApplicationIcon *)icon;
+- (SBIconView *)iconViewForIcon:(SBIcon *)icon;
+- (void)_addIconView:(SBIconView *)iconView forIcon:(SBIcon *)icon;
+- (void)purgeIconFromMap:(SBIcon *)icon;
+- (void)_recycleIconView:(SBIconView *)iconView;
+- (void)recycleViewForIcon:(SBIcon *)icon;
+- (void)recycleAndPurgeAll;
+- (id)releaseIconLabelForIcon:(SBIcon *)icon;
+- (void)captureIconLabel:(id)label forIcon:(SBIcon *)icon;
+- (void)purgeRecycledIconViewsForClass:(Class)aClass;
+- (void)_modelListAddedIcon:(SBIcon *)icon;
+- (void)_modelRemovedIcon:(SBIcon *)icon;
+- (void)_modelReloadedIcons;
+- (void)_modelReloadedState;
+- (void)iconAccessoriesDidUpdate:(SBIcon *)icon;
+@end
+
+@interface SBIconModel (iOS81)
+- (id)visibleIconIdentifiers;
+- (id)applicationIconForBundleIdentifier:(id)arg1;
+@end
