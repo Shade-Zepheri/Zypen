@@ -5,34 +5,30 @@
 #import "ZYMessagingServer.h"
 
 @implementation ZYReachabilityManager
-+(id) sharedInstance
-{
++ (id)sharedInstance {
 	SHARED_INSTANCE(ZYReachabilityManager);
 }
 
--(void) launchTopAppWithIdentifier:(NSString*)identifier
-{
+- (void)launchTopAppWithIdentifier:(NSString*)identifier {
 	//[[objc_getClass("SBWorkspace") sharedInstance] ZY_closeCurrentView];
 	[GET_SBWORKSPACE ZY_launchTopAppWithIdentifier:identifier];
 }
 
--(void) launchWidget:(ZYWidget*)widget
-{
+- (void)launchWidget:(ZYWidget*)widget {
 	//[[objc_getClass("SBWorkspace") sharedInstance] ZY_closeCurrentView];
 	[GET_SBWORKSPACE ZY_setView:[widget view] preferredHeight:[widget preferredHeight]];
 }
 
--(void) showWidgetSelector
-{
+- (void)showWidgetSelector {
 	//[[objc_getClass("SBWorkspace") sharedInstance] ZY_closeCurrentView];
 	[GET_SBWORKSPACE ZY_showWidgetSelector];
 }
 
--(void) showAppWithSliderProvider:(__weak ZYAppSliderProviderView*)view
-{
+- (void)showAppWithSliderProvider:(__weak ZYAppSliderProviderView*)view {
 	//[[objc_getClass("SBWorkspace") sharedInstance] ZY_closeCurrentView];
 	[view updateCurrentView];
 	[view load];
 	[GET_SBWORKSPACE ZY_setView:view preferredHeight:view.frame.size.height];
 }
+
 @end

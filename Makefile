@@ -10,6 +10,8 @@ TWEAK_NAME = Zypen
 Zypen_FILES = $(wildcard *.xm) $(wildcard *.mm) $(wildcard *.m) \
 		$(wildcard Gestures/*.xm) $(wildcard Gestures/*.mm) $(wildcard Gestures/*.m) \
 		$(wildcard ReachApp/*.xm) $(wildcard ReachApp/*.mm) $(wildcard ReachApp/*.m) \
+		$(wildcard widgets/*.xm) $(wildcard widgets/*.mm) $(wildcard widgets/*.m) \
+		$(wildcard widgets/Core/*.xm) $(wildcard widgets/Core/*.mm) $(wildcard widgets/Core/*.m) \
 		$(wildcard widgets/Reachability/*.xm) $(wildcard widgets/Reachability/*.mm) $(wildcard widgets/Reachability/*.m) \
 		$(wildcard Messaging/*.xm) $(wildcard Messaging/*.mm) $(wildcard Messaging/*.m) \
 		$(wildcard Keyboard/*.xm) $(wildcard Keyboard/*.mm) $(wildcard Keyboard/*.m) \
@@ -24,5 +26,4 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 after-install::
 	install.exec "killall -9 backboardd"
 SUBPROJECTS += zypen
-SUBPROJECTS += zypenDaemon
 include $(THEOS_MAKE_PATH)/aggregate.mk
