@@ -272,6 +272,7 @@ id SBWorkspace$sharedInstance;
 }
 
 - (void)handleReachabilityModeActivated {
+    HBLogDebug(@"Reachability activated");
     %orig;
     if (![ZYSettings.sharedSettings reachabilityEnabled]) {
       return;
@@ -312,6 +313,7 @@ id SBWorkspace$sharedInstance;
         }
 
         if ([ZYSettings.sharedSettings showWidgetSelector]) {
+            HBLogDebug(@"Should Show App Selector");
             [self ZY_showWidgetSelector];
         } else {
             SBApplication *app = nil;
@@ -379,6 +381,7 @@ id SBWorkspace$sharedInstance;
 }
 
 %new - (void)ZY_showWidgetSelector {
+    HBLogDebug(@"Show Selector Widget Ran");
     if (view) {
       [self ZY_closeCurrentView];
     }
@@ -423,6 +426,7 @@ id SBWorkspace$sharedInstance;
 
 CGFloat startingY = -1;
 %new - (void)handlePan:(UIPanGestureRecognizer*)sender {
+    HBLogDebug(@"Handle Pan Ran");
     UIView *view = draggerView; //sender.view;
 
     if (sender.state == UIGestureRecognizerStateBegan) {
@@ -486,10 +490,12 @@ CGFloat startingY = -1;
 }
 
 %new - (void)ZY_updateViewSizes {
+  HBLogDebug(@"ZY Update View Sizes");
     [self updateViewSizes:draggerView.center animate:YES];
 }
 
 %new - (void)updateViewSizes:(CGPoint)center animate:(BOOL)animate {
+  HBLogDebug(@"Actually Update Sizes");
     // Resizing
     UIWindow *topWindow = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
     UIWindow *bottomWindow = MSHookIvar<UIWindow*>(self, "_reachabilityWindow");
@@ -615,6 +621,7 @@ CGFloat startingY = -1;
 }
 
 %new - (void)ZY_launchTopAppWithIdentifier:(NSString*)bundleIdentifier {
+  HBLogDebug(@"Launch with top Identifier");
     UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
     SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:lastBundleIdentifier];
     FBScene *scene = [app mainScene];

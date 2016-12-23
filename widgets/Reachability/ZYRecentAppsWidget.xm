@@ -35,7 +35,7 @@
   return savedX;
 }
 
--(UIView*) viewForFrame:(CGRect)frame preferredIconSize:(CGSize)size_ iconsThatFitPerLine:(NSInteger)iconsPerLine spacing:(CGFloat)spacing {
+- (UIView*)viewForFrame:(CGRect)frame preferredIconSize:(CGSize)size_ iconsThatFitPerLine:(NSInteger)iconsPerLine spacing:(CGFloat)spacing {
 	viewFrame = frame;
 	CGSize size = [%c(SBIconView) defaultIconSize];
 	spacing = (frame.size.width - (iconsPerLine * size.width)) / (iconsPerLine + 0);
@@ -66,8 +66,8 @@
 
 	for (NSString *str in recents) {
 		app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:str];
-    SBApplicationIcon *icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
-    SBIconView *iconView = [[%c(SBIconViewMap) homescreenMap] _iconViewForIcon:icon];
+    SBApplicationIcon *icon = [[%c(SBApplicationIcon) alloc] initWithApplication:app];
+    UIImageView *iconView = [[UIImageView alloc] initWithImage:[icon getIconImage:1]];
     if (!iconView) {
       continue;
     }
@@ -83,7 +83,7 @@
 			}
 			isTop = !isTop;
 		}
-
+				iconView.userInteractionEnabled = YES;
         iconView.frame = CGRectMake(contentSize.width, contentSize.height, iconView.frame.size.width, iconView.frame.size.height);
 
         iconView.tag = index++;

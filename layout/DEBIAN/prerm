@@ -1,7 +1,0 @@
-#!/bin/bash
-
-echo "Unloading Daemon"
-
-launchctl unload -w /Library/LaunchDaemons/com.shade.zypen.fsdaemon.plist
-
-echo "Insert Inspirational Message Here"

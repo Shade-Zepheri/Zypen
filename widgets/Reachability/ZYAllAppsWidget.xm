@@ -51,8 +51,7 @@
 	allAppsView.pagingEnabled = [ZYSettings.sharedSettings pagingEnabled];
 
 	static NSMutableArray *allApps = nil;
-	if (!allApps)
-	{
+	if (!allApps) {
 		allApps = [[[[%c(SBIconViewMap) homescreenMap] iconModel] visibleIconIdentifiers] mutableCopy];
 	    [allApps sortUsingComparator: ^(NSString* a, NSString* b) {
 	    	NSString *a_ = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:a].displayName;
@@ -65,23 +64,19 @@
 	isTop = YES;
 	intervalCount = 1;
 	hasSecondRow = NO;
-	for (NSString *str in allApps)
-	{
+	for (NSString *str in allApps) {
 		app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:str];
-        SBApplicationIcon *icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
-        SBIconView *iconView = [[%c(SBIconViewMap) homescreenMap] _iconViewForIcon:icon];
-        if (!iconView || [icon isKindOfClass:[%c(SBApplicationIcon) class]] == NO)
-        	continue;
+    SBApplicationIcon *icon = [[%c(SBApplicationIcon) alloc] initWithApplication:app];
+    UIImageView *iconView = [[UIImageView alloc] initWithImage:[icon getIconImage:1]];
+    if (!iconView || [icon isKindOfClass:[%c(SBApplicationIcon) class]] == NO) {
+			continue;
+		}
 
-        if (interval != 0 && contentSize.width + iconView.frame.size.width > interval * intervalCount)
-		{
-			if (isTop)
-			{
+    if (interval != 0 && contentSize.width + iconView.frame.size.width > interval * intervalCount) {
+			if (isTop) {
 				contentSize.height += size.height + 10;
 				contentSize.width -= interval;
-			}
-			else
-			{
+			} else {
 				intervalCount++;
 				contentSize.height -= (size.height + 10);
 				width += interval;
@@ -89,7 +84,7 @@
 			hasSecondRow = YES;
 			isTop = !isTop;
 		}
-
+				iconView.userInteractionEnabled = YES;
         iconView.frame = CGRectMake(contentSize.width, contentSize.height, iconView.frame.size.width, iconView.frame.size.height);
         iconView.tag = app.pid;
         iconView.restorationIdentifier = app.bundleIdentifier;

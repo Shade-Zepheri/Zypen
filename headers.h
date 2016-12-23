@@ -18,7 +18,6 @@
 #include <sys/sysctl.h>
 #import <notify.h>
 #import <IOKit/hid/IOHIDEvent.h>
-#import <GraphicsServices/GraphicsServices.h>
 
 #define ZY_BASE_PATH @"/Library/Zypen"
 
@@ -163,11 +162,11 @@ return sharedInstance;
 @end
 
 @interface SBApplicationController : NSObject
-+(id) sharedInstance;
--(SBApplication*) applicationWithBundleIdentifier:(NSString*)identifier;
--(SBApplication*) applicationWithDisplayIdentifier:(NSString*)identifier;
--(SBApplication*)applicationWithPid:(int)arg1;
--(SBApplication*) ZY_applicationWithBundleIdentifier:(NSString*)bundleIdentifier;
++ (id)sharedInstance;
+- (SBApplication*)applicationWithBundleIdentifier:(NSString*)identifier;
+- (SBApplication*)applicationWithDisplayIdentifier:(NSString*)identifier;
+- (SBApplication*)applicationWithPid:(int)arg1;
+- (SBApplication*)ZY_applicationWithBundleIdentifier:(NSString*)bundleIdentifier;
 @end
 
 @interface SBDisplayItem : NSObject
@@ -886,6 +885,33 @@ typedef struct {
 @property (nonatomic, readonly) NSURL *bundleURL;
 @end
 
+@interface SBIconLabelView : UIView
+@end
+
+@interface SBIcon (iOS81)
+-(BOOL) isBeta;
+- (_Bool)isApplicationIcon;
+@end
+
+@interface SBIconModel (iOS81)
+- (id)visibleIconIdentifiers;
+- (id)applicationIconForBundleIdentifier:(id)arg1;
+@end
+
+@interface SBIconModel (iOS40)
+- (/*SBApplicationIcon*/SBIcon *)applicationIconForDisplayIdentifier:(NSString *)displayIdentifier;
+@end
+
+@interface SBIcon (iOS40)
+- (void)prepareDropGlow;
+- (UIImageView *)dropGlow;
+- (void)showDropGlow:(BOOL)showDropGlow;
+- (long long)badgeValue;
+- (id)leafIdentifier;
+- (SBApplication*)application;
+- (NSString*)applicationBundleID;
+@end
+
 @class NSMapTable;
 
 @interface SBIconViewMap : NSObject {
@@ -895,9 +921,7 @@ typedef struct {
 	NSMapTable* _labels;
 	NSMapTable* _badges;
 }
-@property (nonatomic,readonly) SBIconModel* iconModel;
-+ (SBIconViewMap *)switcherMap;
-+ (SBIconViewMap *)homescreenMap;
++ (id)homescreenMap;
 + (Class)iconViewClassForIcon:(SBIcon *)icon location:(int)location;
 - (id)init;
 - (void)dealloc;
@@ -919,7 +943,6 @@ typedef struct {
 - (void)iconAccessoriesDidUpdate:(SBIcon *)icon;
 @end
 
-@interface SBIconModel (iOS81)
-- (id)visibleIconIdentifiers;
-- (id)applicationIconForBundleIdentifier:(id)arg1;
+@interface SBIconViewMap (iOS6)
+@property (nonatomic, readonly) SBIconModel *iconModel;
 @end

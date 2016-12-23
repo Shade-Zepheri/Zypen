@@ -1,9 +1,0 @@
-#!/bin/bash
-
-echo "Loading Daemon"
-
-chgrp wheel /Library/LaunchDaemons/com.shade.zypen.fsdaemon.plist
-chown root /Library/LaunchDaemons/com.shade.zypen.fsdaemon.plist
-launchctl load -w /Library/LaunchDaemons/com.shade.zypen.fsdaemon.plist
-
-echo "Insert Inspirational Message Here"

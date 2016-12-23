@@ -57,8 +57,8 @@
 	favoritesView.pagingEnabled = [ZYSettings.sharedSettings pagingEnabled];
 	for (NSString *str in favorites) {
 		app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:str];
-    SBApplicationIcon *icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
-    SBIconView *iconView = [[%c(SBIconViewMap) homescreenMap] _iconViewForIcon:icon];
+    SBApplicationIcon *icon = [[%c(SBApplicationIcon) alloc] initWithApplication:app];
+    UIImageView *iconView = [[UIImageView alloc] initWithImage:[icon getIconImage:1]];
     if (!iconView) {
       continue;
     }
@@ -75,7 +75,7 @@
 			hasSecondRow = YES;
 			isTop = !isTop;
 		}
-
+				iconView.userInteractionEnabled = YES;
         iconView.frame = CGRectMake(contentSize.width, contentSize.height, iconView.frame.size.width, iconView.frame.size.height);
 
         iconView.tag = app.pid;
