@@ -3,6 +3,7 @@
 #import "ZYReachabilityManager.h"
 #import "ZYWidgetSectionManager.h"
 #import "ZYSettings.h"
+#import <AppList/AppList.h>
 
 @interface ZYAllAppsWidget () {
 	CGFloat savedX;
@@ -52,12 +53,11 @@
 
 	static NSMutableArray *allApps = nil;
 	if (!allApps) {
-		allApps = [[[[%c(SBIconViewMap) homescreenMap] iconModel] visibleIconIdentifiers] mutableCopy];
-	    [allApps sortUsingComparator: ^(NSString* a, NSString* b) {
-	    	NSString *a_ = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:a].displayName;
-	    	NSString *b_ = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:b].displayName;
-	        return [a_ caseInsensitiveCompare:b_];
-		}];
+		ALApplicationList *applicationList = [ALApplicationList sharedApplicationList];
+		NSArray *sortedAppList = [[applicationList.applications allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+	    return [[applicationList.applications objectForKey:obj1] caseInsensitiveCompare:[applicationList.applications objectForKey:obj2]];}];
+		allApps = [NSMutableArray arrayWithArray:sortedAppList];
+		HBLogDebug(@"%@", allApps);
 		//[allApps removeObject:currentBundleIdentifier];
 	}
 

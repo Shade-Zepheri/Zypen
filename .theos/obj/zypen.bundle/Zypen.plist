@@ -46,6 +46,18 @@
 				<key>detail</key>
 				<string>ZYPAboutController</string>
 			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+			</dict>
+			<dict>
+				<key>action</key>
+				<string>resetData</string>
+				<key>cell</key>
+				<string>PSButtonCell</string>
+				<key>label</key>
+				<string>Reset All Settings and Respring</string>
+			</dict>
 		</array>
 		<key>title</key>
 		<string></string>
