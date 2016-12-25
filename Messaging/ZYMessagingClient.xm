@@ -24,7 +24,8 @@ extern BOOL allowClosingReachabilityNatively;
 		sharedInstance.hasRecievedData = NO;
 
 		if ([NSBundle.mainBundle.executablePath hasPrefix:@"/Applications"] ||
-			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/db/stash"] ||
+			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/stash/appsstash"] ||
+			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/containers/Bundle/Application"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/mobile/Applications"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/mobile/Applications"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/mobile/Containers/Bundle/Application"] ||
@@ -54,15 +55,8 @@ extern BOOL allowClosingReachabilityNatively;
 
 	_currentData = data; // Initialize data
 
-	serverCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.shade.zypen.messaging.server"];
-
-    void* handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
-    if (handle) {
-        void (*rocketbootstrap_distributedmessagingcenter_apply)(CPDistributedMessagingCenter*);
-        rocketbootstrap_distributedmessagingcenter_apply = (void(*)(CPDistributedMessagingCenter*))dlsym(handle, "rocketbootstrap_distributedmessagingcenter_apply");
-        rocketbootstrap_distributedmessagingcenter_apply(serverCenter);
-        dlclose(handle);
-    }
+	serverCenter = [CPDistributedMessagingCenter centerNamed:@"com.shade.zypen.messaging.server"];
+	rocketbootstrap_distributedmessagingcenter_apply(serverCenter);
 }
 
 - (void)alertUser:(NSString*)description {
@@ -95,9 +89,11 @@ extern BOOL allowClosingReachabilityNatively;
 		[data[@"data"] getBytes:&actualData length:sizeof(actualData)];
 		[self updateWithData:actualData];
 		self.hasRecievedData = YES;
+		HBLogInfo(@"Has Recieved data");
 	} else {
 		if (tries <= 4) {
 			[self _requestUpdateFromServerWithTries:tries + 1];
+			HBLogInfo(@"Tyring Again");
 		} else {
 			[self alertUser:[NSString stringWithFormat:@"App \"%@\" is unable to communicate with messaging server", [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"] ?: NSBundle.mainBundle.bundleIdentifier]];
 		}
@@ -173,14 +169,38 @@ extern BOOL allowClosingReachabilityNatively;
 	}
 }
 
-- (BOOL)shouldUseExternalKeyboard { return _currentData.shouldUseExternalKeyboard; }
-- (BOOL)shouldResize { return _currentData.shouldForceSize; }
-- (CGSize)resizeSize { return CGSizeMake(_currentData.wantedClientWidth, _currentData.wantedClientHeight); }
-- (BOOL)shouldHideStatusBar { return _currentData.shouldForceStatusBar && _currentData.statusBarVisibility == NO; }
-- (BOOL)shouldShowStatusBar { return _currentData.shouldForceStatusBar && _currentData.statusBarVisibility == YES; }
-- (UIInterfaceOrientation)forcedOrientation { return _currentData.forcedOrientation; }
-- (BOOL)shouldForceOrientation { return _currentData.shouldForceOrientation; }
-- (BOOL)isBeingHosted { return _currentData.isBeingHosted; }
+- (BOOL)shouldUseExternalKeyboard {
+	return _currentData.shouldUseExternalKeyboard;
+}
+
+- (BOOL)shouldResize {
+	return _currentData.shouldForceSize;
+}
+
+- (CGSize)resizeSize {
+	return CGSizeMake(_currentData.wantedClientWidth, _currentData.wantedClientHeight);
+}
+
+- (BOOL)shouldHideStatusBar {
+	return _currentData.shouldForceStatusBar && _currentData.statusBarVisibility == NO;
+}
+
+- (BOOL)shouldShowStatusBar {
+	return _currentData.shouldForceStatusBar && _currentData.statusBarVisibility == YES;
+}
+
+- (UIInterfaceOrientation)forcedOrientation {
+	return _currentData.forcedOrientation;
+}
+
+- (BOOL)shouldForceOrientation {
+	return _currentData.shouldForceOrientation;
+}
+
+- (BOOL)isBeingHosted {
+	return _currentData.isBeingHosted;
+}
+
 @end
 
 void reloadClientData(CFNotificationCenterRef center,

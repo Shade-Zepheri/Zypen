@@ -19,7 +19,7 @@ Zypen_FILES = $(wildcard *.xm) $(wildcard *.mm) $(wildcard *.m) \
 		$(wildcard Theming/*.xm) $(wildcard Theming/*.mm) $(wildcard Theming/*.m)
 Zypen_FRAMEWORKS = UIKit QuartzCore CoreGraphics CoreImage
 Zypen_PRIVATE_FRAMEWORKS = GraphicsServices BackBoardServices AppSupport IOKit
-Zypen_LIBRARIES = applist
+Zypen_LIBRARIES = applist rocketbootstrap
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

@@ -64,16 +64,8 @@ extern BOOL $__IS_SPRINGBOARD;
 #define kBGModeBluetoothPeripheral     @"bluetooth-peripheral"
 // newsstand-content
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
-void BKSHIDServicesCancelTouchesOnMainDisplay();
-
-#ifdef __cplusplus
-}
-#endif
+extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
+extern "C" void BKSHIDServicesCancelTouchesOnMainDisplay();
 
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 #define DEGREES_TO_RADIANS(radians) ((radians) * (M_PI / 180))

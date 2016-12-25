@@ -36,7 +36,7 @@ extern BOOL overrideDisableForStatusBar;
 %end
 
 %hook SpringBoard
--(void) _performDeferredLaunchWork {
+- (void)_performDeferredLaunchWork {
     %orig;
     [ZYDesktopManager sharedInstance]; // load desktop (and previous windows!)
 

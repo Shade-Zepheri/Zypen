@@ -87,7 +87,7 @@ struct VelocityData {
             location.y = location.x;
             location.x = t;
         }
-        NSLog(@"[ReachApp] _UIScreenEdgePanRecognizer location: %@", NSStringFromCGPoint(location));
+        //NSLog(@"[ReachApp] _UIScreenEdgePanRecognizer location: %@", NSStringFromCGPoint(location));
         if ([ZYGestureManager.sharedInstance handleMovementOrStateUpdate:UIGestureRecognizerStateBegan withPoint:location velocity:screenEdgePanRecognizer.ZY_velocity forEdge:screenEdgePanRecognizer.targetEdges]) {
             currentEdge9 = screenEdgePanRecognizer.targetEdges;
             BKSHIDServicesCancelTouchesOnMainDisplay(); // This is needed or open apps, etc will still get touch events. For example open settings app + swipeover without this line and you can still scroll up/down through the settings
@@ -121,7 +121,7 @@ void touch_event(void *target, void *refcon, IOHIDServiceRef service, IOHIDEvent
 
             CGPoint rotatedLocation = (CGPoint) { rotatedX, rotatedY };
 
-            NSLog(@"[ReachApp] (%f, %d) %@ -> %@", density, isTracking, NSStringFromCGPoint(location), NSStringFromCGPoint(rotatedLocation));
+            //NSLog(@"[ReachApp] (%f, %d) %@ -> %@", density, isTracking, NSStringFromCGPoint(location), NSStringFromCGPoint(rotatedLocation));
 
             if (isTracking == NO) {
                 for (_UIScreenEdgePanRecognizer *recognizer in gestureRecognizers) {
@@ -143,7 +143,7 @@ void touch_event(void *target, void *refcon, IOHIDServiceRef service, IOHIDEvent
                 currentEdge9 = UIRectEdgeNone;
                 isTracking = NO;
 
-                NSLog(@"[ReachApp] touch ended.");
+                //NSLog(@"[ReachApp] touch ended.");
             } else {
                 _UIScreenEdgePanRecognizer *targetRecognizer = nil;
 

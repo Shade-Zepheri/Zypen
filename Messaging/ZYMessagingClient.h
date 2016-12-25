@@ -1,5 +1,6 @@
 #import "headers.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #import "ZYMessaging.h"
 
 @interface ZYMessagingClient : NSObject {
