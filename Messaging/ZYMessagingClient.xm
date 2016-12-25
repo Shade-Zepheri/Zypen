@@ -89,11 +89,9 @@ extern BOOL allowClosingReachabilityNatively;
 		[data[@"data"] getBytes:&actualData length:sizeof(actualData)];
 		[self updateWithData:actualData];
 		self.hasRecievedData = YES;
-		HBLogInfo(@"Has Recieved data");
 	} else {
 		if (tries <= 4) {
 			[self _requestUpdateFromServerWithTries:tries + 1];
-			HBLogInfo(@"Tyring Again");
 		} else {
 			[self alertUser:[NSString stringWithFormat:@"App \"%@\" is unable to communicate with messaging server", [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"] ?: NSBundle.mainBundle.bundleIdentifier]];
 		}

@@ -22,7 +22,7 @@ CGSize forcePhoneModeSize = ZY_6P_SIZE;
                 // force resizing seems to render touches incorrectly ¯\_(ツ)_/¯
             IF_NOT_SPRINGBOARD {
                 if ([ZYFakePhoneMode shouldFakeForThisProcess]) {
-                    dlopen("/Library/MobileSubstrate/DynamicLibraries/ReachAppFakePhoneMode.dylib", RTLD_NOW);
+                    dlopen("/Library/MobileSubstrate/DynamicLibraries/ZYFakePhoneMode.dylib", RTLD_NOW);
                 }
             }
         });

@@ -567,8 +567,7 @@ extern BOOL allowOpenApp;
 	}];
 }
 
--(void) handleTripleTap:(UITapGestureRecognizer*)tap
-{
+-(void) handleTripleTap:(UITapGestureRecognizer*)tap{
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 		[ZYMessagingServer.sharedInstance forcePhoneMode:![ZYFakePhoneMode shouldFakeForAppWithIdentifier:attachedView.app.bundleIdentifier] forIdentifier:attachedView.app.bundleIdentifier andRelaunchApp:YES];
 }

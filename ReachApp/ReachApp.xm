@@ -495,7 +495,7 @@ CGFloat startingY = -1;
     SBWindow *bottomWindow = MSHookIvar<SBWindow*>(self, "_reachabilityWindow");
 
     CGRect topFrame = CGRectMake(topWindow.frame.origin.x, topWindow.frame.origin.y, topWindow.frame.size.width, center.y);
-    CGRect bottomFrame = CGRectMake(bottomWindow.frame.origin.x, center.y, bottomWindow.frame.size.width, [[UIScreen mainScreen] bounds].size.height - center.y);
+    CGRect bottomFrame = CGRectMake(bottomWindow.frame.origin.x, center.y, bottomWindow.frame.size.width, UIScreen.mainScreen._referenceBounds.size.height - center.y);
 
     if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
         topFrame = CGRectMake(topWindow.frame.origin.x, 0, topWindow.frame.size.width, center.y);
@@ -579,14 +579,13 @@ CGFloat startingY = -1;
         if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
             [ZYMessagingServer.sharedInstance moveApp:targetIdentifier toOrigin:CGPointMake(bottomWindow.frame.size.height, 0) completion:nil];
         }
-
         [ZYMessagingServer.sharedInstance resizeApp:targetIdentifier toSize:CGSizeMake(width, height) completion:nil];
     }
-
+    /* Causing Problems for Now
     if ([view isKindOfClass:[%c(FBWindowContextHostWrapperView) class]] == NO && [view isKindOfClass:[ZYAppSliderProviderView class]] == NO) {
         return; // only resize when the app is being shown. That way it's more like native Reachability
     }
-
+    */
     [ZYMessagingServer.sharedInstance setHosted:YES forIdentifier:currentBundleIdentifier completion:nil];
 
     [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
