@@ -210,7 +210,7 @@ id SBWorkspace$sharedInstance;
                 if (app && [app pid] && [app mainScene]) {
                     FBScene *scene = [app mainScene];
                     FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
-                    SET_BACKGROUNDED(settings, YES);
+                    [settings setBackgrounded:YES];
                     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
                     MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
                     MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
@@ -222,7 +222,7 @@ id SBWorkspace$sharedInstance;
                     }
 
                     FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
-                    [contextHostManager disableHostingForRequester:@"reachapp"];
+                    [contextHostManager disableHostingForRequester:lastBundleIdentifier];
                 }
             }
             view = nil;
@@ -490,18 +490,17 @@ CGFloat startingY = -1;
 }
 
 %new - (void)ZY_updateViewSizes {
-  HBLogDebug(@"ZY Update View Sizes");
     [self updateViewSizes:draggerView.center animate:YES];
 }
 
 %new - (void)updateViewSizes:(CGPoint)center animate:(BOOL)animate {
-  HBLogDebug(@"Actually Update Sizes");
+    HBLogDebug(@"Actually Update Sizes");
     // Resizing
-    UIWindow *topWindow = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
-    UIWindow *bottomWindow = MSHookIvar<UIWindow*>(self, "_reachabilityWindow");
+    SBWindow *topWindow = MSHookIvar<SBWindow*>(self, "_reachabilityEffectWindow");
+    SBWindow *bottomWindow = MSHookIvar<SBWindow*>(self, "_reachabilityWindow");
 
     CGRect topFrame = CGRectMake(topWindow.frame.origin.x, topWindow.frame.origin.y, topWindow.frame.size.width, center.y);
-    CGRect bottomFrame = CGRectMake(bottomWindow.frame.origin.x, center.y, bottomWindow.frame.size.width, UIScreen.mainScreen._referenceBounds.size.height - center.y);
+    CGRect bottomFrame = CGRectMake(bottomWindow.frame.origin.x, center.y, bottomWindow.frame.size.width, [[UIScreen mainScreen] bounds].size.height - center.y);
 
     if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
         topFrame = CGRectMake(topWindow.frame.origin.x, 0, topWindow.frame.size.width, center.y);
@@ -651,11 +650,13 @@ CGFloat startingY = -1;
     FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
 
     FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
-    SET_BACKGROUNDED(settings, NO);
+    [settings setBackgrounded:NO];
     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
 
-    [contextHostManager enableHostingForRequester:@"reachapp" orderFront:YES];
-    view = [contextHostManager hostViewForRequester:@"reachapp" enableAndOrderFront:YES];
+    [[UIApplication sharedApplication] launchApplicationWithIdentifier:bundleIdentifier suspended:YES];
+
+    [contextHostManager enableHostingForRequester:bundleIdentifier orderFront:YES];
+    view = [contextHostManager hostViewForRequester:bundleIdentifier enableAndOrderFront:YES];
 
     if (draggerView && draggerView.superview == w) {
         [w insertSubview:view belowSubview:draggerView];

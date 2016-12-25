@@ -9,35 +9,29 @@ extern "C" void BKSTerminateApplicationForReasonAndReportWithDescription(NSStrin
 @end
 
 @implementation ZYAppKiller : NSObject
-+(instancetype) sharedInstance
-{
++ (instancetype)sharedInstance {
 	SHARED_INSTANCE2(ZYAppKiller,
 		[sharedInstance initialize];
 	);
 }
 
-+(void) killAppWithIdentifier:(NSString*)identifier
-{
++ (void)killAppWithIdentifier:(NSString*)identifier {
 	return [ZYAppKiller killAppWithIdentifier:identifier completion:nil];
 }
 
-+(void) killAppWithIdentifier:(NSString*)identifier completion:(void(^)())handler
-{
++ (void)killAppWithIdentifier:(NSString*)identifier completion:(void(^)())handler {
 	return [ZYAppKiller killAppWithSBApplication:[[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier] completion:handler];
 }
 
-+(void) killAppWithSBApplication:(SBApplication*)app
-{
++ (void)killAppWithSBApplication:(SBApplication*)app {
 	return [ZYAppKiller killAppWithSBApplication:app completion:nil];
 }
 
-+(void) killAppWithSBApplication:(SBApplication*)app completion:(void(^)())handler
-{
++ (void)killAppWithSBApplication:(SBApplication*)app completion:(void(^)())handler {
 	return [ZYAppKiller checkAppDead:app withTries:0 andCompletion:handler];
 }
 
-+(void) checkAppDead:(SBApplication*)app withTries:(int)tries andCompletion:(void(^)())handler
-{
++ (void)checkAppDead:(SBApplication*)app withTries:(int)tries andCompletion:(void(^)())handler {
 	/*
 	BOOL isDeadOrMaxed = (app.pid == 0 || app.isRunning == NO) && tries < 5;
 	if (isDeadOrMaxed)
@@ -75,19 +69,16 @@ extern "C" void BKSTerminateApplicationForReasonAndReportWithDescription(NSStrin
 	*/
 
 	[ZYAppKiller.sharedInstance->completionDictionary setObject:[handler copy] forKey:app.bundleIdentifier];
-	BKSTerminateApplicationForReasonAndReportWithDescription(app.bundleIdentifier, 5, 1, @"Multiplexer requested this process to be slayed.");
+	BKSTerminateApplicationForReasonAndReportWithDescription(app.bundleIdentifier, 5, 1, @"Zypen requested this process to be slayed.");
 }
 
--(void) initialize
-{
+- (void)initialize {
 	completionDictionary = [NSMutableDictionary dictionary];
 	[ZYRunningAppsProvider.sharedInstance addTarget:self];
 }
 
--(void) appDidDie:(__unsafe_unretained SBApplication*)app
-{
-	if (completionDictionary && [completionDictionary objectForKey:app.bundleIdentifier] != nil)
-	{
+- (void)appDidDie:(__unsafe_unretained SBApplication*)app {
+	if (completionDictionary && [completionDictionary objectForKey:app.bundleIdentifier] != nil) {
 		dispatch_block_t block = completionDictionary[app.bundleIdentifier];
 		block();
 		[completionDictionary removeObjectForKey:app.bundleIdentifier];

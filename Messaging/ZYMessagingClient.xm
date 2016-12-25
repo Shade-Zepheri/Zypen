@@ -28,16 +28,14 @@ extern BOOL allowClosingReachabilityNatively;
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/mobile/Applications"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/mobile/Applications"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/mobile/Containers/Bundle/Application"] ||
-			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/mobile/Containers/Bundle/Application"])
-		{
+			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/mobile/Containers/Bundle/Application"]) {
 			HBLogDebug(@"[ReachApp] valid process for ZYMessagingClient");
 			sharedInstance->allowedProcess = YES;
 		}
 	);
 }
 
--(void) loadMessagingCenter
-{
+- (void)loadMessagingCenter {
 	ZYMessageAppData data;
 
 	data.shouldForceSize = NO;
@@ -59,8 +57,7 @@ extern BOOL allowClosingReachabilityNatively;
 	serverCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.shade.zypen.messaging.server"];
 
     void* handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
-    if (handle)
-    {
+    if (handle) {
         void (*rocketbootstrap_distributedmessagingcenter_apply)(CPDistributedMessagingCenter*);
         rocketbootstrap_distributedmessagingcenter_apply = (void(*)(CPDistributedMessagingCenter*))dlsym(handle, "rocketbootstrap_distributedmessagingcenter_apply");
         rocketbootstrap_distributedmessagingcenter_apply(serverCenter);
@@ -68,16 +65,11 @@ extern BOOL allowClosingReachabilityNatively;
     }
 }
 
--(void) alertUser:(NSString*)description
-{
-#if DEBUG
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Zypen" message:description delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
-#endif
+- (void)alertUser:(NSString*)description {
+		HBLogError(@"%@", description);
 }
 
--(void) _requestUpdateFromServerWithTries:(int)tries
-{
+- (void)_requestUpdateFromServerWithTries:(int)tries {
 	/*if (!NSBundle.mainBundle.bundleIdentifier ||
 		IS_PROCESS("assertiond") ||  // Don't need to load into this anyway
 		IS_PROCESS("searchd") ||  // safe-mode crash fix
@@ -86,8 +78,7 @@ extern BOOL allowClosingReachabilityNatively;
 		IS_PROCESS("backboardd") // Backboardd uses its own messaging center for what it does.
 		)*/
 
-	if (allowedProcess == NO)
-	{
+	if (allowedProcess == NO) {
 		// Anything that's not a UIApp (system app or user app) doesn't need this messaging client
 		// Attempting to reach out will either:
 		// 1. hang the process
@@ -99,31 +90,25 @@ extern BOOL allowClosingReachabilityNatively;
 
 	NSDictionary *dict = @{ @"bundleIdentifier": NSBundle.mainBundle.bundleIdentifier };
 	NSDictionary *data = [serverCenter sendMessageAndReceiveReplyName:ZYMessagingUpdateAppInfoMessageName userInfo:dict];
-	if (data && [data objectForKey:@"data"] != nil)
-	{
+	if (data && [data objectForKey:@"data"] != nil) {
 		ZYMessageAppData actualData;
 		[data[@"data"] getBytes:&actualData length:sizeof(actualData)];
 		[self updateWithData:actualData];
 		self.hasRecievedData = YES;
-	}
-	else
-	{
-		if (tries <= 4)
+	} else {
+		if (tries <= 4) {
 			[self _requestUpdateFromServerWithTries:tries + 1];
-		else
-		{
+		} else {
 			[self alertUser:[NSString stringWithFormat:@"App \"%@\" is unable to communicate with messaging server", [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"] ?: NSBundle.mainBundle.bundleIdentifier]];
 		}
 	}
 }
 
--(void) requestUpdateFromServer
-{
+- (void)requestUpdateFromServer {
 	[self _requestUpdateFromServerWithTries:0];
 }
 
--(void) updateWithData:(ZYMessageAppData)data
-{
+- (void)updateWithData:(ZYMessageAppData)data {
 	BOOL didStatusBarVisibilityChange = _currentData.shouldForceStatusBar != data.shouldForceStatusBar;
 	BOOL didOrientationChange = _currentData.shouldForceOrientation != data.shouldForceOrientation;
 	BOOL didSizingChange  =_currentData.shouldForceSize != data.shouldForceSize;
@@ -131,49 +116,46 @@ extern BOOL allowClosingReachabilityNatively;
 	/* THE REAL IMPORTANT BIT */
 	_currentData = data;
 
-	if (didStatusBarVisibilityChange && data.shouldForceStatusBar == NO)
-   		[UIApplication.sharedApplication ZY_forceStatusBarVisibility:_currentData.statusBarVisibility orRevert:YES];
-   	else if (data.shouldForceStatusBar)
-   		[UIApplication.sharedApplication ZY_forceStatusBarVisibility:_currentData.statusBarVisibility orRevert:NO];
+	if (didStatusBarVisibilityChange && data.shouldForceStatusBar == NO){
+		[UIApplication.sharedApplication ZY_forceStatusBarVisibility:_currentData.statusBarVisibility orRevert:YES];
+	} else if (data.shouldForceStatusBar) {
+		[UIApplication.sharedApplication ZY_forceStatusBarVisibility:_currentData.statusBarVisibility orRevert:NO];
+	}
 
-	if (didSizingChange && data.shouldForceSize == NO)
-	   	[UIApplication.sharedApplication ZY_updateWindowsForSizeChange:CGSizeMake(data.wantedClientWidth, data.wantedClientHeight) isReverting:YES];
-	else if (data.shouldForceSize)
-	   	[UIApplication.sharedApplication ZY_updateWindowsForSizeChange:CGSizeMake(data.wantedClientWidth, data.wantedClientHeight) isReverting:NO];
+	if (didSizingChange && data.shouldForceSize == NO) {
+		[UIApplication.sharedApplication ZY_updateWindowsForSizeChange:CGSizeMake(data.wantedClientWidth, data.wantedClientHeight) isReverting:YES];
+	} else if (data.shouldForceSize) {
+		[UIApplication.sharedApplication ZY_updateWindowsForSizeChange:CGSizeMake(data.wantedClientWidth, data.wantedClientHeight) isReverting:NO];
+	}
 
-	if (didOrientationChange && data.shouldForceOrientation == NO)
+	if (didOrientationChange && data.shouldForceOrientation == NO) {
 		[UIApplication.sharedApplication ZY_forceRotationToInterfaceOrientation:data.forcedOrientation isReverting:YES];
-	else if (data.shouldForceOrientation)
+	} else if (data.shouldForceOrientation) {
 		[UIApplication.sharedApplication ZY_forceRotationToInterfaceOrientation:data.forcedOrientation isReverting:NO];
-
+	}
 	allowClosingReachabilityNatively = YES;
 }
 
--(void) notifyServerWithKeyboardContextId:(unsigned int)cid
-{
+- (void)notifyServerWithKeyboardContextId:(unsigned int)cid {
 	NSDictionary *dict = @{ @"contextId": @(cid), @"bundleIdentifier": NSBundle.mainBundle.bundleIdentifier };
 	[serverCenter sendMessageName:ZYMessagingUpdateKeyboardContextIdMessageName userInfo:dict];
 }
 
--(void) notifyServerToShowKeyboard
-{
+- (void)notifyServerToShowKeyboard {
 	NSDictionary *dict = @{ @"bundleIdentifier": NSBundle.mainBundle.bundleIdentifier };
 	[serverCenter sendMessageName:ZYMessagingShowKeyboardMessageName userInfo:dict];
 }
 
--(void) notifyServerToHideKeyboard
-{
+- (void)notifyServerToHideKeyboard {
 	[serverCenter sendMessageName:ZYMessagingHideKeyboardMessageName userInfo:nil];
 }
 
--(void) notifyServerOfKeyboardSizeUpdate:(CGSize)size
-{
+- (void)notifyServerOfKeyboardSizeUpdate:(CGSize)size {
 	NSDictionary *dict = @{ @"size": NSStringFromCGSize(size) };
 	[serverCenter sendMessageName:ZYMessagingUpdateKeyboardSizeMessageName userInfo:dict];
 }
 
--(BOOL) notifyServerToOpenURL:(NSURL*)url openInWindow:(BOOL)openWindow
-{
+- (BOOL)notifyServerToOpenURL:(NSURL*)url openInWindow:(BOOL)openWindow {
 	NSDictionary *dict = @{
 		@"url": url.absoluteString,
 		@"openInWindow": @(openWindow)
@@ -181,32 +163,31 @@ extern BOOL allowClosingReachabilityNatively;
 	return [[serverCenter sendMessageAndReceiveReplyName:ZYMessagingOpenURLKMessageName userInfo:dict][@"success"] boolValue];
 }
 
--(void) notifySpringBoardOfFrontAppChangeToSelf
-{
+- (void)notifySpringBoardOfFrontAppChangeToSelf {
 	NSString *ident = NSBundle.mainBundle.bundleIdentifier;
-	if (!ident)
+	if (!ident) {
 		return;
-
-	if ([self isBeingHosted] && (self.knownFrontmostApp == nil || [self.knownFrontmostApp isEqual:ident] == NO))
+	}
+	if ([self isBeingHosted] && (self.knownFrontmostApp == nil || [self.knownFrontmostApp isEqual:ident] == NO)) {
 		[serverCenter sendMessageName:ZYMessagingChangeFrontMostAppMessageName userInfo:@{ @"bundleIdentifier": ident }];
+	}
 }
 
--(BOOL) shouldUseExternalKeyboard { return _currentData.shouldUseExternalKeyboard; }
--(BOOL) shouldResize { return _currentData.shouldForceSize; }
--(CGSize) resizeSize { return CGSizeMake(_currentData.wantedClientWidth, _currentData.wantedClientHeight); }
--(BOOL) shouldHideStatusBar { return _currentData.shouldForceStatusBar && _currentData.statusBarVisibility == NO; }
--(BOOL) shouldShowStatusBar { return _currentData.shouldForceStatusBar && _currentData.statusBarVisibility == YES; }
--(UIInterfaceOrientation) forcedOrientation { return _currentData.forcedOrientation; }
--(BOOL) shouldForceOrientation { return _currentData.shouldForceOrientation; }
--(BOOL) isBeingHosted { return _currentData.isBeingHosted; }
+- (BOOL)shouldUseExternalKeyboard { return _currentData.shouldUseExternalKeyboard; }
+- (BOOL)shouldResize { return _currentData.shouldForceSize; }
+- (CGSize)resizeSize { return CGSizeMake(_currentData.wantedClientWidth, _currentData.wantedClientHeight); }
+- (BOOL)shouldHideStatusBar { return _currentData.shouldForceStatusBar && _currentData.statusBarVisibility == NO; }
+- (BOOL)shouldShowStatusBar { return _currentData.shouldForceStatusBar && _currentData.statusBarVisibility == YES; }
+- (UIInterfaceOrientation)forcedOrientation { return _currentData.forcedOrientation; }
+- (BOOL)shouldForceOrientation { return _currentData.shouldForceOrientation; }
+- (BOOL)isBeingHosted { return _currentData.isBeingHosted; }
 @end
 
 void reloadClientData(CFNotificationCenterRef center,
                     void *observer,
                     CFStringRef name,
                     const void *object,
-                    CFDictionaryRef userInfo)
-{
+                    CFDictionaryRef userInfo) {
 	[[ZYMessagingClient sharedInstance] requestUpdateFromServer];
 }
 
@@ -214,18 +195,14 @@ void updateFrontmostApp(CFNotificationCenterRef center,
                     void *observer,
                     CFStringRef name,
                     const void *object,
-                    CFDictionaryRef userInfo)
-{
+                    CFDictionaryRef userInfo) {
 	ZYMessagingClient.sharedInstance.knownFrontmostApp = ((__bridge NSDictionary*)userInfo)[@"bundleIdentifier"];
 }
 
-%ctor
-{
+%ctor {
 	IF_SPRINGBOARD {
 
-	}
-	else
-	{
+	} else {
 		[ZYMessagingClient sharedInstance];
     	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadClientData, (__bridge CFStringRef)[NSString stringWithFormat:@"com.shade.zypen.clientupdate-%@",NSBundle.mainBundle.bundleIdentifier], NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     	CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, &updateFrontmostApp, CFSTR("com.shade.zypen.frontmostAppDidUpdate"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);

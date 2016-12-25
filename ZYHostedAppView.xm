@@ -28,60 +28,51 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 @end
 
 @implementation ZYHostedAppView
--(id) initWithBundleIdentifier:(NSString*)bundleIdentifier
-{
-	if (self = [super init])
-	{
+- (id)initWithBundleIdentifier:(NSString*)bundleIdentifier {
+	if (self = [super init]) {
 		self.bundleIdentifier = bundleIdentifier;
-        self.autosizesApp = NO;
-        self.allowHidingStatusBar = YES;
-        self.showSplashscreenInsteadOfSpinner = NO;
-        startTries = 0;
-        disablePreload = NO;
-        self.renderWallpaper = NO;
-        self.backgroundColor = [UIColor clearColor];
+    self.autosizesApp = NO;
+    self.allowHidingStatusBar = YES;
+    self.showSplashscreenInsteadOfSpinner = NO;
+    startTries = 0;
+    disablePreload = NO;
+    self.renderWallpaper = NO;
+    self.backgroundColor = [UIColor clearColor];
 	}
 	return self;
 }
 
--(void) _preloadOrAttemptToUpdateReachabilityCounterpart
-{
-    if (app)
-    {
-        if ([app mainScene])
-        {
+- (void)_preloadOrAttemptToUpdateReachabilityCounterpart {
+    if (app) {
+        if ([app mainScene]) {
             isPreloading = NO;
-            if (((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive && [GET_SBWORKSPACE respondsToSelector:@selector(ZY_updateViewSizes)])
+            if (((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive && [GET_SBWORKSPACE respondsToSelector:@selector(ZY_updateViewSizes)]) {
                 [GET_SBWORKSPACE performSelector:@selector(ZY_updateViewSizes) withObject:nil afterDelay:0.5]; // App is launched using ReachApp - animations commence. We have to wait for those animations to finish or this won't work.
-        }
-        else if (![app mainScene])
-        {
-            if (disablePreload)
+            }
+        } else if (![app mainScene]) {
+            if (disablePreload) {
                 disablePreload = NO;
-            else
+            } else {
                 [self preloadApp];
+            }
         }
     }
 }
 
--(void) setBundleIdentifier:(NSString*)value
-{
+- (void)setBundleIdentifier:(NSString*)value {
     _orientation = UIInterfaceOrientationPortrait;
     _bundleIdentifier = value;
     app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:value];
 }
 
--(void) setShouldUseExternalKeyboard:(BOOL)value
-{
+- (void)setShouldUseExternalKeyboard:(BOOL)value {
     _shouldUseExternalKeyboard = value;
     [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:value forApp:self.bundleIdentifier completion:nil];
 }
 
--(void) preloadApp
-{
+- (void)preloadApp {
     startTries++;
-    if (startTries > 5)
-    {
+    if (startTries > 5) {
         isPreloading = NO;
         HBLogDebug(@"[ReachApp] maxed out preload attempts for app %@", app.bundleIdentifier);
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Zypen"
@@ -94,16 +85,16 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         return;
     }
 
-    if (app == nil)
+    if (app == nil) {
         return;
-
-    if (_isCurrentlyHosting)
+    }
+    if (_isCurrentlyHosting) {
         return;
+    }
 
     isPreloading = YES;
-	FBScene *scene = [app mainScene];
-    if (![app pid] || scene == nil)
-    {
+	  FBScene *scene = [app mainScene];
+    if (![app pid] || scene == nil) {
         [UIApplication.sharedApplication launchApplicationWithIdentifier:self.bundleIdentifier suspended:YES];
         [[%c(FBProcessManager) sharedInstance] createApplicationProcessForBundleID:self.bundleIdentifier]; // ummm...?
     }
@@ -112,16 +103,15 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     // it will call it again.
 }
 
--(void) _actualLoadApp
-{
-    if (isPreloading)
-    {
+- (void)_actualLoadApp {
+    if (isPreloading) {
         [self performSelector:@selector(_actualLoadApp) withObject:nil afterDelay:0.3];
         return;
     }
 
-    if (_isCurrentlyHosting)
+    if (_isCurrentlyHosting) {
         return;
+    }
     _isCurrentlyHosting = YES;
 
     appsBeingHosted[app.bundleIdentifier] = [appsBeingHosted objectForKey:app.bundleIdentifier] ? @([appsBeingHosted[app.bundleIdentifier] intValue] + 1) : @1;
@@ -136,8 +126,9 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     [self addSubview:view];
 
     [ZYMessagingServer.sharedInstance setHosted:YES forIdentifier:app.bundleIdentifier completion:nil];
-    //if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [ZYHostedAppView iPad_iOS83_fixHosting];
+    }
 
     [ZYRunningAppsProvider.sharedInstance addTarget:self];
 
@@ -145,19 +136,19 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     [[NSRunLoop currentRunLoop] addTimer:loadedTimer forMode:NSRunLoopCommonModes];
 }
 
--(void) loadApp
-{
+- (void)loadApp {
     startTries = 0;
     disablePreload = NO;
-	[self preloadApp];
-    if (!app)
-        return;
+	  [self preloadApp];
+    if (!app) {
+      return;
+    }
 
-    if (_isCurrentlyHosting)
-        return;
+    if (_isCurrentlyHosting) {
+      return;
+    }
 
-    if ([UIApplication.sharedApplication._accessibilityFrontMostApplication isEqual:app])
-    {
+    if ([UIApplication.sharedApplication._accessibilityFrontMostApplication isEqual:app]) {
         isForemostAppLabel = [[UILabel alloc] initWithFrame:self.bounds];
         isForemostAppLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
         isForemostAppLabel.textColor = [UIColor whiteColor];
@@ -172,10 +163,8 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 
     [self _actualLoadApp];
 
-    if (self.showSplashscreenInsteadOfSpinner)
-    {
-        if (splashScreenImageView)
-        {
+    if (self.showSplashscreenInsteadOfSpinner) {
+        if (splashScreenImageView) {
             [splashScreenImageView removeFromSuperview];
             splashScreenImageView = nil;
         }
@@ -183,11 +172,8 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         splashScreenImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         splashScreenImageView.image = img;
         [self insertSubview:splashScreenImageView atIndex:0];
-    }
-    else
-    {
-        if (!activityView)
-        {
+    } else {
+        if (!activityView) {
             activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
             [self addSubview:activityView];
         }
@@ -199,86 +185,73 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     }
 }
 
--(void) verifyHostingAndRehostIfNecessary
-{
-    if (!isPreloading && _isCurrentlyHosting && (app.isRunning == NO || view.contextHosted == NO)) // && (app.pid == 0 || view == nil || view.manager == nil)) // || view._isReallyHosting == NO))
-    {
+- (void)verifyHostingAndRehostIfNecessary {
+    if (!isPreloading && _isCurrentlyHosting && (app.isRunning == NO || view.contextHosted == NO)) {
         //[activityView startAnimating];
         [self unloadApp];
         [self loadApp];
-    }
-    else
-    {
+    } else {
         [self removeLoadingIndicator];
         [loadedTimer invalidate];
         loadedTimer = nil;
     }
 }
 
--(void) appDidDie:(SBApplication*)app_
-{
-    if (app_ == self.app)
-    {
+- (void)appDidDie:(SBApplication*)app_ {
+    if (app_ == self.app) {
         [self verifyHostingAndRehostIfNecessary];
     }
 }
 
--(void) removeLoadingIndicator
-{
-    if (self.showSplashscreenInsteadOfSpinner)
-    {
+- (void)removeLoadingIndicator {
+    if (self.showSplashscreenInsteadOfSpinner) {
         [splashScreenImageView removeFromSuperview];
         splashScreenImageView = nil;
-    }
-    else if (activityView)
+    } else if (activityView) {
         [activityView stopAnimating];
+    }
 }
 
--(void) drawRect:(CGRect)rect
-{
-    if (_renderWallpaper)
+- (void)drawRect:(CGRect)rect {
+    if (_renderWallpaper) {
         [[ZYSnapshotProvider.sharedInstance wallpaperImage] drawInRect:rect];
+    }
 }
 
--(void) setFrame:(CGRect)frame
-{
+- (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     [view setFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
 
-    if (self.autosizesApp)
-    {
+    if (self.autosizesApp) {
         ZYMessageAppData data = [ZYMessagingServer.sharedInstance getDataForIdentifier:self.bundleIdentifier];
         data.canHideStatusBarIfWanted = self.allowHidingStatusBar;
         [ZYMessagingServer.sharedInstance setData:data forIdentifier:self.bundleIdentifier];
         [ZYMessagingServer.sharedInstance resizeApp:self.bundleIdentifier toSize:CGSizeMake(frame.size.width, frame.size.height) completion:nil];
 
-    }
-    else if (self.bundleIdentifier)
-    {
+    } else if (self.bundleIdentifier) {
         [ZYMessagingServer.sharedInstance endResizingApp:self.bundleIdentifier completion:nil];
     }
 }
 
--(void) setHideStatusBar:(BOOL)value
-{
+- (void)setHideStatusBar:(BOOL)value {
     _hideStatusBar = value;
 
-    if (!self.bundleIdentifier)
+    if (!self.bundleIdentifier) {
         return;
+    }
 
-    if (value)
+    if (value) {
         [ZYMessagingServer.sharedInstance forceStatusBarVisibility:!value forApp:self.bundleIdentifier completion:nil];
-    else
+    } else {
         [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:self.bundleIdentifier completion:nil];
+    }
 }
 
--(void) unloadApp
-{
+- (void)unloadApp {
     [self unloadApp:NO];
 }
 
--(void) unloadApp:(BOOL)forceImmediate
-{
+- (void)unloadApp:(BOOL)forceImmediate {
     //if (activityView)
     //    [activityView stopAnimating];
     [self removeLoadingIndicator];
@@ -289,15 +262,15 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 
     disablePreload = YES;
 
-    if (_isCurrentlyHosting == NO)
+    if (_isCurrentlyHosting == NO) {
         return;
+    }
 
     _isCurrentlyHosting = NO;
 
     FBScene *scene = [app mainScene];
 
-    if (authenticationDidFailLabel)
-    {
+    if (authenticationDidFailLabel) {
         [authenticationDidFailLabel removeFromSuperview];
         authenticationDidFailLabel = nil;
 
@@ -311,7 +284,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     }
 
     if (contextHostManager) {
-        [contextHostManager disableHostingForRequester:@"reachapp"];
+        [contextHostManager disableHostingForRequester:app.bundleIdentifier];
         contextHostManager = nil;
     }
 
@@ -321,18 +294,21 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     __weak ZYHostedAppView *weakSelf = self;
     __block BOOL didRun = NO;
     ZYMessageCompletionCallback block = ^(BOOL success) {
-        if (didRun || (weakSelf && [UIApplication.sharedApplication._accessibilityFrontMostApplication isEqual:weakSelf.app]))
+        if (didRun || (weakSelf && [UIApplication.sharedApplication._accessibilityFrontMostApplication isEqual:weakSelf.app])) {
             return;
-        if (!scene)
+        }
+        if (!scene) {
             return;
+        }
 
         appsBeingHosted[app.bundleIdentifier] = [appsBeingHosted objectForKey:app.bundleIdentifier] ? @([appsBeingHosted[app.bundleIdentifier] intValue] - 1) : @0;
 
-        if ([appsBeingHosted[app.bundleIdentifier] intValue] > 0)
+        if ([appsBeingHosted[app.bundleIdentifier] intValue] > 0) {
             return;
+        }
 
         FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
-        SET_BACKGROUNDED(settings, YES);
+        [settings setBackgrounded:YES];
         [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
         //FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
         didRun = YES;
@@ -341,13 +317,10 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     [ZYMessagingServer.sharedInstance setHosted:NO forIdentifier:app.bundleIdentifier completion:nil];
     [ZYMessagingServer.sharedInstance unforceStatusBarVisibilityForApp:self.bundleIdentifier completion:nil];
     [ZYMessagingServer.sharedInstance unRotateApp:self.bundleIdentifier completion:nil];
-    if (forceImmediate)
-    {
+    if (forceImmediate) {
         [ZYMessagingServer.sharedInstance endResizingApp:self.bundleIdentifier completion:nil];
         block(YES);
-    }
-    else
-    {
+    } else {
         // >Somewhere in the messaging server, the block is being removed from the waitingCompletions dictionary without being called.
         // >This is a large issue (probably to do with asynchronous code) TODO: FIXME
         // lol im retarded, it's the default empty callback the messaging server made
@@ -358,26 +331,21 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     }
 }
 
--(void) rotateToOrientation:(UIInterfaceOrientation)o
-{
+- (void)rotateToOrientation:(UIInterfaceOrientation)o {
     _orientation = o;
 
     [ZYMessagingServer.sharedInstance rotateApp:self.bundleIdentifier toOrientation:o completion:nil];
 }
 
-+(void) iPad_iOS83_fixHosting
-{
-    for (NSString *bundleIdentifier in appsBeingHosted.allKeys)
-    {
++ (void)iPad_iOS83_fixHosting {
+    for (NSString *bundleIdentifier in appsBeingHosted.allKeys) {
         NSNumber *num = appsBeingHosted[bundleIdentifier];
-        if (num.intValue > 0)
-        {
+        if (num.intValue > 0) {
             SBApplication *app_ = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:bundleIdentifier];
             FBWindowContextHostManager *manager = (FBWindowContextHostManager*)[ZYHostManager hostManagerForApp:app_];
-            if (manager)
-            {
+            if (manager) {
                 HBLogDebug(@"[ReachApp] rehosting for iPad: %@", bundleIdentifier);
-                [manager enableHostingForRequester:@"reachapp" priority:1];
+                [manager enableHostingForRequester:bundleIdentifier priority:1];
             }
         }
     }
@@ -385,17 +353,22 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 }
 
 // This allows for any subviews (with gestures) (e.g. the SwipeOver bar with a negative y origin) to recieve touch events.
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
-{
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     BOOL isContained = NO;
-    for (UIView *subview in self.subviews)
-    {
-        if (CGRectContainsPoint(subview.frame, point)) // [self convertPoint:point toView:view]))
+    for (UIView *subview in self.subviews) {
+        if (CGRectContainsPoint(subview.frame, point)) {
             isContained = YES;
+        }
     }
     return isContained;
 }
 
--(SBApplication*) app { return app; }
--(NSString*) displayName { return app.displayName; }
+- (SBApplication*)app {
+  return app;
+}
+
+- (NSString*)displayName {
+  return app.displayName;
+}
+
 @end

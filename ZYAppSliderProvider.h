@@ -6,13 +6,13 @@
 @property (nonatomic, retain) NSArray *availableIdentifiers;
 @property (nonatomic) NSInteger currentIndex;
 
--(BOOL) canGoLeft;
--(BOOL) canGoRight;
+- (BOOL)canGoLeft;
+- (BOOL)canGoRight;
 
--(ZYHostedAppView*) viewToTheLeft;
--(ZYHostedAppView*) viewToTheRight;
--(ZYHostedAppView*) viewAtCurrentIndex;
+- (ZYHostedAppView*)viewToTheLeft;
+- (ZYHostedAppView*)viewToTheRight;
+- (ZYHostedAppView*)viewAtCurrentIndex;
 
--(void) goToTheLeft;
--(void) goToTheRight;
+- (void)goToTheLeft;
+- (void)goToTheRight;
 @end

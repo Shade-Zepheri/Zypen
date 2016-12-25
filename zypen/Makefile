@@ -5,6 +5,7 @@ zypen_FILES = ZYPRootListController.m ZYPOptionsController.m ZYPAboutController.
 zypen_INSTALL_PATH = /Library/PreferenceBundles
 zypen_FRAMEWORKS = UIKit
 zypen_PRIVATE_FRAMEWORKS = Preferences
+zypen_CFLAGS = -O2 -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

@@ -26,4 +26,5 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 after-install::
 	install.exec "killall -9 backboardd"
 SUBPROJECTS += zypen
+SUBPROJECTS += ZYFakePhoneMode
 include $(THEOS_MAKE_PATH)/aggregate.mk

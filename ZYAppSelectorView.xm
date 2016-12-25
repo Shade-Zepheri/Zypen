@@ -2,8 +2,7 @@
 
 @implementation ZYAppSelectorView
 - (id)initWithFrame:(CGRect)frame {
-	if (self = [super initWithFrame:frame])
-	{
+	if (self = [super initWithFrame:frame]) {
   		self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
 	}
 	return self;

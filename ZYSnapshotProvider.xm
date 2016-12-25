@@ -3,12 +3,11 @@
 #import "ZYDesktopWindow.h"
 
 @implementation ZYSnapshotProvider
-+(id) sharedInstance {
++ (id)sharedInstance {
 	SHARED_INSTANCE2(ZYSnapshotProvider, sharedInstance->imageCache = [NSCache new]);
 }
 
--(UIImage*) snapshotForIdentifier:(NSString*)identifier orientation:(UIInterfaceOrientation)orientation
-{
+- (UIImage*)snapshotForIdentifier:(NSString*)identifier orientation:(UIInterfaceOrientation)orientation {
 	/*if (![NSThread isMainThread])
 	{
 		__block id result = nil;
@@ -30,37 +29,29 @@
 		__block SBAppSwitcherSnapshotView *view = nil;
 
 		ON_MAIN_THREAD(^{
-			if ([%c(SBUIController) respondsToSelector:@selector(switcherController)])
-			{
+			if ([%c(SBUIController) respondsToSelector:@selector(switcherController)]) {
 				view = [[[%c(SBUIController) sharedInstance] switcherController] performSelector:@selector(_snapshotViewForDisplayItem:) withObject:item];
 				[view setOrientation:orientation orientationBehavior:0];
-			}
-			else
-			{
+			} else {
 				//SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier];
 				//view = [[%c(SBAppSwitcherSnapshotView) alloc] initWithDisplayItem:item application:app orientation:orientation preferringDownscaledSnapshot:NO async:NO withQueue:nil];
 			}
 		});
 
-		if (view)
-		{
+		if (view) {
 			[view performSelectorOnMainThread:@selector(_loadSnapshotSync) withObject:nil waitUntilDone:YES];
 			image = MSHookIvar<UIImageView*>(view, "_snapshotImageView").image;
 		}
 
-		if (!image)
-		{
+		if (!image) {
 			SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier];
 
-			if (app && app.mainSceneID)
-			{
-				@try
-				{
+			if (app && app.mainSceneID) {
+				@try {
 					CGRect frame = CGRectMake(0, 0, 0, 0);
 					UIView *view = [%c(SBUIController) _zoomViewWithSplashboardLaunchImageForApplication:app sceneID:app.mainSceneID screen:UIScreen.mainScreen interfaceOrientation:0 includeStatusBar:YES snapshotFrame:&frame];
 
-					if (view)
-					{
+					if (view) {
 						UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
 						CGContextRef c = UIGraphicsGetCurrentContext();
 						//CGContextSetAllowsAntialiasing(c, YES);
@@ -70,18 +61,17 @@
 						view.layer.contents = nil;
 					}
 				}
-				@catch (NSException *ex)
-				{
+				@catch (NSException *ex) {
 					HBLogDebug(@"[ReachApp] error generating snapshot: %@", ex);
 				}
 			}
 
-			if (!image) // we can only hope it does not reach this point of desperation
+			if (!image) {
 				image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/Default.png", app.path]];
+			} // we can only hope it does not reach this point of desperation
 		}
 
-		if (image)
-		{
+		if (image) {
 			[imageCache setObject:image forKey:identifier];
 		}
 
@@ -89,23 +79,19 @@
 	}
 }
 
--(UIImage*) snapshotForIdentifier:(NSString*)identifier
-{
+- (UIImage*)snapshotForIdentifier:(NSString*)identifier {
 	return [self snapshotForIdentifier:identifier orientation:UIApplication.sharedApplication.statusBarOrientation];
 }
 
--(void) forceReloadOfSnapshotForIdentifier:(NSString*)identifier
-{
+- (void)forceReloadOfSnapshotForIdentifier:(NSString*)identifier {
 	[imageCache removeObjectForKey:identifier];
 }
 
--(UIImage*) storedSnapshotOfMissionControl
-{
+- (UIImage*)storedSnapshotOfMissionControl {
 	return [imageCache objectForKey:@"missioncontrol"];
 }
 
--(void) storeSnapshotOfMissionControl:(UIWindow*)window
-{
+- (void)storeSnapshotOfMissionControl:(UIWindow*)window {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 		UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].ZY_interfaceOrientedBounds.size, YES, [UIScreen mainScreen].scale);
 		//CGContextRef c = UIGraphicsGetCurrentContext();
@@ -120,43 +106,41 @@
 		UIGraphicsEndImageContext();
 		window.layer.contents = nil;
 
-		if (image)
+		if (image) {
 			[imageCache setObject:image forKey:@"missioncontrol"];
+		}
 	});
-
 }
 
--(NSString*) createKeyForDesktop:(ZYDesktopWindow*)desktop
-{
+- (NSString*)createKeyForDesktop:(ZYDesktopWindow*)desktop {
 	return [NSString stringWithFormat:@"desktop-%lu", (unsigned long)desktop.hash];
 }
 
--(UIImage*) snapshotForDesktop:(ZYDesktopWindow*)desktop
-{
+- (UIImage*)snapshotForDesktop:(ZYDesktopWindow*)desktop {
 	NSString *key = [self createKeyForDesktop:desktop];
-	if ([imageCache objectForKey:key] != nil) return [imageCache objectForKey:key];
-
+	if ([imageCache objectForKey:key] != nil) {
+		return [imageCache objectForKey:key];
+	}
 	UIImage *img = [self renderPreviewForDesktop:desktop];
-	if (img)
+	if (img) {
 		[imageCache setObject:img forKey:key];
+	}
 	return img;
 }
 
--(void) forceReloadSnapshotOfDesktop:(ZYDesktopWindow*)desktop
-{
+- (void)forceReloadSnapshotOfDesktop:(ZYDesktopWindow*)desktop {
 	[imageCache removeObjectForKey:[self createKeyForDesktop:desktop]];
 }
 
-- (UIImage*)rotateImageToMatchOrientation:(UIImage*)oldImage
-{
+- (UIImage*)rotateImageToMatchOrientation:(UIImage*)oldImage {
 	CGFloat degrees = 0;
-	if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight)
+	if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
 		degrees = 270;
-	else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft)
+	} else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
 		degrees = 90;
-	else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown)
+	} else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		degrees = 180;
-
+	}
 	// https://stackoverflow.com/questions/20764623/rotate-newly-created-ios-image-90-degrees-prior-to-saving-as-png
 
 	__block CGSize rotatedSize;
@@ -192,8 +176,7 @@
 	return newImage;
 }
 
--(UIImage*) renderPreviewForDesktop:(ZYDesktopWindow*)desktop
-{
+-(UIImage*) renderPreviewForDesktop:(ZYDesktopWindow*)desktop {
 	@autoreleasepool {
 		UIGraphicsBeginImageContextWithOptions(UIScreen.mainScreen.bounds.size, YES, UIScreen.mainScreen.scale);
 		CGContextRef c = UIGraphicsGetCurrentContext();
@@ -215,17 +198,16 @@
 		});
 		//[desktop.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(__bridge id)c waitUntilDone:YES]; // Desktop windows
 
-		for (UIView *view in desktop.subviews) // Application views
-		{
-			if ([view isKindOfClass:[ZYWindowBar class]])
-			{
+		for (UIView *view in desktop.subviews) {// Application views
+
+			if ([view isKindOfClass:[ZYWindowBar class]]) {
 				ZYHostedAppView *hostedView = [((ZYWindowBar*)view) attachedView];
 
 				UIImage *image = [self snapshotForIdentifier:hostedView.bundleIdentifier orientation:hostedView.orientation];
 				CIImage *coreImage = image.CIImage;
-				if (!coreImage)
-				    coreImage = [CIImage imageWithCGImage:image.CGImage];
-
+				if (!coreImage) {
+						coreImage = [CIImage imageWithCGImage:image.CGImage];
+				}
 				//coreImage = [coreImage imageByApplyingTransform:view.transform];
 				CGFloat rotation = atan2(hostedView.transform.b, hostedView.transform.a);
 
@@ -248,17 +230,15 @@
 	}
 }
 
--(UIImage*) wallpaperImage
-{
+- (UIImage*)wallpaperImage {
 	return [self wallpaperImage:YES];
 }
 
--(UIImage*) wallpaperImage:(BOOL)blurred
-{
+- (UIImage*)wallpaperImage:(BOOL)blurred {
 	NSString *key = blurred ? @"wallpaperImageBlurred" : @"wallpaperImage";
-	if ([imageCache objectForKey:key])
+	if ([imageCache objectForKey:key]) {
 		return [imageCache objectForKey:key];
-
+	}
 	UIGraphicsBeginImageContextWithOptions(UIScreen.mainScreen.bounds.size, YES, UIScreen.mainScreen.scale);
 	CGContextRef c = UIGraphicsGetCurrentContext();
 
@@ -274,8 +254,7 @@
 	//UIImageView *imgView = [[UIImageView alloc] initWithImage:image];//Frame:(CGRect){CGPointZero,image.size}];
 	//imgView.image = image;
 
-	if (blurred)
-	{
+	if (blurred) {
 		CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
 		[gaussianBlurFilter setDefaults];
 		CIImage *inputImage = [CIImage imageWithCGImage:[image CGImage]];
@@ -295,8 +274,7 @@
 	return image;
 }
 
--(void) forceReloadEverything
-{
+- (void)forceReloadEverything {
 	[imageCache removeAllObjects];
 }
 @end

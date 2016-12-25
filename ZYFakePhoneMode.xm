@@ -8,23 +8,20 @@ I split them apart when i was trying to find some issue with app resizing/touche
 */
 
 #define ZY_4S_SIZE CGSizeMake(320, 480)
-#define ZY_5S_SIZE CGSizeMake(320, 512)
+#define ZY_5S_SIZE CGSizeMake(320, 568)
 #define ZY_6P_SIZE CGSizeMake(414, 736)
 
 CGSize forcePhoneModeSize = ZY_6P_SIZE;
 
 @implementation ZYFakePhoneMode
-+(void) load
-{
++ (void)load {
+    HBLogDebug(@"Ran Fake Phone Mode");
     // Prevent iPhone issue
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{ // somehow, this is needed to make sure that both force resizing and Fake Phone Mode work. Without the dispatch_after, even if fake phone mode is disabled,
                 // force resizing seems to render touches incorrectly ¯\_(ツ)_/¯
-            IF_NOT_SPRINGBOARD
-            {
-                if ([ZYFakePhoneMode shouldFakeForThisProcess])
-                {
+            IF_NOT_SPRINGBOARD {
+                if ([ZYFakePhoneMode shouldFakeForThisProcess]) {
                     dlopen("/Library/MobileSubstrate/DynamicLibraries/ReachAppFakePhoneMode.dylib", RTLD_NOW);
                 }
             }
@@ -32,27 +29,23 @@ CGSize forcePhoneModeSize = ZY_6P_SIZE;
     }
 }
 
-+(CGSize) fakedSize
-{
++ (CGSize)fakedSize {
 	if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation))
 		return CGSizeMake(forcePhoneModeSize.height, forcePhoneModeSize.width);
 	return forcePhoneModeSize;
 }
 
-+(CGSize) fakeSizeForAppWithIdentifier:(NSString*)identifier
-{
++ (CGSize)fakeSizeForAppWithIdentifier:(NSString*)identifier {
 	return forcePhoneModeSize;
 }
 
-+(void) updateAppSizing
-{
++ (void)updateAppSizing {
     CGRect f = UIWindow.keyWindow.frame;
     f.origin = CGPointZero;
     UIWindow.keyWindow.frame = f;
 }
 
-+(BOOL) shouldFakeForAppWithIdentifier:(NSString*)identifier
-{
++ (BOOL)shouldFakeForAppWithIdentifier:(NSString*)identifier {
 	IF_SPRINGBOARD {
 		return [ZYMessagingServer.sharedInstance getDataForIdentifier:identifier].forcePhoneMode;
 	}
@@ -60,8 +53,7 @@ CGSize forcePhoneModeSize = ZY_6P_SIZE;
 	return NO;
 }
 
-+(BOOL) shouldFakeForThisProcess
-{
++ (BOOL)shouldFakeForThisProcess {
     static char fakeFlag = 0;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{

@@ -55,9 +55,9 @@
 	if (!allApps) {
 		ALApplicationList *applicationList = [ALApplicationList sharedApplicationList];
 		NSArray *sortedAppList = [[applicationList.applications allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-	    return [[applicationList.applications objectForKey:obj1] caseInsensitiveCompare:[applicationList.applications objectForKey:obj2]];}];
+	    return [[applicationList.applications objectForKey:obj1] caseInsensitiveCompare:[applicationList.applications objectForKey:obj2]];
+		}];
 		allApps = [NSMutableArray arrayWithArray:sortedAppList];
-		HBLogDebug(@"%@", allApps);
 		//[allApps removeObject:currentBundleIdentifier];
 	}
 

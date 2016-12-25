@@ -78,7 +78,7 @@ void BKSHIDServicesCancelTouchesOnMainDisplay();
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 #define DEGREES_TO_RADIANS(radians) ((radians) * (M_PI / 180))
 
-void SET_BACKGROUNDED(id settings, BOOL val);
+//void SET_BACKGROUNDED(id settings, BOOL val);
 
 #define SHARED_INSTANCE2(cls, extracode) \
 static cls *sharedInstance = nil; \
@@ -253,9 +253,7 @@ return sharedInstance;
 @end
 
 @interface FBSMutableSceneSettings : FBSSceneSettings
-{
-}
-
+- (void)setBackgrounded:(bool)arg1;
 + (BOOL)_isMutable;
 - (id)mutableCopyWithZone:(struct _NSZone *)arg1;
 - (id)copyWithZone:(struct _NSZone *)arg1;
@@ -411,20 +409,20 @@ return sharedInstance;
 @end
 
 @interface SBWorkspace : NSObject
-+(id) sharedInstance;
--(BOOL) isUsingReachApp;
++ (id)sharedInstance;
+- (BOOL)isUsingReachApp;
 - (void)_exitReachabilityModeWithCompletion:(id)arg1;
 - (void)_disableReachabilityImmediately:(_Bool)arg1;
 - (void)handleReachabilityModeDeactivated;
--(void) ZY_animateWidgetSelectorOut:(id)completion;
--(void) ZY_setView:(UIView*)view preferredHeight:(CGFloat)preferredHeight;
--(void) ZY_launchTopAppWithIdentifier:(NSString*) bundleIdentifier;
--(void) ZY_showWidgetSelector;
--(void) updateViewSizes:(CGPoint)center animate:(BOOL)animate;
--(void) ZY_closeCurrentView;
--(void) ZY_handleLongPress:(UILongPressGestureRecognizer*)gesture;
--(void) ZY_updateViewSizes;
--(void) appViewItemTap:(id)sender;
+- (void)ZY_animateWidgetSelectorOut:(id)completion;
+- (void)ZY_setView:(UIView*)view preferredHeight:(CGFloat)preferredHeight;
+- (void)ZY_launchTopAppWithIdentifier:(NSString*) bundleIdentifier;
+- (void)ZY_showWidgetSelector;
+- (void)updateViewSizes:(CGPoint)center animate:(BOOL)animate;
+- (void)ZY_closeCurrentView;
+- (void)ZY_handleLongPress:(UILongPressGestureRecognizer*)gesture;
+- (void)ZY_updateViewSizes;
+- (void)appViewItemTap:(id)sender;
 @end
 
 @interface SBAppSwitcherSnapshotView : UIView
@@ -945,4 +943,21 @@ typedef struct {
 
 @interface SBIconViewMap (iOS6)
 @property (nonatomic, readonly) SBIconModel *iconModel;
+@end
+
+@interface SBWindow : UIWindow
++(BOOL)sb_autorotates;
++(id)defaultLayoutStrategy;
++(BOOL)sb_disableStatusBarHeightChanges;
+-(void)setAlphaAndObeyBecauseIAmTheWindowManager:(double)arg1 ;
+-(id)initWithScreen:(id)arg1 debugName:(id)arg2 ;
+-(id)_initWithScreen:(id)arg1 layoutStrategy:(id)arg2 debugName:(id)arg3 rootViewController:(id)arg4 scene:(id)arg5 ;
+-(id)initWithScreen:(id)arg1 debugName:(id)arg2 rootViewController:(id)arg3 ;
+-(id)recycledViewsContainer;
+-(id)initWithScreen:(id)arg1 layoutStrategy:(id)arg2 debugName:(id)arg3 scene:(id)arg4 ;
+-(id)initWithScreen:(id)arg1 layoutStrategy:(id)arg2 debugName:(id)arg3 ;
+-(id)initWithFrame:(CGRect)arg1 ;
+-(id)description;
+-(void)setAutorotates:(BOOL)arg1 forceUpdateInterfaceOrientation:(BOOL)arg2 ;
+-(void)handleStatusBarChangeFromHeight:(double)arg1 toHeight:(double)arg2 ;
 @end

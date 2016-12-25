@@ -21,8 +21,7 @@ extern BOOL launchNextOpenIntoWindow;
 @end
 
 @implementation ZYMessagingServer
-+(instancetype) sharedInstance
-{
++ (instancetype)sharedInstance {
 	SHARED_INSTANCE2(ZYMessagingServer,
 		[sharedInstance loadServer];
 		sharedInstance->dataForApps = [NSMutableDictionary dictionary];
@@ -32,13 +31,11 @@ extern BOOL launchNextOpenIntoWindow;
 	);
 }
 
--(void) loadServer
-{
+- (void)loadServer {
     messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.shade.zypen.messaging.server"];
 
     void* handle = dlopen("/usr/lib/librocketbootstrap.dylib", RTLD_LAZY);
-    if (handle)
-    {
+    if (handle) {
         void (*rocketbootstrap_distributedmessagingcenter_apply)(CPDistributedMessagingCenter*);
         rocketbootstrap_distributedmessagingcenter_apply = (void(*)(CPDistributedMessagingCenter*))dlsym(handle, "rocketbootstrap_distributedmessagingcenter_apply");
         rocketbootstrap_distributedmessagingcenter_apply(messagingCenter);
@@ -69,36 +66,30 @@ extern BOOL launchNextOpenIntoWindow;
     [messagingCenter registerForMessageName:ZYMessagingDetachCurrentAppMessageName target:self selector:@selector(handleKeyboardEvent:userInfo:)];
 }
 
--(NSDictionary*) handleMessageNamed:(NSString*)identifier userInfo:(NSDictionary*)info
-{
-	if ([identifier isEqual:ZYMessagingShowKeyboardMessageName])
+- (NSDictionary*)handleMessageNamed:(NSString*)identifier userInfo:(NSDictionary*)info {
+	if ([identifier isEqual:ZYMessagingShowKeyboardMessageName]) {
 		[self receiveShowKeyboardForAppWithIdentifier:info[@"bundleIdentifier"]];
-	else if ([identifier isEqual:ZYMessagingHideKeyboardMessageName])
+	} else if ([identifier isEqual:ZYMessagingHideKeyboardMessageName]) {
 		[self receiveHideKeyboard];
-	else if ([identifier isEqual:ZYMessagingUpdateKeyboardContextIdMessageName])
+	} else if ([identifier isEqual:ZYMessagingUpdateKeyboardContextIdMessageName]) {
 		[self setKeyboardContextId:[info[@"contextId"] integerValue] forIdentifier:info[@"bundleIdentifier"]];
-	else if ([identifier isEqual:ZYMessagingRetrieveKeyboardContextIdMessageName])
+	} else if ([identifier isEqual:ZYMessagingRetrieveKeyboardContextIdMessageName]) {
 		return @{ @"contextId": @([self getStoredKeyboardContextIdForApp:info[@"bundleIdentifier"]]) };
-	else if ([identifier isEqual:ZYMessagingUpdateKeyboardSizeMessageName])
-	{
+	} else if ([identifier isEqual:ZYMessagingUpdateKeyboardSizeMessageName]) {
 		CGSize size = CGSizeFromString(info[@"size"]);
 		[ZYKeyboardStateListener.sharedInstance _setSize:size];
-	}
-	else if ([identifier isEqual:ZYMessagingUpdateAppInfoMessageName])
-	{
+	} else if ([identifier isEqual:ZYMessagingUpdateAppInfoMessageName]) {
 		NSString *identifier = info[@"bundleIdentifier"];
 		ZYMessageAppData data = [self getDataForIdentifier:identifier];
 
-		if ([waitingCompletions objectForKey:identifier] != nil)
-		{
+		if ([waitingCompletions objectForKey:identifier] != nil) {
 			ZYMessageCompletionCallback callback = (ZYMessageCompletionCallback)waitingCompletions[identifier];
 			[waitingCompletions removeObjectForKey:identifier];
 			callback(YES);
 		}
 
 		// Got the message, cancel the re-sender
-		if ([asyncHandles objectForKey:identifier] != nil)
-		{
+		if ([asyncHandles objectForKey:identifier] != nil) {
 			struct dispatch_async_handle *handle = (struct dispatch_async_handle *)[asyncHandles[identifier] pointerValue];
 			dispatch_after_cancel(handle);
 			[asyncHandles removeObjectForKey:identifier];
@@ -107,9 +98,7 @@ extern BOOL launchNextOpenIntoWindow;
 		return @{
 			@"data": [NSData dataWithBytes:&data length:sizeof(data)],
 		};
-	}
-	else if ([identifier isEqual:ZYMessagingOpenURLKMessageName])
-	{
+	} else if ([identifier isEqual:ZYMessagingOpenURLKMessageName]) {
 		NSURL *url = [NSURL URLWithString:info[@"url"]];
 		BOOL openInWindow = [ZYSettings.sharedSettings openLinksInWindows]; // [info[@"openInWindow"] boolValue];
 		if (openInWindow)
@@ -117,28 +106,24 @@ extern BOOL launchNextOpenIntoWindow;
 
 		BOOL success = [UIApplication.sharedApplication openURL:url];
 		return @{ @"success": @(success) };
-	}
-	else if ([identifier isEqual:ZYMessagingGetFrontMostAppInfoMessageName])
-	{
-		if (UIApplication.sharedApplication._accessibilityFrontMostApplication)
+	} else if ([identifier isEqual:ZYMessagingGetFrontMostAppInfoMessageName]) {
+		if (UIApplication.sharedApplication._accessibilityFrontMostApplication) {
 			return nil;
+		}
 		ZYWindowBar *window = ZYDesktopManager.sharedInstance.lastUsedWindow;
-		if (window)
-		{
+		if (window) {
 			SBApplication *app = window.attachedView.app;
-			if (app.pid)
+			if (app.pid){
 				return @{
 					@"pid": @(app.pid),
 					@"bundleIdentifier": app.bundleIdentifier
 				};
+			}
 		}
-	}
-	else if ([identifier isEqual:ZYMessagingChangeFrontMostAppMessageName])
-	{
+	} else if ([identifier isEqual:ZYMessagingChangeFrontMostAppMessageName]) {
 		NSString *bundleIdentifier = info[@"bundleIdentifier"];
 		ZYWindowBar *window = [ZYDesktopManager.sharedInstance windowForIdentifier:bundleIdentifier];
-		if (window)
-		{
+		if (window) {
 			ZYDesktopManager.sharedInstance.lastUsedWindow = window;
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.shade.zypen.frontmostAppDidUpdate"), NULL, (__bridge CFDictionaryRef)@{ @"bundleIdentifier": bundleIdentifier }, YES);
 		}
@@ -147,14 +132,11 @@ extern BOOL launchNextOpenIntoWindow;
 	return nil;
 }
 
--(void) handleKeyboardEvent:(NSString*)identifier userInfo:(NSDictionary*)info
-{
-	if ([identifier isEqual:ZYMessagingDetachCurrentAppMessageName])
-	{
+- (void)handleKeyboardEvent:(NSString*)identifier userInfo:(NSDictionary*)info {
+	if ([identifier isEqual:ZYMessagingDetachCurrentAppMessageName]) {
         SBApplication *topApp = [[UIApplication sharedApplication] _accessibilityFrontMostApplication];
 
-        if (topApp)
-        {
+        if (topApp) {
 	        [[%c(SBWallpaperController) sharedInstance] beginRequiringWithReason:@"BeautifulAnimation"];
 	        [[%c(SBUIController) sharedInstance] restoreContentAndUnscatterIconsAnimated:NO];
 
@@ -172,58 +154,46 @@ extern BOOL launchNextOpenIntoWindow;
 		        [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowForSBApplication:topApp animated:YES];
 		    }];
         }
-	}
-	else if ([identifier isEqual:ZYMessagingGoToDesktopOnTheLeftMessageName])
-	{
+	} else if ([identifier isEqual:ZYMessagingGoToDesktopOnTheLeftMessageName]) {
 		int newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex - 1;
 		BOOL isValid = newIndex >= 0 && newIndex <= ZYDesktopManager.sharedInstance.numberOfDesktops;
-		if (isValid)
+		if (isValid) {
 			[ZYDesktopManager.sharedInstance switchToDesktop:newIndex];
-	}
-	else if ([identifier isEqual:ZYMessagingGoToDesktopOnTheRightMessageName])
-	{
+		}
+	} else if ([identifier isEqual:ZYMessagingGoToDesktopOnTheRightMessageName]) {
 		int newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex + 1;
 		BOOL isValid = newIndex >= 0 && newIndex < ZYDesktopManager.sharedInstance.numberOfDesktops;
-		if (isValid)
+		if (isValid) {
 			[ZYDesktopManager.sharedInstance switchToDesktop:newIndex];
-	}
-	else if ([identifier isEqual:ZYMessagingAddNewDesktopMessageName])
-	{
+		}
+	} else if ([identifier isEqual:ZYMessagingAddNewDesktopMessageName]) {
 		[ZYDesktopManager.sharedInstance addDesktop:YES];
 	}
 
 	ZYWindowBar *window = ZYDesktopManager.sharedInstance.lastUsedWindow;
-	if (!window)
+	if (!window) {
 		return;
-	if ([identifier isEqual:ZYMessagingSnapFrontMostWindowLeftMessageName])
-	{
+	}
+	if ([identifier isEqual:ZYMessagingSnapFrontMostWindowLeftMessageName]) {
 		[ZYWindowSnapDataProvider snapWindow:window toLocation:ZYWindowSnapLocationGetLeftOfScreen() animated:YES];
-	}
-	else if ([identifier isEqual:ZYMessagingSnapFrontMostWindowRightMessageName])
-	{
+	} else if ([identifier isEqual:ZYMessagingSnapFrontMostWindowRightMessageName]) {
 		[ZYWindowSnapDataProvider snapWindow:window toLocation:ZYWindowSnapLocationGetRightOfScreen() animated:YES];
-	}
-	else if ([identifier isEqual:ZYMessagingMaximizeAppMessageName])
-	{
+	} else if ([identifier isEqual:ZYMessagingMaximizeAppMessageName]) {
 		[window maximize];
-	}
-	else if ([identifier isEqual:ZYMessagingCloseAppMessageName])
-	{
+	} else if ([identifier isEqual:ZYMessagingCloseAppMessageName]) {
 		[window close];
 	}
 }
 
--(void) alertUser:(NSString*)description {
-
+- (void)alertUser:(NSString*)description {
+	HBLogError(@"%@", description);
 }
 
--(ZYMessageAppData) getDataForIdentifier:(NSString*)identifier
-{
+- (ZYMessageAppData)getDataForIdentifier:(NSString*)identifier {
 	ZYMessageAppData ret;
-	if ([dataForApps objectForKey:identifier] != nil)
+	if ([dataForApps objectForKey:identifier] != nil) {
 		[dataForApps[identifier] getValue:&ret];
-	else
-	{
+	} else {
 		// Initialize with some default values
 		ret.shouldForceSize = NO;
 		ret.wantedClientOriginX = -1;
@@ -242,21 +212,16 @@ extern BOOL launchNextOpenIntoWindow;
 	return ret;
 }
 
--(void) setData:(ZYMessageAppData)data forIdentifier:(NSString*)identifier
-{
-	if (identifier)
-	{
+- (void)setData:(ZYMessageAppData)data forIdentifier:(NSString*)identifier {
+	if (identifier) {
 		dataForApps[identifier] = [NSValue valueWithBytes:&data objCType:@encode(ZYMessageAppData)];
 	}
 }
 
--(void) checkIfCompletionStillExitsForIdentifierAndFailIt:(NSString*)identifier
-{
-	if ([waitingCompletions objectForKey:identifier] != nil)
-	{
+- (void)checkIfCompletionStillExitsForIdentifierAndFailIt:(NSString*)identifier {
+	if ([waitingCompletions objectForKey:identifier] != nil) {
 		// We timed out, remove the re-sender
-		if ([asyncHandles objectForKey:identifier] != nil)
-		{
+		if ([asyncHandles objectForKey:identifier] != nil) {
 			struct dispatch_async_handle *handle = (struct dispatch_async_handle *)[asyncHandles[identifier] pointerValue];
 			dispatch_after_cancel(handle);
 			[asyncHandles removeObjectForKey:identifier];
@@ -271,21 +236,18 @@ extern BOOL launchNextOpenIntoWindow;
 	}
 }
 
--(void) sendDataWithCurrentTries:(int)tries toAppWithBundleIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback
-{
+- (void)sendDataWithCurrentTries:(int)tries toAppWithBundleIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier];
-	if (!app.isRunning || [app mainScene] == nil)
-	{
-		if (tries > 4)
-		{
+	if (!app.isRunning || [app mainScene] == nil) {
+		if (tries > 4) {
 			[self alertUser:[NSString stringWithFormat:@"Unable to communicate with app that isn't running: %@ (%@)", app.displayName, identifier]];
-			if (callback)
+			if (callback) {
 				callback(NO);
+			}
 			return;
 		}
 
-		if ([asyncHandles objectForKey:identifier] != nil)
-		{
+		if ([asyncHandles objectForKey:identifier] != nil) {
 			struct dispatch_async_handle *handle = (struct dispatch_async_handle *)[asyncHandles[identifier] pointerValue];
 			dispatch_after_cancel(handle);
 			[asyncHandles removeObjectForKey:identifier];
@@ -300,10 +262,8 @@ extern BOOL launchNextOpenIntoWindow;
 
 	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge CFStringRef)[NSString stringWithFormat:@"com.shade.zypen.clientupdate-%@",identifier], nil, nil, YES);
 
-	if (tries <= 4)
-	{
-		if ([asyncHandles objectForKey:identifier] != nil)
-		{
+	if (tries <= 4) {
+		if ([asyncHandles objectForKey:identifier] != nil) {
 			struct dispatch_async_handle *handle = (struct dispatch_async_handle *)[asyncHandles[identifier] pointerValue];
 			dispatch_after_cancel(handle);
 			[asyncHandles removeObjectForKey:identifier];
@@ -314,8 +274,7 @@ extern BOOL launchNextOpenIntoWindow;
 		});
 		asyncHandles[identifier] = [NSValue valueWithPointer:handle];
 
-		if ([waitingCompletions objectForKey:identifier] == nil)
-		{
+		if ([waitingCompletions objectForKey:identifier] == nil) {
 			//if (callback == nil)
 			//	callback = ^(BOOL _) { };
 			if (callback)
@@ -369,16 +328,14 @@ extern BOOL launchNextOpenIntoWindow;
 */
 }
 
--(void) sendStoredDataToApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback
-{
-	if (!identifier || identifier.length == 0)
+- (void)sendStoredDataToApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
+	if (!identifier || identifier.length == 0) {
 		return;
-
+	}
 	[self sendDataWithCurrentTries:0 toAppWithBundleIdentifier:identifier completion:callback];
 }
 
--(void) resizeApp:(NSString*)identifier toSize:(CGSize)size completion:(ZYMessageCompletionCallback)callback
-{
+- (void)resizeApp:(NSString*)identifier toSize:(CGSize)size completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
 	data.wantedClientWidth = size.width;
 	data.wantedClientHeight = size.height;
@@ -387,8 +344,7 @@ extern BOOL launchNextOpenIntoWindow;
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) moveApp:(NSString*)identifier toOrigin:(CGPoint)origin completion:(ZYMessageCompletionCallback)callback
-{
+- (void)moveApp:(NSString*)identifier toOrigin:(CGPoint)origin completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
 	data.wantedClientOriginX = (float)origin.x;
 	data.wantedClientOriginY = (float)origin.y;
@@ -397,8 +353,7 @@ extern BOOL launchNextOpenIntoWindow;
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) endResizingApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback
-{
+- (void)endResizingApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
 	//data.wantedClientSize = CGSizeMake(-1, -1);
 	data.shouldForceSize = NO;
@@ -406,21 +361,18 @@ extern BOOL launchNextOpenIntoWindow;
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) rotateApp:(NSString*)identifier toOrientation:(UIInterfaceOrientation)orientation completion:(ZYMessageCompletionCallback)callback
-{
+- (void)rotateApp:(NSString*)identifier toOrientation:(UIInterfaceOrientation)orientation completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
-
-	if (data.forcePhoneMode)
+	if (data.forcePhoneMode) {
 		return;
-
+	}
 	data.forcedOrientation = orientation;
 	data.shouldForceOrientation = YES;
 	[self setData:data forIdentifier:identifier];
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) unRotateApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback
-{
+- (void)unRotateApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
 	data.forcedOrientation = UIApplication.sharedApplication.statusBarOrientation;
 	data.shouldForceOrientation = NO;
@@ -428,8 +380,7 @@ extern BOOL launchNextOpenIntoWindow;
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) forceStatusBarVisibility:(BOOL)visibility forApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback
-{
+- (void)forceStatusBarVisibility:(BOOL)visibility forApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
 	data.shouldForceStatusBar = YES;
 	data.statusBarVisibility = visibility;
@@ -437,69 +388,58 @@ extern BOOL launchNextOpenIntoWindow;
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) unforceStatusBarVisibilityForApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback
-{
+- (void)unforceStatusBarVisibilityForApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
 	data.shouldForceStatusBar = NO;
 	[self setData:data forIdentifier:identifier];
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) setShouldUseExternalKeyboard:(BOOL)value forApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback
-{
+- (void)setShouldUseExternalKeyboard:(BOOL)value forApp:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
 	data.shouldUseExternalKeyboard = value;
 	[self setData:data forIdentifier:identifier];
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) setHosted:(BOOL)value forIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback
-{
+- (void)setHosted:(BOOL)value forIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
 	data.isBeingHosted = value;
 	[self setData:data forIdentifier:identifier];
 	[self sendStoredDataToApp:identifier completion:callback];
 }
 
--(void) forcePhoneMode:(BOOL)value forIdentifier:(NSString*)identifier andRelaunchApp:(BOOL)relaunch
-{
+- (void)forcePhoneMode:(BOOL)value forIdentifier:(NSString*)identifier andRelaunchApp:(BOOL)relaunch {
 	ZYMessageAppData data = [self getDataForIdentifier:identifier];
-
 	data.forcePhoneMode = value;
 	[self setData:data forIdentifier:identifier];
 
-	if (relaunch)
-	{
+	if (relaunch) {
 		[ZYAppKiller killAppWithIdentifier:identifier completion:^{
 			[ZYDesktopManager.sharedInstance updateWindowSizeForApplication:identifier];
 		}];
 	}
 }
 
--(void) receiveShowKeyboardForAppWithIdentifier:(NSString*)identifier
-{
+- (void)receiveShowKeyboardForAppWithIdentifier:(NSString*)identifier {
 	[ZYSpringBoardKeyboardActivation.sharedInstance showKeyboardForAppWithIdentifier:identifier];
 }
 
--(void) receiveHideKeyboard
-{
+- (void)receiveHideKeyboard {
 	[ZYSpringBoardKeyboardActivation.sharedInstance hideKeyboard];
 }
 
--(void) setKeyboardContextId:(unsigned int)id forIdentifier:(NSString*)identifier
-{
+- (void)setKeyboardContextId:(unsigned int)id forIdentifier:(NSString*)identifier {
 	HBLogDebug(@"[ReachApp] got c id %d", id);
 	contextIds[identifier] = @(id);
 }
 
--(unsigned int) getStoredKeyboardContextIdForApp:(NSString*)identifier
-{
+- (unsigned int)getStoredKeyboardContextIdForApp:(NSString*)identifier {
 	return [contextIds objectForKey:identifier] != nil ? [contextIds[identifier] unsignedIntValue] : 0;
 }
 @end
 
-%ctor
-{
+%ctor {
 	IF_SPRINGBOARD {
 		[ZYMessagingServer sharedInstance];
 	}

@@ -2,8 +2,8 @@
 
 @protocol ZYRunningAppsProviderDelegate
 @optional
--(void) appDidStart:(__unsafe_unretained SBApplication*)app;
--(void) appDidDie:(__unsafe_unretained SBApplication*)app;
+- (void)appDidStart:(__unsafe_unretained SBApplication*)app;
+- (void)appDidDie:(__unsafe_unretained SBApplication*)app;
 @end
 
 @interface ZYRunningAppsProvider : NSObject {
@@ -11,13 +11,12 @@
 	NSMutableArray *targets;
 	NSLock *lock;
 }
-+(instancetype) sharedInstance;
++ (instancetype)sharedInstance;
 
--(void) addRunningApp:(__unsafe_unretained SBApplication*)app;
--(void) removeRunningApp:(__unsafe_unretained SBApplication*)app;
+- (void)addRunningApp:(__unsafe_unretained SBApplication*)app;
+- (void)removeRunningApp:(__unsafe_unretained SBApplication*)app;
+- (void)addTarget:(__weak NSObject<ZYRunningAppsProviderDelegate>*)target;
+- (void)removeTarget:(__weak NSObject<ZYRunningAppsProviderDelegate>*)target;
 
--(void) addTarget:(__weak NSObject<ZYRunningAppsProviderDelegate>*)target;
--(void) removeTarget:(__weak NSObject<ZYRunningAppsProviderDelegate>*)target;
-
--(NSArray*) runningApplications;
+- (NSArray*)runningApplications;
 @end

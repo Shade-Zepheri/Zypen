@@ -48,11 +48,11 @@ extern BOOL overrideDisableForStatusBar;
 
 %hook SBApplicationController
 %new -(SBApplication*) ZY_applicationWithBundleIdentifier:(__unsafe_unretained NSString*)bundleIdentifier {
-    if ([self respondsToSelector:@selector(applicationWithBundleIdentifier:)])
+    if ([self respondsToSelector:@selector(applicationWithBundleIdentifier:)]) {
         return [self applicationWithBundleIdentifier:bundleIdentifier];
-    else if ([self respondsToSelector:@selector(applicationWithDisplayIdentifier:)])
+    } else if ([self respondsToSelector:@selector(applicationWithDisplayIdentifier:)]) {
         return [self applicationWithDisplayIdentifier:bundleIdentifier];
-
+    }
     [ZYCompatibilitySystem showWarning:@"Unable to find valid -[SBApplicationController applicationWithBundleIdentifier:] replacement"];
     return nil;
 }
@@ -62,12 +62,12 @@ extern BOOL overrideDisableForStatusBar;
 - (void)_willBegin {
     @autoreleasepool {
         NSArray *apps = nil;
-        if ([self respondsToSelector:@selector(toApplications)])
+        if ([self respondsToSelector:@selector(toApplications)]) {
             apps = [self toApplications];
-        else
+        } else {
             apps = [MSHookIvar<NSArray*>(self, "_toApplications") copy];
-        for (SBApplication *app in apps)
-        {
+        }
+        for (SBApplication *app in apps) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [ZYDesktopManager.sharedInstance removeAppWithIdentifier:app.bundleIdentifier animated:NO forceImmediateUnload:YES];
             });
@@ -78,28 +78,17 @@ extern BOOL overrideDisableForStatusBar;
 
 // On iOS 8.3 and above, on the iPad, if a FBWindowContextWhatever creates a hosting context / enabled hosting, all the other hosted windows stop.
 // This fixes that.
--(void)_didComplete {
+- (void)_didComplete {
     %orig;
 
-    //if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [ZYHostedAppView iPad_iOS83_fixHosting];
+    }
     // can't hurt to check all devices - especially if it changes/has changed to include phones.
     // however this was presumably done in preparation for the iOS 9 multitasking
-    [ZYHostedAppView iPad_iOS83_fixHosting];
-}
-%end
 
-/*
-%hook SBRootFolderView
-- (_Bool)_hasMinusPages
-{
-    return ZYDesktopManager.sharedInstance.currentDesktop.hostedWindows.count > 0 ? YES : %orig;
-}
-- (unsigned long long)_minusPageCount
-{
-    return ZYDesktopManager.sharedInstance.currentDesktop.hostedWindows.count > 0 ? 1 : %orig;
 }
 %end
-*/
 
 %hook SpringBoard
 -(void)noteInterfaceOrientationChanged:(int)arg1 duration:(float)arg2 {
@@ -121,8 +110,9 @@ extern BOOL overrideDisableForStatusBar;
 
 %hook UIScreen
 %new -(CGRect) ZY_interfaceOrientedBounds {
-    if ([self respondsToSelector:@selector(_interfaceOrientedBounds)])
+    if ([self respondsToSelector:@selector(_interfaceOrientedBounds)]) {
         return [self _interfaceOrientedBounds];
+    }
     return [self bounds];
 }
 %end
@@ -135,10 +125,8 @@ void reset_settings_notification(CFNotificationCenterRef center, void *observer,
     [ZYSettings.sharedSettings resetSettings];
 }
 
-%ctor
-{
-    if (IS_SPRINGBOARD)
-    {
+%ctor {
+    if (IS_SPRINGBOARD) {
         %init;
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, respring_notification, CFSTR("com.shade.zypen/Respring"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, reset_settings_notification, CFSTR("com.shade.zypen/ResetSettings"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
