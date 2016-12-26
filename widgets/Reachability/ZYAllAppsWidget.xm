@@ -35,7 +35,6 @@
 	UIScrollView *allAppsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 200)];
 
 	CGSize size = [%c(SBIconView) defaultIconSize];
-	HBLogInfo(@"Default Icon Size: %@", NSStringFromCGSize(size));
 	spacing = (frame.size.width - (iconsPerLine * size.width)) / (iconsPerLine + 0);
 	//NSString *currentBundleIdentifier = [[UIApplication sharedApplication] _accessibilityFrontMostApplication].bundleIdentifier;
 	//if (!currentBundleIdentifier)
@@ -54,11 +53,12 @@
 
 	static NSMutableArray *allApps = nil;
 	if (!allApps) {
-		ALApplicationList *applicationList = [ALApplicationList sharedApplicationList];
-		NSArray *sortedAppList = [[applicationList.applications allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-	    return [[applicationList.applications objectForKey:obj1] caseInsensitiveCompare:[applicationList.applications objectForKey:obj2]];
+		allApps = [[[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] visibleIconIdentifiers] mutableCopy];
+    [allApps sortUsingComparator: ^(NSString* a, NSString* b) {
+    	NSString *a_ = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:a].displayName;
+    	NSString *b_ = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:b].displayName;
+        return [a_ caseInsensitiveCompare:b_];
 		}];
-		allApps = [NSMutableArray arrayWithArray:sortedAppList];
 	}
 
 	isTop = YES;
@@ -66,10 +66,8 @@
 	hasSecondRow = NO;
 	for (NSString *str in allApps) {
 		app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:str];
-    SBApplicationIcon *icon = [[%c(SBApplicationIcon) alloc] initWithApplication:app];
-		UIImageView *iconView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-		iconView.image = [icon getIconImage:1];
-		iconView.contentMode = UIViewContentModeScaleAspectFit;
+    SBApplicationIcon *icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
+    SBIconView *iconView = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] _iconViewForIcon:icon];
     if (!iconView || [icon isKindOfClass:[%c(SBApplicationIcon) class]] == NO) {
 			continue;
 		}
@@ -86,7 +84,6 @@
 			hasSecondRow = YES;
 			isTop = !isTop;
 		}
-				iconView.userInteractionEnabled = YES;
         iconView.frame = CGRectMake(contentSize.width, contentSize.height, iconView.frame.size.width, iconView.frame.size.height);
         iconView.tag = app.pid;
         iconView.restorationIdentifier = app.bundleIdentifier;

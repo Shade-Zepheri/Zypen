@@ -951,3 +951,8 @@ typedef struct {
 -(void)setAutorotates:(BOOL)arg1 forceUpdateInterfaceOrientation:(BOOL)arg2 ;
 -(void)handleStatusBarChangeFromHeight:(double)arg1 toHeight:(double)arg2 ;
 @end
+
+@interface SBIconController ()
+@property (nonatomic,readonly) SBIconViewMap *homescreenIconViewMap;
++ (id)sharedInstance;
+@end
