@@ -35,6 +35,7 @@
 	UIScrollView *allAppsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 200)];
 
 	CGSize size = [%c(SBIconView) defaultIconSize];
+	HBLogInfo(@"Default Icon Size: %@", NSStringFromCGSize(size));
 	spacing = (frame.size.width - (iconsPerLine * size.width)) / (iconsPerLine + 0);
 	//NSString *currentBundleIdentifier = [[UIApplication sharedApplication] _accessibilityFrontMostApplication].bundleIdentifier;
 	//if (!currentBundleIdentifier)
@@ -58,7 +59,6 @@
 	    return [[applicationList.applications objectForKey:obj1] caseInsensitiveCompare:[applicationList.applications objectForKey:obj2]];
 		}];
 		allApps = [NSMutableArray arrayWithArray:sortedAppList];
-		//[allApps removeObject:currentBundleIdentifier];
 	}
 
 	isTop = YES;
@@ -67,7 +67,9 @@
 	for (NSString *str in allApps) {
 		app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:str];
     SBApplicationIcon *icon = [[%c(SBApplicationIcon) alloc] initWithApplication:app];
-    UIImageView *iconView = [[UIImageView alloc] initWithImage:[icon getIconImage:1]];
+		UIImageView *iconView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+		iconView.image = [icon getIconImage:1];
+		iconView.contentMode = UIViewContentModeScaleAspectFit;
     if (!iconView || [icon isKindOfClass:[%c(SBApplicationIcon) class]] == NO) {
 			continue;
 		}

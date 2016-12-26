@@ -575,13 +575,11 @@ return sharedInstance;
 -(void) ZY_setIsIconIndicatorInhibited:(BOOL)value showAgainImmediately:(BOOL)value2;
 
 + (CGSize)defaultIconSize;
++ (CGSize)defaultVisibleIconImageSize;
 + (CGSize)defaultIconImageSize;
 + (BOOL)allowsRecycling;
 + (id)_jitterPositionAnimation;
 + (id)_jitterTransformAnimation;
-+ (struct CGSize)defaultIconImageSize;
-+ (struct CGSize)defaultIconSize;
-
 - (id)initWithDefaultSize;
 - (void)dealloc;
 

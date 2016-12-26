@@ -67,7 +67,9 @@
 	for (NSString *str in recents) {
 		app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:str];
     SBApplicationIcon *icon = [[%c(SBApplicationIcon) alloc] initWithApplication:app];
-    UIImageView *iconView = [[UIImageView alloc] initWithImage:[icon getIconImage:1]];
+		UIImageView *iconView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+		iconView.image = [icon getIconImage:1];
+		iconView.contentMode = UIViewContentModeScaleAspectFit;
     if (!iconView) {
       continue;
     }

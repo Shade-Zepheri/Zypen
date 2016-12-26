@@ -79,6 +79,7 @@ BOOL wasEnabled = NO;
 }
 
 - (void)deactivateReachabilityModeForObserver:(unsafe_id)arg1 {
+    HBLogDebug(@"deactivateReachabilityModeForObserver");
     if (overrideDisableForStatusBar) {
       return;
     }
@@ -171,6 +172,7 @@ id SBWorkspace$sharedInstance;
 }
 
 %new - (void)ZY_closeCurrentView {
+    HBLogDebug(@"Closing Current VIew");
     if ([view isKindOfClass:[ZYAppSliderProviderView class]]) {
       [ZYMessagingServer.sharedInstance endResizingApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
       [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
@@ -232,6 +234,7 @@ id SBWorkspace$sharedInstance;
 }
 
 - (void)_disableReachabilityImmediately:(_Bool)arg1 {
+    HBLogDebug(@"Deactivating Immediately");
     if (overrideDisableForStatusBar) {
       return;
     }
@@ -384,7 +387,6 @@ id SBWorkspace$sharedInstance;
     }
 
     UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
-    //CGSize iconSize = [%c(SBIconView) defaultIconImageSize];
     static CGSize fullSize = [%c(SBIconView) defaultIconSize];
     fullSize.height = fullSize.width; // otherwise it often looks like {60,74}
     CGFloat padding = 20;
@@ -644,12 +646,11 @@ CGFloat startingY = -1;
 
     FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
     [settings setBackgrounded:NO];
+
     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
 
-    [[UIApplication sharedApplication] launchApplicationWithIdentifier:bundleIdentifier suspended:YES];
-
-    [contextHostManager enableHostingForRequester:bundleIdentifier orderFront:YES];
-    view = [contextHostManager hostViewForRequester:bundleIdentifier enableAndOrderFront:YES];
+    [contextHostManager enableHostingForRequester:app.bundleIdentifier orderFront:YES];
+    view = [contextHostManager hostViewForRequester:app.bundleIdentifier enableAndOrderFront:YES];
 
     if (draggerView && draggerView.superview == w) {
         [w insertSubview:view belowSubview:draggerView];
@@ -734,7 +735,7 @@ CGFloat startingY = -1;
     completion:completion];
 }
 
-%new -(void) appViewItemTap:(UITapGestureRecognizer*)sender {
+%new - (void)appViewItemTap:(UITapGestureRecognizer*)sender {
     int pid = [sender.view tag];
     SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithPid:pid];
     if (!app) {
