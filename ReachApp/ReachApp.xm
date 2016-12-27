@@ -205,20 +205,19 @@ id SBWorkspace$sharedInstance;
             [view removeFromSuperview];
           }
         }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             if (lastBundleIdentifier && lastBundleIdentifier.length > 0) {
                 if (app && [app pid] && [app mainScene]) {
                     FBScene *scene = [app mainScene];
                     FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
                     [settings setBackgrounded:YES];
                     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
-                    HBLogDebug(@"%@", NSStringFromCGRect(pre_topAppFrame));
-                    MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
+                    //Dont Understand Purpose? MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
                     MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
 
                     SBApplication *currentApp = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:currentBundleIdentifier];
                     if ([currentApp mainScene]) {
-                        MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
+                        //Dont Understand Purpose?  MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
                         MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
                     }
 
