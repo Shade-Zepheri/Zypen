@@ -190,7 +190,6 @@ extern BOOL allowClosingReachabilityNatively;
 }
 
 - (BOOL)isBeingHosted {
-	HBLogInfo(_currentData.isBeingHosted ? @"YES" : @"NO");
 	return _currentData.isBeingHosted;
 }
 

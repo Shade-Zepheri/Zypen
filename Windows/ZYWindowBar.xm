@@ -44,11 +44,9 @@ extern BOOL allowOpenApp;
 @end
 
 @implementation ZYWindowBar
--(void) attachView:(ZYHostedAppView*)view
-{
+- (void)attachView:(ZYHostedAppView*)view {
 	height = 40;
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-	{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
 	    height = 45;
 	}
 
@@ -113,17 +111,17 @@ extern BOOL allowOpenApp;
     titleLabel.textAlignment = THEMED(windowedMultaskingBarTitleTextAlignment);
     titleLabel.font = [UIFont systemFontOfSize:18];
     titleLabel.textColor = THEMED(windowedMultitaskingBarTitleColor);
-    titleLabel.text = [view displayName];
+		titleLabel.text = [view displayName];
     [self addSubview:titleLabel];
 
     CGFloat tmp = 16;
-    while (tmp + 16 < height)
-    	tmp += 16;
+    while (tmp + 16 < height) {
+			tmp += 16;
+		}
     buttonSize = tmp;
     spacing = (height - buttonSize) / 2.0;
 
-    if (![ZYSettings.sharedSettings onlyShowWindowBarIconsOnOverlay])
-    {
+    if (![ZYSettings.sharedSettings onlyShowWindowBarIconsOnOverlay]) {
 	    /*
 	        alignment:
 			0 = left
@@ -176,30 +174,30 @@ extern BOOL allowOpenApp;
 	    NSMutableArray *leftIconOrder = [NSMutableArray array];
 	    NSMutableArray *rightIconOrder = [NSMutableArray array];
 
-	    for (int i = 0; i < infos.count; i++)
-		{
+	    for (int i = 0; i < infos.count; i++) {
 			ZYWindowBarIconInfo *info = infos[i];
-			if (info.alignment == 0)
+			if (info.alignment == 0) {
 				[leftIconOrder addObject:info];
-			else
+			} else {
 				[rightIconOrder addObject:info];
+			}
 		}
 
 		[leftIconOrder sortUsingComparator:^(ZYWindowBarIconInfo *a, ZYWindowBarIconInfo *b) {
-			if (a.priority > b.priority)
+			if (a.priority > b.priority) {
 				return (NSComparisonResult)NSOrderedDescending;
-			else if (a.priority < b.priority)
+			} else if (a.priority < b.priority) {
 				return (NSComparisonResult)NSOrderedAscending;
-
+			}
 		    return (NSComparisonResult)NSOrderedSame;
 		}];
 
 		[rightIconOrder sortUsingComparator:^(ZYWindowBarIconInfo *a, ZYWindowBarIconInfo *b) {
-			if (a.priority > b.priority)
+			if (a.priority > b.priority) {
 				return (NSComparisonResult)NSOrderedDescending;
-			else if (a.priority < b.priority)
+			} else if (a.priority < b.priority) {
 				return (NSComparisonResult)NSOrderedAscending;
-
+			}
 		    return (NSComparisonResult)NSOrderedSame;
 		}];
 
@@ -256,39 +254,36 @@ extern BOOL allowOpenApp;
 			return sizingLockButton;
 		};
 
-		for (ZYWindowBarIconInfo *item in leftIconOrder)
-		{
+		for (ZYWindowBarIconInfo *item in leftIconOrder) {
 			UIButton *button = nil;
-			if (item.item == closeItemIdentifier)
+			if (item.item == closeItemIdentifier) {
 				button = createCloseButton();
-			else if (item.item == maxItemIdentifier)
+			} else if (item.item == maxItemIdentifier) {
 				button = createMaxButton();
-			else if (item.item == minItemIdentifier)
+			} else if (item.item == minItemIdentifier) {
 				button = createMinButton();
-			else if (item.item == rotationItemIdentifier)
+			} else if (item.item == rotationItemIdentifier) {
 				button = createRotationButton();
+			}
 
-			if (button)
-			{
+			if (button) {
 				button.frame = CGRectMake(leftSpace, spacing, buttonSize, buttonSize);
 				leftSpace += button.frame.size.width + (THEMED(windowedMultitaskingBarTitleTextInset) ?: 5);
 			}
 		}
 
-		for (ZYWindowBarIconInfo *item in rightIconOrder)
-		{
+		for (ZYWindowBarIconInfo *item in rightIconOrder) {
 			UIButton *button = nil;
-			if (item.item == closeItemIdentifier)
+			if (item.item == closeItemIdentifier) {
 				button = createCloseButton();
-			else if (item.item == maxItemIdentifier)
+			} else if (item.item == maxItemIdentifier) {
 				button = createMaxButton();
-			else if (item.item == minItemIdentifier)
+			} else if (item.item == minItemIdentifier) {
 				button = createMinButton();
-			else if (item.item == rotationItemIdentifier)
+			} else if (item.item == rotationItemIdentifier) {
 				button = createRotationButton();
-
-			if (button)
-			{
+			}
+			if (button) {
 				button.frame = CGRectMake(rightSpace, spacing, buttonSize, buttonSize);
 				rightSpace -= button.frame.size.width + (THEMED(windowedMultitaskingBarTitleTextInset) ?: 5);
 			}
@@ -303,8 +298,7 @@ extern BOOL allowOpenApp;
 	self.layer.mask = maskLayer;
 }
 
--(void) drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     CGRect topRect = CGRectMake(0, 0, rect.size.width, height);
     // Fill the rectangle with grey
     [barBackgroundColor setFill];
@@ -313,217 +307,188 @@ extern BOOL allowOpenApp;
     [super drawRect:rect];
 }
 
--(void) close
-{
+- (void)close {
 	[ZYDesktopManager.sharedInstance removeAppWithIdentifier:self.attachedView.bundleIdentifier animated:YES];
 }
 
--(void) maximize
-{
+- (void)maximize {
 	allowOpenApp = YES;
-	if ([%c(SBUIController) respondsToSelector:@selector(activateApplicationAnimated:)])
+	if ([%c(SBUIController) respondsToSelector:@selector(activateApplicationAnimated:)]) {
 		[[%c(SBUIController) sharedInstance] activateApplicationAnimated:attachedView.app];
-	else
+	} else {
 		[[%c(SBUIController) sharedInstance] activateApplication:attachedView.app];
+	}
 	allowOpenApp = NO;
 }
 
--(void) minimize
-{
+- (void)minimize {
 	[attachedView rotateToOrientation:UIInterfaceOrientationPortrait];
 	[UIView animateWithDuration:0.7 animations:^{
 		self.transform = CGAffineTransformMakeScale(0.25, 0.25);
 	}];
 }
 
--(void) closeButtonTap:(id)arg1
-{
+- (void)closeButtonTap:(id)arg1 {
 	[self close];
 }
 
--(void) maximizeButtonTap:(id)arg1
-{
+- (void)maximizeButtonTap:(id)arg1 {
 	[self maximize];
 }
 
--(void) minimizeButtonTap:(id)arg1
-{
+- (void)minimizeButtonTap:(id)arg1 {
 	[self minimize];
 }
 
--(void) saveWindowInfo
-{
+- (void)saveWindowInfo {
 	[ZYWindowStatePreservationSystemManager.sharedInstance saveWindowInformation:self];
-	if (self.desktop)
-	{
+	if (self.desktop) {
 		[self.desktop saveInfo];
 	}
 }
 
--(BOOL) isLocked
-{
-	if ([ZYSettings.sharedSettings windowRotationLockMode] == 0)
-	{
+- (BOOL)isLocked {
+	if ([ZYSettings.sharedSettings windowRotationLockMode] == 0) {
 		return sizingLocked;
-	}
-	else
-	{
+	} else {
 		return appRotationLocked;
 	}
 }
 
--(void) sizingLockButtonTap:(id)arg1
-{
-	if ([ZYSettings.sharedSettings windowRotationLockMode] == 0)
-	{
+- (void)sizingLockButtonTap:(id)arg1 {
+	if ([ZYSettings.sharedSettings windowRotationLockMode] == 0) {
 		sizingLocked = !sizingLocked;
-	}
-	else
-	{
+	} else {
 		appRotationLocked = !appRotationLocked;
 	}
 
-	if (sizingLocked || appRotationLocked)
-	{
+	if (sizingLocked || appRotationLocked) {
 		[sizingLockButton setImage:[ZYResourceImageProvider imageForFilename:@"Lock" size:CGSizeMake(16, 16) tintedTo:THEMED(windowedMultitaskingRotationIconTint)] forState:UIControlStateNormal];
-	}
-	else
-	{
+	} else {
 		[sizingLockButton setImage:[ZYResourceImageProvider imageForFilename:@"Unlocked" size:CGSizeMake(16, 16) tintedTo:THEMED(windowedMultitaskingRotationIconTint)] forState:UIControlStateNormal];
 		[self updateClientRotation];
 	}
 }
 
--(void) scaleTo:(CGFloat)scale animated:(BOOL)animate
-{
+- (void)scaleTo:(CGFloat)scale animated:(BOOL)animate {
 	[self scaleTo:scale animated:animate derotate:NO];
 }
 
--(void) scaleTo:(CGFloat)scale animated:(BOOL)animate derotate:(BOOL)derotate
-{
+- (void)scaleTo:(CGFloat)scale animated:(BOOL)animate derotate:(BOOL)derotate {
 	CGFloat rotation = atan2(self.transform.b, self.transform.a);
 
 	CGAffineTransform transform = CGAffineTransformMakeScale(scale, scale);
-	if (derotate == NO)
+	if (derotate == NO) {
 		transform = CGAffineTransformRotate(transform, rotation);
+	}
 
-	if (animate)
+	if (animate) {
 		[UIView animateWithDuration:0.2 animations:^{
-	    	[self setTransform:transform];
-	    }];
-	else
+				[self setTransform:transform];
+			}];
+	} else {
 		[self setTransform:transform];
-
+	}
 	[self saveWindowInfo];
 }
 
--(void) addRotation:(CGFloat)rads updateApp:(BOOL)update
-{
-	if (sizingLocked)
+- (void)addRotation:(CGFloat)rads updateApp:(BOOL)update {
+	if (sizingLocked) {
 		return;
+	}
 
-	if (rads != 0)
+	if (rads != 0) {
 		self.transform = CGAffineTransformRotate(self.transform, rads);
+	}
 
-    if (update)
-	{
-    	CGFloat currentRotation = RADIANS_TO_DEGREES(atan2(self.transform.b, self.transform.a));
-    	CGFloat rotateSnapDegrees = 0;
+  if (update) {
+  	CGFloat currentRotation = RADIANS_TO_DEGREES(atan2(self.transform.b, self.transform.a));
+  	CGFloat rotateSnapDegrees = 0;
 
-    	if (currentRotation < 0)
-    		currentRotation = 360 + currentRotation;
+  	if (currentRotation < 0) {
+			currentRotation = 360 + currentRotation;
+		}
 
-    	if (currentRotation >= 315 || currentRotation <= 45)
-    		rotateSnapDegrees = 360 - currentRotation;
-    	else if (currentRotation > 45 && currentRotation <= 135)
-    		rotateSnapDegrees = 90 - currentRotation;
-    	else if (currentRotation > 135 && currentRotation <= 215)
-    		rotateSnapDegrees = 180 - currentRotation;
-    	else
-    		rotateSnapDegrees = 270 - currentRotation;
+  	if (currentRotation >= 315 || currentRotation <= 45) {
+			rotateSnapDegrees = 360 - currentRotation;
+		} else if (currentRotation > 45 && currentRotation <= 135) {
+			rotateSnapDegrees = 90 - currentRotation;
+		} else if (currentRotation > 135 && currentRotation <= 215) {
+			rotateSnapDegrees = 180 - currentRotation;
+		} else {
+			rotateSnapDegrees = 270 - currentRotation;
+		}
 
-    	if ([ZYSettings.sharedSettings snapRotation])
-	    	[UIView animateWithDuration:0.2 animations:^{
-		    	self.transform = CGAffineTransformRotate(self.transform, DEGREES_TO_RADIANS(rotateSnapDegrees));
-		    }];
+  	if ([ZYSettings.sharedSettings snapRotation]) {
+			[UIView animateWithDuration:0.2 animations:^{
+				self.transform = CGAffineTransformRotate(self.transform, DEGREES_TO_RADIANS(rotateSnapDegrees));
+			}];
+		}
 
-		if (!appRotationLocked)
-	    	[attachedView rotateToOrientation:[self.desktop appOrientationRelativeToThisOrientation:currentRotation]];
+		if (!appRotationLocked) {
+			[attachedView rotateToOrientation:[self.desktop appOrientationRelativeToThisOrientation:currentRotation]];
+		}
 
-		if ([ZYSettings.sharedSettings snapWindows] && [ZYWindowSnapDataProvider shouldSnapWindow:self])
-		{
+		if ([ZYSettings.sharedSettings snapWindows] && [ZYWindowSnapDataProvider shouldSnapWindow:self]) {
 			[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES];
 			isSnapped = YES;
 		}
 
 		[self saveWindowInfo];
-    }
+  }
 }
 
--(void) updateClientRotation
-{
-	if (!appRotationLocked)
-	{
+- (void)updateClientRotation {
+	if (!appRotationLocked) {
     	CGFloat currentRotation = RADIANS_TO_DEGREES(atan2(self.transform.b, self.transform.a));
     	[self updateClientRotation:[self.desktop appOrientationRelativeToThisOrientation:currentRotation]];
 	}
 }
 
--(void) updateClientRotation:(UIInterfaceOrientation)orientation
-{
-	if (!appRotationLocked)
-	{
+- (void)updateClientRotation:(UIInterfaceOrientation)orientation {
+	if (!appRotationLocked) {
     	CGFloat currentRotation = RADIANS_TO_DEGREES(atan2(self.transform.b, self.transform.a));
 	    [attachedView rotateToOrientation:[self.desktop appOrientationRelativeToThisOrientation:currentRotation]];
 	}
 }
 
--(void) disableLongPress
-{
+- (void)disableLongPress {
 	enableLongPress = NO;
 	longPressGesture.enabled = NO;
 	longPressGesture.enabled = YES;
 }
 
--(void) enableLongPress
-{
+- (void)enableLongPress {
 	enableLongPress = YES;
 }
 
--(void) swapOrientationButtonTap:(id)arg1
-{
+- (void)swapOrientationButtonTap:(id)arg1 {
 	[self addRotation:DEGREES_TO_RADIANS(90) updateApp:YES];
 }
 
-- (void)handleRotate:(UIRotationGestureRecognizer *)gesture
-{
-	if ([ZYSettings.sharedSettings alwaysEnableGestures] == NO && self.isOverlayShowing == NO)
+- (void)handleRotate:(UIRotationGestureRecognizer *)gesture {
+	if ([ZYSettings.sharedSettings alwaysEnableGestures] == NO && self.isOverlayShowing == NO) {
 		return;
+	}
 
-    if (gesture.state == UIGestureRecognizerStateChanged)
-    {
-    	[self addRotation:gesture.rotation updateApp:NO];
-        //[self setTransform:CGAffineTransformRotate(self.transform, gesture.rotation)];
-        gesture.rotation = 0.0;
-    }
-    else if (gesture.state == UIGestureRecognizerStateEnded)
-	{
-    	[self addRotation:0 updateApp:YES];
-    }
+  if (gesture.state == UIGestureRecognizerStateChanged) {
+		[self addRotation:gesture.rotation updateApp:NO];
+    //[self setTransform:CGAffineTransformRotate(self.transform, gesture.rotation)];
+    gesture.rotation = 0.0;
+  } else if (gesture.state == UIGestureRecognizerStateEnded) {
+  	[self addRotation:0 updateApp:YES];
+  }
 }
 
--(void) handleLongPress:(UILongPressGestureRecognizer*)sender
-{
-	if (!enableLongPress)
-	{
+- (void)handleLongPress:(UILongPressGestureRecognizer*)sender {
+	if (!enableLongPress) {
 		return;
 	}
 
 	[self close];
 }
 
--(void) showOverlay
-{
+- (void)showOverlay {
 	ZYWindowOverlayView *overlay = [[ZYWindowOverlayView alloc] initWithFrame:CGRectMake(0, height, self.bounds.size.width, self.bounds.size.height - height)];
 	overlay.alpha = 0;
 	overlay.tag = 465982;
@@ -540,8 +505,7 @@ extern BOOL allowOpenApp;
 	}];
 }
 
--(void) hideOverlay
-{
+- (void)hideOverlay {
 	[(ZYWindowOverlayView*)[self viewWithTag:465982] dismiss];
 	[UIView animateWithDuration:0.5 animations:^{
 		closeButton.alpha = 1;
@@ -551,51 +515,45 @@ extern BOOL allowOpenApp;
 	}];
 }
 
--(BOOL) isOverlayShowing { return [self viewWithTag:465982] != nil; }
-
--(void) handleTap:(UITapGestureRecognizer*)tap
-{
-	if (!self.isOverlayShowing)
-		[self showOverlay];
+- (BOOL)isOverlayShowing {
+	return [self viewWithTag:465982] != nil;
 }
 
--(void) handleDoubleTap:(UITapGestureRecognizer*)tap
-{
+- (void)handleTap:(UITapGestureRecognizer*)tap {
+	if (!self.isOverlayShowing) {
+		[self showOverlay];
+	}
+}
+
+- (void)handleDoubleTap:(UITapGestureRecognizer*)tap {
 	[attachedView rotateToOrientation:UIInterfaceOrientationPortrait];
 	[UIView animateWithDuration:0.7 animations:^{
 		self.transform = CGAffineTransformMakeScale(0.6, 0.6);
 	}];
 }
 
--(void) handleTripleTap:(UITapGestureRecognizer*)tap{
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+- (void)handleTripleTap:(UITapGestureRecognizer*)tap{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
 		[ZYMessagingServer.sharedInstance forcePhoneMode:![ZYFakePhoneMode shouldFakeForAppWithIdentifier:attachedView.app.bundleIdentifier] forIdentifier:attachedView.app.bundleIdentifier andRelaunchApp:YES];
+	}
 }
 
--(void) handlePan:(UIPanGestureRecognizer*)sender
-{
-	if (!enableDrag)
-	{
+- (void)handlePan:(UIPanGestureRecognizer*)sender {
+	if (!enableDrag) {
 		[self removePotentialSnapShadow];
 		return;
 	}
 
-	if (sender.state == UIGestureRecognizerStateBegan)
-	{
+	if (sender.state == UIGestureRecognizerStateBegan) {
 		[self.superview bringSubviewToFront:self];
 		initialPoint = sender.view.center;
-	}
-	else if (sender.state == UIGestureRecognizerStateChanged)
-	{
+	} else if (sender.state == UIGestureRecognizerStateChanged) {
 		enableLongPress = NO;
-	}
-	else if (sender.state == UIGestureRecognizerStateEnded)
-	{
+	} else if (sender.state == UIGestureRecognizerStateEnded) {
 		enableLongPress = YES;
 		[self saveWindowInfo];
 
-		if ([ZYSettings.sharedSettings snapWindows] && [ZYWindowSnapDataProvider shouldSnapWindow:self])
-		{
+		if ([ZYSettings.sharedSettings snapWindows] && [ZYWindowSnapDataProvider shouldSnapWindow:self]) {
 			[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES completion:^{
 				[self removePotentialSnapShadow];
 				[self saveWindowInfo];
@@ -605,9 +563,9 @@ extern BOOL allowOpenApp;
 			tapGesture.enabled = NO;
 			tapGesture.enabled = YES;
 			return;
-		}
-		else
+		} else {
 			[self removePotentialSnapShadow];
+		}
 		return;
 	}
 
@@ -621,10 +579,10 @@ extern BOOL allowOpenApp;
     [self updatePotentialSnapShadow];
 }
 
-- (void)handlePinch:(UIPinchGestureRecognizer *)gesture
-{
-	if ([ZYSettings.sharedSettings alwaysEnableGestures] == NO && self.isOverlayShowing == NO)
+- (void)handlePinch:(UIPinchGestureRecognizer *)gesture {
+	if ([ZYSettings.sharedSettings alwaysEnableGestures] == NO && self.isOverlayShowing == NO) {
 		return;
+	}
 
     switch (gesture.state) {
         case UIGestureRecognizerStateBegan:
@@ -639,8 +597,7 @@ extern BOOL allowOpenApp;
         case UIGestureRecognizerStateEnded:
         	enableDrag = YES; enableLongPress = YES;
 
-			if ([ZYWindowSnapDataProvider shouldSnapWindow:self])
-			{
+			if ([ZYWindowSnapDataProvider shouldSnapWindow:self]) {
 				[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES];
 				isSnapped = YES;
 				// Force tap to fail
@@ -656,8 +613,7 @@ extern BOOL allowOpenApp;
     }
 }
 
--(void) setTransform:(CGAffineTransform)trans
-{
+- (void)setTransform:(CGAffineTransform)trans {
 	CGFloat scale = sqrt(trans.a * trans.a + trans.c * trans.c);
 	CGFloat max = 1.0;
 	scale = MIN(max, MAX(0.15, scale));
@@ -666,10 +622,10 @@ extern BOOL allowOpenApp;
 
 	[super setTransform:trans];
 
-	if (isBeingTouched == NO)
-	{
-		if ([ZYWindowSnapDataProvider shouldSnapWindow:self])
+	if (isBeingTouched == NO) {
+		if ([ZYWindowSnapDataProvider shouldSnapWindow:self]) {
 			[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES];
+		}
 
 		/*CGPoint origin = self.frame.origin;
 		CGPoint endPoint = CGPointMake(origin.x + self.frame.size.width, origin.y + self.frame.size.height);
@@ -687,99 +643,92 @@ extern BOOL allowOpenApp;
 	}
 }
 
--(void) updatePotentialSnapShadow
-{
-	if (![ZYSettings.sharedSettings snapWindows])
+- (void)updatePotentialSnapShadow {
+	if (![ZYSettings.sharedSettings snapWindows]) {
 		return;
+	}
 
-	if (![ZYSettings.sharedSettings showSnapHelper])
+	if (![ZYSettings.sharedSettings showSnapHelper]) {
 		return;
+	}
 
-	if (!snapShadowView)
-	{
+	if (!snapShadowView) {
 		snapShadowView = [[UIView alloc] initWithFrame:self.bounds];
 		snapShadowView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.1]; // [UIColor.blackColor colorWithAlphaComponent:0.5];
 		snapShadowView.layer.borderColor = [UIColor whiteColor].CGColor;
 		snapShadowView.layer.shadowRadius = 20;
 		snapShadowView.layer.shadowOpacity = 0.8;
 		snapShadowView.layer.shadowOffset = CGSizeMake(0, 0);
-  		snapShadowView.layer.borderWidth = 1.5f;
-  		snapShadowView.layer.cornerRadius = 6;
-  		snapShadowView.clipsToBounds = YES;
-  		snapShadowView.layer.masksToBounds = YES;
+		snapShadowView.layer.borderWidth = 1.5f;
+		snapShadowView.layer.cornerRadius = 6;
+		snapShadowView.clipsToBounds = YES;
+		snapShadowView.layer.masksToBounds = YES;
 
 		[self.superview insertSubview:snapShadowView belowSubview:self];
 	}
 
-	if ([ZYWindowSnapDataProvider shouldSnapWindow:self])
-	{
+	if ([ZYWindowSnapDataProvider shouldSnapWindow:self]) {
 		snapShadowView.hidden = NO;
 		snapShadowView.transform = self.transform;
 		snapShadowView.center = [ZYWindowSnapDataProvider snapCenterForWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self]];
-	}
-	else
-	{
+	} else {
 		snapShadowView.hidden = YES;
 	}
 }
 
--(void) removePotentialSnapShadow
-{
+- (void)removePotentialSnapShadow {
 	[snapShadowView removeFromSuperview];
 	snapShadowView = nil;
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	isBeingTouched = YES;
 	ZYDesktopManager.sharedInstance.lastUsedWindow = self;
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	isBeingTouched = NO;
 }
 
--(void) resignForemostApp
-{
+- (void)resignForemostApp {
     titleLabel.font = [UIFont systemFontOfSize:18];
 }
 
--(void) becomeForemostApp
-{
+- (void)becomeForemostApp {
     titleLabel.font = [UIFont boldSystemFontOfSize:20];
 	[self.superview bringSubviewToFront:self];
 }
 
--(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     NSEnumerator *objects = [self.subviews reverseObjectEnumerator];
     UIView *subview;
-    while ((subview = [objects nextObject]))
-    {
+    while ((subview = [objects nextObject])) {
         UIView *success = [subview hitTest:[self convertPoint:point toView:subview] withEvent:event];
-        if (success)
-            return success;
+        if (success) {
+					return success;
+				}
     }
     return [super hitTest:point withEvent:event];
 }
 
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
-{
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
 	BOOL isContained = NO;
-	for (UIView *view in self.subviews)
-	{
-		if (CGRectContainsPoint(view.frame, point) || CGRectContainsPoint(view.frame, [view convertPoint:point fromView:self])) // [self convertPoint:point toView:view]))
+	for (UIView *view in self.subviews) {
+		if (CGRectContainsPoint(view.frame, point) || CGRectContainsPoint(view.frame, [view convertPoint:point fromView:self])) {
 			isContained = YES;
+		}
 	}
 	return isContained || [super pointInside:point withEvent:event];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-	if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]])
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+	if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
 		return NO;
+	}
 	return YES;
 }
--(ZYHostedAppView*) attachedView { return attachedView; }
+- (ZYHostedAppView*)attachedView {
+	return attachedView;
+}
+
 @end

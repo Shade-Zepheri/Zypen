@@ -5,8 +5,7 @@
 BOOL overrideUIWindow = NO;
 
 @implementation ZYDesktopManager
-+(instancetype) sharedInstance
-{
++ (instancetype)sharedInstance {
 	SHARED_INSTANCE2(ZYDesktopManager,
 		sharedInstance->windows = [NSMutableArray array];
 		[sharedInstance addDesktop:YES];
@@ -14,23 +13,24 @@ BOOL overrideUIWindow = NO;
 	);
 }
 
--(void) addDesktop:(BOOL)switchTo
-{
+- (void)addDesktop:(BOOL)switchTo {
 	ZYDesktopWindow *desktopWindow = [[ZYDesktopWindow alloc] initWithFrame:UIScreen.mainScreen._referenceBounds];
 
 	[windows addObject:desktopWindow];
-	if (switchTo)
+	if (switchTo) {
 		[self switchToDesktop:windows.count - 1];
+	}
 	[desktopWindow loadInfo:[windows indexOfObject:desktopWindow]];
 }
 
--(void) removeDesktopAtIndex:(NSUInteger)index
-{
-	if (windows.count == 1 && index == 0)
+- (void)removeDesktopAtIndex:(NSUInteger)index {
+	if (windows.count == 1 && index == 0) {
 		return;
+	}
 
-	if (currentDesktopIndex == index)
+	if (currentDesktopIndex == index) {
 		[self switchToDesktop:0];
+	}
 
 	ZYDesktopWindow *window = windows[index];
 	[window saveInfo];
@@ -38,26 +38,24 @@ BOOL overrideUIWindow = NO;
 	[windows removeObjectAtIndex:index];
 }
 
--(BOOL) isAppOpened:(NSString*)identifier
-{
-	for (ZYDesktopWindow *desktop in windows)
-		if ([desktop isAppOpened:identifier])
+- (BOOL)isAppOpened:(NSString*)identifier {
+	for (ZYDesktopWindow *desktop in windows) {
+		if ([desktop isAppOpened:identifier]) {
 			return YES;
+		}
+	}
 	return NO;
 }
 
--(NSUInteger) numberOfDesktops
-{
+- (NSUInteger)numberOfDesktops {
 	return windows.count;
 }
 
--(void) switchToDesktop:(NSUInteger)index
-{
+- (void)switchToDesktop:(NSUInteger)index {
 	[self switchToDesktop:index actuallyShow:YES];
 }
 
--(void) switchToDesktop:(NSUInteger)index actuallyShow:(BOOL)show
-{
+- (void)switchToDesktop:(NSUInteger)index actuallyShow:(BOOL)show {
 	ZYDesktopWindow *newDesktop = windows[index];
 
 	currentDesktop.hidden = YES;
@@ -65,80 +63,72 @@ BOOL overrideUIWindow = NO;
 	[currentDesktop unloadApps];
 	[newDesktop loadApps];
 
-	if (show == NO)
+	if (show == NO) {
 		newDesktop.hidden = YES;
+	}
 	overrideUIWindow = NO;
 	[newDesktop makeKeyAndVisible];
 	overrideUIWindow = YES;
-	if (show == NO)
+	if (show == NO) {
 		newDesktop.hidden = YES;
+	}
 
 	currentDesktopIndex = index;
 	currentDesktop = newDesktop;
 	//[newDesktop updateForOrientation:UIApplication.sharedApplication.statusBarOrientation];
 }
 
--(void) removeAppWithIdentifier:(NSString*)bundleIdentifier animated:(BOOL)animated
-{
+- (void)removeAppWithIdentifier:(NSString*)bundleIdentifier animated:(BOOL)animated {
 	[self removeAppWithIdentifier:bundleIdentifier animated:animated forceImmediateUnload:NO];
 }
 
--(void) removeAppWithIdentifier:(NSString*)bundleIdentifier animated:(BOOL)animated forceImmediateUnload:(BOOL)force
-{
-	for (ZYDesktopWindow *window in windows)
-	{
+- (void)removeAppWithIdentifier:(NSString*)bundleIdentifier animated:(BOOL)animated forceImmediateUnload:(BOOL)force {
+	for (ZYDesktopWindow *window in windows) {
 		[window removeAppWithIdentifier:bundleIdentifier animated:animated forceImmediateUnload:force];
 	}
 }
 
--(ZYWindowBar*) windowForIdentifier:(NSString*)identifier
-{
-	for (ZYDesktopWindow *desktop in windows)
-		if ([desktop isAppOpened:identifier])
+- (ZYWindowBar*)windowForIdentifier:(NSString*)identifier {
+	for (ZYDesktopWindow *desktop in windows) {
+		if ([desktop isAppOpened:identifier]) {
 			return [desktop windowForIdentifier:identifier];
+		}
+	}
 	return nil;
 }
 
--(void) hideDesktop
-{
+- (void)hideDesktop {
 	currentDesktop.hidden = YES;
 }
 
--(void) reshowDesktop
-{
+- (void)reshowDesktop {
 	currentDesktop.hidden = NO;
 }
 
--(void) updateRotationOnClients:(UIInterfaceOrientation)orientation
-{
-	for (ZYDesktopWindow *w in windows)
+- (void)updateRotationOnClients:(UIInterfaceOrientation)orientation {
+	for (ZYDesktopWindow *w in windows) {
 		[w updateRotationOnClients:orientation];
+	}
 }
 
--(void) updateWindowSizeForApplication:(NSString*)identifier
-{
+-(void) updateWindowSizeForApplication:(NSString*)identifier {
 	for (ZYDesktopManager *w in windows)
 		[w updateWindowSizeForApplication:identifier];
 }
 
--(void) setLastUsedWindow:(ZYWindowBar*)window
-{
-	if (_lastUsedWindow)
-	{
+- (void)setLastUsedWindow:(ZYWindowBar*)window {
+	if (_lastUsedWindow) {
 		[_lastUsedWindow resignForemostApp];
 	}
 	_lastUsedWindow = window;
 	[_lastUsedWindow becomeForemostApp];
 }
 
--(void) findNewForemostApp
-{
+- (void)findNewForemostApp {
 	ZYDesktopWindow *desktop = [self currentDesktop];
-	for (ZYHostedAppView *hostedApp in desktop.hostedWindows)
-	{
+	for (ZYHostedAppView *hostedApp in desktop.hostedWindows) {
 		ZYWindowBar *bar = [desktop windowForIdentifier:hostedApp.app.bundleIdentifier];
-		if (bar)
-		{
+		if (bar) {
 			self.lastUsedWindow = bar;
 			return;
 		}
@@ -146,10 +136,22 @@ BOOL overrideUIWindow = NO;
 	//self.lastUsedWindow = nil;
 }
 
--(ZYDesktopWindow*) desktopAtIndex:(NSUInteger)index { return windows[index]; }
--(NSArray*) availableDesktops { return windows; }
--(NSUInteger) currentDesktopIndex { return currentDesktopIndex; }
--(ZYDesktopWindow*) currentDesktop { return currentDesktop; }
+- (ZYDesktopWindow*) desktopAtIndex:(NSUInteger)index {
+	return windows[index];
+}
+
+- (NSArray*) availableDesktops {
+	return windows;
+}
+
+- (NSUInteger) currentDesktopIndex {
+	return currentDesktopIndex;
+}
+
+- (ZYDesktopWindow*) currentDesktop {
+	return currentDesktop;
+}
+
 @end
 
 /*
@@ -175,15 +177,14 @@ BOOL overrideUIWindow = NO;
 */
 
 %hook SpringBoard
--(void)noteInterfaceOrientationChanged:(UIInterfaceOrientation)arg1 duration:(CGFloat)arg2
-{
+-(void)noteInterfaceOrientationChanged:(UIInterfaceOrientation)arg1 duration:(CGFloat)arg2 {
 	%orig;
 	[ZYDesktopManager.sharedInstance updateRotationOnClients:arg1];
 }
 %end
 
-%ctor
-{
-	if ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"])
+%ctor {
+	if ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"]) {
 		%init;
+	}
 }

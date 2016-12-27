@@ -2,31 +2,26 @@
 #import "ZYDesktopManager.h"
 #import "ZYHostedAppView.h"
 
-#define FILE_PATH @"/User/Library/Preferences/com.efrederickson.empoleon.windowstates.plist"
+#define FILE_PATH @"/User/Library/Preferences/com.shade.empoleon.windowstates.plist"
 
 @implementation ZYWindowStatePreservationSystemManager
-+(id) sharedInstance
-{
++ (id)sharedInstance {
 	SHARED_INSTANCE2(ZYWindowStatePreservationSystemManager, [sharedInstance loadInfo]);
 }
 
--(void) loadInfo
-{
+- (void)loadInfo {
 	dict = [NSMutableDictionary dictionaryWithContentsOfFile:FILE_PATH] ?: [NSMutableDictionary dictionary];
 }
 
--(void) saveInfo
-{
+- (void)saveInfo {
 	[dict writeToFile:FILE_PATH atomically:YES];
 }
 
--(void) saveDesktopInformation:(ZYDesktopWindow*)desktop
-{
+- (void)saveDesktopInformation:(ZYDesktopWindow*)desktop {
 	NSUInteger index = [ZYDesktopManager.sharedInstance.availableDesktops indexOfObject:desktop];
 	NSString *key = [NSString stringWithFormat:@"%lu",(unsigned long)index];
 	NSMutableArray *openApps = [NSMutableArray array];
-	for (ZYHostedAppView *app in desktop.hostedWindows)
-	{
+	for (ZYHostedAppView *app in desktop.hostedWindows) {
 		[openApps addObject:app.app.bundleIdentifier];
 	}
 
@@ -35,21 +30,20 @@
 	[self saveInfo];
 }
 
--(BOOL) hasDesktopInformationAtIndex:(NSInteger)index
-{
+- (BOOL)hasDesktopInformationAtIndex:(NSInteger)index {
 	NSString *key = [NSString stringWithFormat:@"%lu",(unsigned long)index];
 	return [dict objectForKey:key] != nil;
 }
 
--(ZYPreservedDesktopInformation) desktopInformationForIndex:(NSInteger)index
-{
+- (ZYPreservedDesktopInformation)desktopInformationForIndex:(NSInteger)index {
 	ZYPreservedDesktopInformation info;
 	info.index = index;
 	NSString *key = [NSString stringWithFormat:@"%lu",(unsigned long)index];
 
 	NSMutableArray *apps = [NSMutableArray array];
-	for (NSString *ident in dict[key])
+	for (NSString *ident in dict[key]) {
 		[apps addObject:ident];
+	}
 
 	info.openApps = apps;
 
@@ -57,8 +51,7 @@
 }
 
 // Window
--(void) saveWindowInformation:(ZYWindowBar*)window
-{
+- (void)saveWindowInformation:(ZYWindowBar*)window {
 	CGPoint center = window.center;
 	CGAffineTransform transform = window.transform;
 	NSString *appIdent = window.attachedView.app.bundleIdentifier;
@@ -71,27 +64,24 @@
 	[self saveInfo];
 }
 
--(BOOL) hasWindowInformationForIdentifier:(NSString*)appIdentifier
-{
+- (BOOL)hasWindowInformationForIdentifier:(NSString*)appIdentifier {
 	return [dict objectForKey:appIdentifier] != nil;
 }
 
--(ZYPreservedWindowInformation) windowInformationForAppIdentifier:(NSString*)identifier
-{
+- (ZYPreservedWindowInformation)windowInformationForAppIdentifier:(NSString*)identifier {
 	ZYPreservedWindowInformation info = (ZYPreservedWindowInformation) { CGPointZero, CGAffineTransformIdentity };
 
 	NSDictionary *appInfo = dict[identifier];
-	if (!appInfo)
+	if (!appInfo) {
 		return info;
-
+	}
 	info.center = CGPointFromString(appInfo[@"center"]);
 	info.transform = CGAffineTransformFromString(appInfo[@"transform"]);
 
 	return info;
 }
 
--(void) removeWindowInformationForIdentifier:(NSString*)appIdentifier
-{
+- (void)removeWindowInformationForIdentifier:(NSString*)appIdentifier {
 	[dict removeObjectForKey:appIdentifier];
 	[self saveInfo];
 }
