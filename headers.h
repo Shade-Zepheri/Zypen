@@ -381,7 +381,7 @@ return sharedInstance;
 - (BOOL)_isSupportedOrientation:(int)arg1;
 
 // SpringBoard methods
--(BOOL)launchApplicationWithIdentifier:(id)identifier suspended:(BOOL)suspended;
+- (void)launchApplicationWithIdentifier: (NSString*)identifier suspended: (BOOL)suspended;
 -(SBApplication*) _accessibilityFrontMostApplication;
 -(void)setWantsOrientationEvents:(BOOL)events;
 
@@ -955,4 +955,12 @@ typedef struct {
 @interface SBIconController ()
 @property (nonatomic,readonly) SBIconViewMap *homescreenIconViewMap;
 + (id)sharedInstance;
+@end
+
+@interface SBWorkspaceHomeScreenEntity : NSObject
+@end
+
+@interface SBWorkspaceEntity : NSObject
+-(BOOL)isApplicationEntity;
+-(void)setIdentifier:(NSString *)arg1 ;
 @end

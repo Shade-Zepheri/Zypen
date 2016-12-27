@@ -126,9 +126,9 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     [self addSubview:view];
 
     [ZYMessagingServer.sharedInstance setHosted:YES forIdentifier:app.bundleIdentifier completion:nil];
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    //if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [ZYHostedAppView iPad_iOS83_fixHosting];
-    }
+    //}
 
     [ZYRunningAppsProvider.sharedInstance addTarget:self];
 
@@ -252,10 +252,6 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 }
 
 - (void)unloadApp:(BOOL)forceImmediate {
-    //if (activityView)
-    //    [activityView stopAnimating];
-    [self removeLoadingIndicator];
-    [loadedTimer invalidate];
     loadedTimer = nil;
 
     [ZYRunningAppsProvider.sharedInstance removeTarget:self];
@@ -284,7 +280,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     }
 
     if (contextHostManager) {
-        [contextHostManager disableHostingForRequester:app.bundleIdentifier];
+        [contextHostManager disableHostingForRequester:@"Zypen"];
         contextHostManager = nil;
     }
 
@@ -306,11 +302,9 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         if ([appsBeingHosted[app.bundleIdentifier] intValue] > 0) {
             return;
         }
-
         FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
         [settings setBackgrounded:YES];
         [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
-        //FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
         didRun = YES;
     };
 
@@ -345,7 +339,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
             FBWindowContextHostManager *manager = (FBWindowContextHostManager*)[ZYHostManager hostManagerForApp:app_];
             if (manager) {
                 HBLogDebug(@"[ReachApp] rehosting for iPad: %@", bundleIdentifier);
-                [manager enableHostingForRequester:bundleIdentifier priority:1];
+                [manager enableHostingForRequester:@"Zypen" priority:1];
             }
         }
     }

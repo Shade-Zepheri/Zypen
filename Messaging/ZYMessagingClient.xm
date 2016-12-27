@@ -73,12 +73,6 @@ extern BOOL allowClosingReachabilityNatively;
 		)*/
 
 	if (allowedProcess == NO) {
-		// Anything that's not a UIApp (system app or user app) doesn't need this messaging client
-		// Attempting to reach out will either:
-		// 1. hang the process
-		// 2. crash after timeout due to no UIKit (?)
-		// 3. something else bad
-		// so therefore all those are simply blacklisted. simple.
 		return;
 	}
 
@@ -196,6 +190,7 @@ extern BOOL allowClosingReachabilityNatively;
 }
 
 - (BOOL)isBeingHosted {
+	HBLogInfo(_currentData.isBeingHosted ? @"YES" : @"NO");
 	return _currentData.isBeingHosted;
 }
 

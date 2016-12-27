@@ -17,15 +17,15 @@
 }
 
 - (NSString*)currentVersion {
-  return @"0.0.1";
+  return @"0.3";
 }
 - (BOOL)isOnSupportedOS {
-  return SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN(@"10.0");
+  return SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN(@"10.2");
 }
 
 - (void)registerExtension:(NSString*)name forZypenVersion:(NSString*)version {
 	if ([self.currentVersion compare:version options:NSNumericSearch] == NSOrderedDescending) {
-		[ZYCompatibilitySystem showWarning:[NSString stringWithFormat:@"Extension %@ was built for Multiplexer version %@, which is above the current version. Compliancy issues may occur.", name, version]];
+		[ZYCompatibilitySystem showWarning:[NSString stringWithFormat:@"Extension %@ was built for Zypen version %@, which is above the current version. Compliancy issues may occur.", name, version]];
 	}
 
 	ZypenExtension *ext = [[ZypenExtension alloc] init];
@@ -64,7 +64,7 @@
 + (BOOL)shouldShowControlCenterGrabberOnFirstSwipe {
 	if ([%c(SBUIController) respondsToSelector:@selector(shouldShowControlCenterTabControlOnFirstSwipe)]) {
 		[[%c(SBUIController) sharedInstance] shouldShowControlCenterTabControlOnFirstSwipe];
-	}	
+	}
 	return [[%c(SBControlCenterController) sharedInstance] _shouldShowGrabberOnFirstSwipe];
 }
 @end

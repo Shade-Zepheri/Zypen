@@ -18,7 +18,7 @@
 
 #define SPRINGBOARD ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"])
 
-/*FBWindowContextHostWrapperView*/ UIView *view = nil;
+UIView *view = nil;
 NSString *lastBundleIdentifier = @"";
 NSString *currentBundleIdentifier = @"";
 UIViewController *ncViewController = nil;
@@ -79,7 +79,6 @@ BOOL wasEnabled = NO;
 }
 
 - (void)deactivateReachabilityModeForObserver:(unsafe_id)arg1 {
-    HBLogDebug(@"deactivateReachabilityModeForObserver");
     if (overrideDisableForStatusBar) {
       return;
     }
@@ -172,7 +171,6 @@ id SBWorkspace$sharedInstance;
 }
 
 %new - (void)ZY_closeCurrentView {
-    HBLogDebug(@"Closing Current VIew");
     if ([view isKindOfClass:[ZYAppSliderProviderView class]]) {
       [ZYMessagingServer.sharedInstance endResizingApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
       [ZYMessagingServer.sharedInstance setShouldUseExternalKeyboard:NO forApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];
@@ -207,13 +205,14 @@ id SBWorkspace$sharedInstance;
             [view removeFromSuperview];
           }
         }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             if (lastBundleIdentifier && lastBundleIdentifier.length > 0) {
                 if (app && [app pid] && [app mainScene]) {
                     FBScene *scene = [app mainScene];
                     FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
                     [settings setBackgrounded:YES];
                     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
+                    HBLogDebug(@"%@", NSStringFromCGRect(pre_topAppFrame));
                     MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
                     MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
 
@@ -224,7 +223,7 @@ id SBWorkspace$sharedInstance;
                     }
 
                     FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
-                    [contextHostManager disableHostingForRequester:lastBundleIdentifier];
+                    [contextHostManager disableHostingForRequester:@"Zypen"];
                 }
             }
             view = nil;
@@ -234,7 +233,6 @@ id SBWorkspace$sharedInstance;
 }
 
 - (void)_disableReachabilityImmediately:(_Bool)arg1 {
-    HBLogDebug(@"Deactivating Immediately");
     if (overrideDisableForStatusBar) {
       return;
     }
@@ -649,8 +647,12 @@ CGFloat startingY = -1;
 
     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
 
-    [contextHostManager enableHostingForRequester:app.bundleIdentifier orderFront:YES];
-    view = [contextHostManager hostViewForRequester:app.bundleIdentifier enableAndOrderFront:YES];
+    [[UIApplication sharedApplication] launchApplicationWithIdentifier:bundleIdentifier suspended:YES];
+
+    [contextHostManager enableHostingForRequester:@"Zypen" orderFront:YES];
+    view = [contextHostManager hostViewForRequester:@"Zypen" enableAndOrderFront:YES];
+
+    view.accessibilityHint = bundleIdentifier;
 
     if (draggerView && draggerView.superview == w) {
         [w insertSubview:view belowSubview:draggerView];

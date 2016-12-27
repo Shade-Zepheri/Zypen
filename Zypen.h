@@ -8,13 +8,13 @@
 @interface Zypen : NSObject {
 	NSMutableArray *activeExtensions;
 }
-+(instancetype) sharedInstance;
++ (instancetype)sharedInstance;
 
--(NSString*) currentVersion;
--(BOOL) isOnSupportedOS;
+- (NSString*)currentVersion;
+- (BOOL)isOnSupportedOS;
 
--(void) registerExtension:(NSString*)name forZypenVersion:(NSString*)version;
+- (void)registerExtension:(NSString*)name forZypenVersion:(NSString*)version;
 
-+(id) createSBAppToAppWorkspaceTransactionForExitingApp:(SBApplication*)app;
-+(BOOL) shouldShowControlCenterGrabberOnFirstSwipe;
++ (id)createSBAppToAppWorkspaceTransactionForExitingApp:(SBApplication*)app;
++ (BOOL)shouldShowControlCenterGrabberOnFirstSwipe;
 @end

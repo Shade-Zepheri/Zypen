@@ -34,8 +34,10 @@
 
 			[[UIApplication sharedApplication] launchApplicationWithIdentifier:app.bundleIdentifier suspended:YES];
 
-	    [contextHostManager enableHostingForRequester:app.bundleIdentifier orderFront:YES];
-	    return [contextHostManager hostViewForRequester:app.bundleIdentifier enableAndOrderFront:YES];
+	    [contextHostManager enableHostingForRequester:@"Zypen" orderFront:YES];
+			UIView *hostView = [contextHostManager hostViewForRequester:@"Zypen" enableAndOrderFront:YES];
+			hostView.accessibilityHint = app.bundleIdentifier;
+			return hostView;
 	}
 
 	[ZYCompatibilitySystem showWarning:@"Unable to find valid method for accessing context host views"];
