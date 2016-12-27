@@ -1,7 +1,6 @@
-GO_EASY_ON_ME = 1
-ARCHS = arm64
-CFLAGS = -I./ -Iwidgets/ -Iwidgets/Core/ -Iwidgets/Reachability/ -IReachApp/ -IGestures/ -IWindows/ -IMessaging/ -IKeyboard/ -ITheming/
-CFLAGS += -fobjc-arc -O2
+ARCHS = armv7 arm64
+CFLAGS = -I./ -Iwidgets/ -Iwidgets/Core/ -Iwidgets/Reachability/ -IReachApp/ -IGestures/ -IWindows/ -IMessaging/ -IKeyboard/ -ITheming/ -IBackgrounding/
+CFLAGS += -fobjc-arc -O2 -Wno-deprecated-declarations
 TARGET = iphone:9.2
 
 include $(THEOS)/makefiles/common.mk
@@ -25,6 +24,10 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 
 after-install::
 	install.exec "killall -9 backboardd"
+
 SUBPROJECTS += zypen
+SUBPROJECTS += Backgrounding
 SUBPROJECTS += ZYFakePhoneMode
+SUBPROJECTS += ZY_assertiond
+
 include $(THEOS_MAKE_PATH)/aggregate.mk

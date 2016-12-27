@@ -1,5 +1,6 @@
 #import "ZYSettings.h"
 #import "headers.h"
+#import "ZYBackgrounder.h"
 #import "ZYThemeManager.h"
 
 #define BOOL(key, default) ([_settings objectForKey:key] != nil ? [_settings[key] boolValue] : default)
@@ -253,6 +254,10 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	return BOOL(@"snapRotation", YES);
 }
 
+- (NSInteger)globalBackgroundMode {
+	return [_settings objectForKey:@"globalBackgroundMode"] == nil ? ZYBackgroundModeNative : [_settings[@"globalBackgroundMode"] intValue];
+}
+
 -(NSInteger) windowRotationLockMode {
 	return [_settings objectForKey:@"windowRotationLockMode"] == nil ? 0 : [_settings[@"windowRotationLockMode"] intValue];
 }
@@ -356,6 +361,14 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 
 -(BOOL) showSnapHelper {
 	return BOOL(@"showSnapHelper", NO);
+}
+
+- (ZYGrabArea) windowedMultitaskingGrabArea {
+	return [_settings objectForKey:@"windowedMultitaskingGrabArea"] == nil ? ZYGrabAreaBottomLeftThird : (ZYGrabArea)[_settings[@"windowedMultitaskingGrabArea"] intValue];
+}
+
+- (ZYGrabArea)swipeOverGrabArea {
+	return [_settings objectForKey:@"swipeOverGrabArea"] == nil ? ZYGrabAreaSideAnywhere : (ZYGrabArea)[_settings[@"swipeOverGrabArea"] intValue];
 }
 
 @end

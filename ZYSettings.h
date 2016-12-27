@@ -1,5 +1,16 @@
 #import <UIKit/UIKit.h>
 
+enum ZYGrabArea {
+	ZYGrabAreaBottomLeftThird = 1,
+	ZYGrabAreaBottomMiddleThird = 2,
+	ZYGrabAreaBottomRightThird = 3,
+
+	ZYGrabAreaSideAnywhere = 6,
+	ZYGrabAreaSideTopThird = 7,
+	ZYGrabAreaSideMiddleThird = 8,
+	ZYGrabAreaSideBottomThird = 9,
+};
+
 @interface ZYSettings : NSObject {
 	NSDictionary *_settings;
 }
@@ -43,6 +54,7 @@
 -(BOOL) openLinksInWindows;
 -(BOOL) showSnapHelper;
 
+-(NSInteger) globalBackgroundMode;
 -(BOOL) shouldShowStatusBarIcons;
 -(BOOL) shouldShowStatusBarNativeIcons;
 -(BOOL) backgrounderEnabled;
@@ -68,6 +80,8 @@
 
 -(BOOL) windowedMultitaskingEnabled;
 -(NSInteger) windowRotationLockMode;
+-(ZYGrabArea) windowedMultitaskingGrabArea;
+-(ZYGrabArea) swipeOverGrabArea;
 -(BOOL) onlyShowWindowBarIconsOnOverlay;
 
 -(NSString*) currentThemeIdentifier;

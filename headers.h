@@ -64,13 +64,21 @@ extern BOOL $__IS_SPRINGBOARD;
 #define kBGModeBluetoothPeripheral     @"bluetooth-peripheral"
 // newsstand-content
 
-extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
-extern "C" void BKSHIDServicesCancelTouchesOnMainDisplay();
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
+void BKSHIDServicesCancelTouchesOnMainDisplay();
+
+#ifdef __cplusplus
+}
+#endif
 
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 #define DEGREES_TO_RADIANS(radians) ((radians) * (M_PI / 180))
 
-//void SET_BACKGROUNDED(id settings, BOOL val);
+void SET_BACKGROUNDED(id settings, BOOL val);
 
 #define SHARED_INSTANCE2(cls, extracode) \
 static cls *sharedInstance = nil; \
@@ -245,7 +253,9 @@ return sharedInstance;
 @end
 
 @interface FBSMutableSceneSettings : FBSSceneSettings
-- (void)setBackgrounded:(bool)arg1;
+{
+}
+
 + (BOOL)_isMutable;
 - (id)mutableCopyWithZone:(struct _NSZone *)arg1;
 - (id)copyWithZone:(struct _NSZone *)arg1;
@@ -258,6 +268,7 @@ return sharedInstance;
 @property(nonatomic) float level;
 @property(nonatomic) struct CGPoint contentOffset;
 @property(nonatomic) struct CGRect frame;
+
 @end
 
 @interface FBScene
@@ -913,7 +924,7 @@ typedef struct {
 + (Class)iconViewClassForIcon:(SBIcon *)icon location:(int)location;
 - (id)init;
 - (void)dealloc;
-- (SBIconView *)mappedIconViewForIcon:(SBIcon *)icon;
+- (SBIconView *)mappedIconViewForIcon:(SBApplicationIcon *)icon;
 - (SBIconView *)_iconViewForIcon:(SBApplicationIcon *)icon;
 - (SBIconView *)iconViewForIcon:(SBIcon *)icon;
 - (void)_addIconView:(SBIconView *)iconView forIcon:(SBIcon *)icon;
@@ -964,3 +975,129 @@ typedef struct {
 -(BOOL)isApplicationEntity;
 -(void)setIdentifier:(NSString *)arg1 ;
 @end
+
+@interface FBApplicationProcess : NSObject
+- (void)launchIfNecessary;
+- (BOOL)bootstrapAndExec;
+- (void)killForReason:(int)arg1 andReport:(BOOL)arg2 withDescription:(id)arg3 completion:(id/*block*/)arg4;
+- (void)killForReason:(int)arg1 andReport:(BOOL)arg2 withDescription:(id)arg3;
+@property(readonly, copy, nonatomic) NSString *bundleIdentifier;
+- (void)processWillExpire:(id)arg1;
+@end
+
+@interface BKSProcess : NSObject { //BSBaseXPCClient  {
+    int _pid;
+    NSString *_bundlePath;
+    NSObject<OS_dispatch_queue> *_clientQueue;
+    bool _workspaceLocked;
+    bool _connectedToExternalAccessories;
+    bool _nowPlayingWithAudio;
+    bool _recordingAudio;
+    bool _supportsTaskSuspension;
+    int _visibility;
+    int _taskState;
+    NSObject *_delegate;
+    long long _terminationReason;
+    long long _exitStatus;
+}
+
+@property (nonatomic, weak) NSObject * delegate;
+@property int visibility;
+@property long long terminationReason;
+@property long long exitStatus;
+@property bool workspaceLocked;
+@property bool connectedToExternalAccessories;
+@property bool nowPlayingWithAudio;
+@property bool recordingAudio;
+@property bool supportsTaskSuspension;
+@property int taskState;
+@property(readonly) double backgroundTimeRemaining;
+
++ (id)busyExtensionInstances:(id)arg1;
++ (void)setTheSystemApp:(int)arg1 identifier:(id)arg2;
++ (double)backgroundTimeRemaining;
+
+- (void)setVisibility:(int)arg1;
+- (int)visibility;
+- (void)_sendMessageType:(int)arg1 withMessage:(id)arg2 withReplyHandler:(id)arg3 waitForReply:(bool)arg4;
+- (long long)exitStatus;
+- (id)initWithPID:(int)arg1 bundlePath:(id)arg2 visibility:(int)arg3 workspaceLocked:(bool)arg4 queue:(id)arg5;
+- (bool)supportsTaskSuspension;
+- (void)setTerminationReason:(long long)arg1;
+- (void)setConnectedToExternalAccessories:(bool)arg1;
+- (void)setNowPlayingWithAudio:(bool)arg1;
+- (void)setRecordingAudio:(bool)arg1;
+- (void)setWorkspaceLocked:(bool)arg1;
+- (void)setTaskState:(int)arg1;
+- (void)queue_connectionWasCreated;
+- (void)queue_connectionWasInterrupted;
+- (void)queue_handleMessage:(id)arg1;
+- (bool)recordingAudio;
+- (bool)nowPlayingWithAudio;
+- (bool)connectedToExternalAccessories;
+- (bool)workspaceLocked;
+- (void)setExitStatus:(long long)arg1;
+- (void)_handleDebuggingStateChanged:(id)arg1;
+- (void)_handleExpirationWarning:(id)arg1;
+- (void)_handleSuspendedStateChanged:(id)arg1;
+- (void)_sendMessageType:(int)arg1 withMessage:(id)arg2;
+- (int)taskState;
+- (double)backgroundTimeRemaining;
+- (void)setSupportsTaskSuspension:(bool)arg1;
+- (id)delegate;
+- (id)init;
+- (void)setDelegate:(NSObject*)arg1;
+- (void)dealloc;
+- (long long)terminationReason;
+@end
+
+@interface BKSProcessAssertion
+- (id)initWithPID:(int)arg1 flags:(unsigned int)arg2 reason:(unsigned int)arg3 name:(id)arg4 withHandler:(id)arg5;
+- (id)initWithBundleIdentifier:(id)arg1 flags:(unsigned int)arg2 reason:(unsigned int)arg3 name:(id)arg4 withHandler:(id)arg5;
+- (void)invalidate;
+@property(readonly, nonatomic) BOOL valid;
+@end
+
+typedef NS_ENUM(NSUInteger, BKSProcessAssertionReason)
+{
+    kProcessAssertionReasonNone = 0,
+    kProcessAssertionReasonAudio = 1,
+    kProcessAssertionReasonLocation = 2,
+    kProcessAssertionReasonExternalAccessory = 3,
+    kProcessAssertionReasonFinishTask = 4,
+    kProcessAssertionReasonBluetooth = 5,
+    kProcessAssertionReasonNetworkAuthentication = 6,
+    kProcessAssertionReasonBackgroundUI = 7,
+    kProcessAssertionReasonInterAppAudioStreaming = 8,
+    kProcessAssertionReasonViewServices = 9,
+    kProcessAssertionReasonNewsstandDownload = 10,
+    kProcessAssertionReasonBackgroundDownload = 11,
+    kProcessAssertionReasonVOiP = 12,
+    kProcessAssertionReasonExtension = 13,
+    kProcessAssertionReasonContinuityStreams = 14,
+    // 15-9999 unknown
+    kProcessAssertionReasonActivation = 10000,
+    kProcessAssertionReasonSuspend = 10001,
+    kProcessAssertionReasonTransientWakeup = 10002,
+    kProcessAssertionReasonVOiP_PreiOS8 = 10003,
+    kProcessAssertionReasonPeriodicTask_iOS8 = kProcessAssertionReasonVOiP_PreiOS8,
+    kProcessAssertionReasonFinishTaskUnbounded = 10004,
+    kProcessAssertionReasonContinuous = 10005,
+    kProcessAssertionReasonBackgroundContentFetching = 10006,
+    kProcessAssertionReasonNotificationAction = 10007,
+    // 10008-49999 unknown
+    kProcessAssertionReasonFinishTaskAfterBackgroundContentFetching = 50000,
+    kProcessAssertionReasonFinishTaskAfterBackgroundDownload = 50001,
+    kProcessAssertionReasonFinishTaskAfterPeriodicTask = 50002,
+    kProcessAssertionReasonAFterNoficationAction = 50003,
+    // 50004+ unknown
+};
+
+typedef NS_ENUM(NSUInteger, ProcessAssertionFlags)
+{
+    ProcessAssertionFlagNone = 0,
+    ProcessAssertionFlagPreventSuspend         = 1 << 0,
+    ProcessAssertionFlagPreventThrottleDownCPU = 1 << 1,
+    ProcessAssertionFlagAllowIdleSleep         = 1 << 2,
+    ProcessAssertionFlagWantsForegroundResourcePriority  = 1 << 3
+};

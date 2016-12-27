@@ -161,7 +161,7 @@
 	}
 }
 
--(void) loadApps {
+- (void)loadApps {
 	for (ZYHostedAppView *view in appViews) {
 		[view loadApp];
 	}

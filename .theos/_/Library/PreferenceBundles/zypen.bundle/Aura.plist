@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>items</key>
+		<array>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.shade.zypen</string>
+				<key>PostNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+				<key>key</key>
+				<string>backgrounderEnabled</string>
+				<key>label</key>
+				<string>Enabled</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+        <key>label</key>
+        <string>Activator</string>
+        <key>footerText</key>
+        <string>If enabled, the current app will be closed after performing the activation method.</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.shade.zypen</string>
+				<key>PostNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+				<key>key</key>
+				<string>exitAppAfterUsingActivatorAction</string>
+				<key>label</key>
+				<string>Exit App After Menu</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+        <key>label</key>
+        <string>Global</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSegmentCell</string>
+				<key>label</key>
+				<string>Background Mode</string>
+				<key>key</key>
+				<string>globalBackgroundMode</string>
+				<key>validTitles</key>
+				<array>
+					<string>Native</string>
+					<string>Unlimited Backgrounding TIme</string>
+					<string>Force Foreground</string>
+					<string>Kill on Exit</string>
+					<string>Suspend Immediately</string>
+				</array>
+				<key>validValues</key>
+				<array>
+					<integer>1</integer>
+					<integer>6</integer>
+					<integer>3</integer>
+					<integer>4</integer>
+					<integer>5</integer>
+				</array>
+				<key>shortTitles</key>
+				<array>
+					<string>Native</string>
+					<string>∞</string>
+					<string>Forced</string>
+					<string>Disabled</string>
+					<string>SmartClose</string>
+				</array>
+				<key>default</key>
+				<integer>1</integer>
+				<key>defaults</key>
+				<string>com.shade.zypen</string>
+				<key>PostNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+        <key>label</key>
+        <string>Specific</string>
+			</dict>
+		</array>
+		<key>title</key>
+		<string>Aura</string>
+	</dict>
+</plist>

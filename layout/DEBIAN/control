@@ -3,7 +3,7 @@ Name: Zypen
 Depends: mobilesubstrate, preferenceloader, applist, com.rpetrich.rocketbootstrap
 Version: 0.4
 Architecture: iphoneos-arm
-Description: ReachApp for iOS 9.
+Description: ReachApp for iOS 9...But Now its 1/2 of Multiplexer
 Maintainer: Shade Zepheri
 Author: Shade Zepheri
 Section: Tweaks

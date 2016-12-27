@@ -2,9 +2,9 @@ Package: com.shade.zypen
 Name: Zypen
 Depends: mobilesubstrate, preferenceloader, applist, com.rpetrich.rocketbootstrap
 Architecture: iphoneos-arm
-Description: ReachApp for iOS 9.
+Description: ReachApp for iOS 9...But Now its 1/2 of Multiplexer
 Maintainer: Shade Zepheri
 Author: Shade Zepheri
 Section: Tweaks
-Version: 0.4
-Installed-Size: 872
+Version: 0.4-24+debug
+Installed-Size: 2756
