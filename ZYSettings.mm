@@ -296,7 +296,7 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	return ret;
 }
 
--(NSDictionary*) rawCompiledBackgrounderSettingsForIdentifier:(NSString*)identifier {
+- (NSDictionary*)rawCompiledBackgrounderSettingsForIdentifier:(NSString*)identifier {
 	return [backgrounderSettingsCache objectForKey:identifier] ?: [self _createAndCacheBackgrounderSettingsForIdentifier:identifier];
 }
 

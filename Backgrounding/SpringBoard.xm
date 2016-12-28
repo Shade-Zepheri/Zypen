@@ -17,16 +17,16 @@
 %end
 
 // STAY IN "FOREGROUND"
-%hook FBUIApplicationResignActiveManager //iOS 8
+%hook FBUIApplicationResignActiveManager
 - (void)_sendResignActiveForReason:(int)arg1 toProcess:(__unsafe_unretained FBApplicationProcess*)arg2 {
-    if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg2.bundleIdentifier])
-        return;
+    if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg2.bundleIdentifier]) {
+      return;
+    }
 
     %orig;
 
     if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg2.bundleIdentifier]) {
         BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(arg2, "_bksProcess");
-        //[bkProcess _handleExpirationWarning:nil];
         [arg2 processWillExpire:bkProcess];
     }
 }
@@ -56,16 +56,18 @@
 %end
 
 %hook FBUIApplicationWorkspaceScene
-- (void)host:(__unsafe_unretained FBScene*)arg1 didUpdateSettings:(__unsafe_unretained FBSSceneSettings*)arg2 withDiff:(unsafe_id)arg3 transitionContext:(unsafe_id)arg4 completion:(unsafe_id)arg5 {
+-(void) host:(__unsafe_unretained FBScene*)arg1 didUpdateSettings:(__unsafe_unretained FBSSceneSettings*)arg2 withDiff:(unsafe_id)arg3 transitionContext:(unsafe_id)arg4 completion:(unsafe_id)arg5
+{
     [ZYBackgrounder.sharedInstance removeTemporaryOverrideForIdentifier:arg1.identifier];
-    if (arg1 && arg1.identifier && arg2 && arg1.clientProcess)  {
+    if (arg1 && arg1.identifier && arg2 && arg1.clientProcess) {// FIX: sanity check to prevent NC App crash. untested/not working.
+
         if (arg2.backgrounded) {
             if ([ZYBackgrounder.sharedInstance killProcessOnExit:arg1.identifier]) {
                 FBProcess *proc = arg1.clientProcess;
 
                 if ([proc isKindOfClass:[%c(FBApplicationProcess) class]]) {
                     FBApplicationProcess *proc2 = (FBApplicationProcess*)proc;
-                    [proc2 killForReason:1 andReport:NO withDescription:@"Zypen.Backgrounder.killOnExit" completion:nil];
+                    [proc2 killForReason:1 andReport:NO withDescription:@"ReachApp.Backgrounder.killOnExit" completion:nil];
                     //[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:ZYIconIndicatorViewInfoForceDeath];
                     if ([ZYBackgrounder.sharedInstance shouldRemoveFromSwitcherWhenKilledOnExit:arg1.identifier]) {
                         [%c(ZYAppSwitcherModelWrapper) removeItemWithIdentifier:arg1.identifier];
@@ -87,12 +89,6 @@
             }
         } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
             //[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
-            FBProcess *process = arg1.clientProcess;
-            if ([process isKindOfClass:[%c(FBApplicationProcess) class]]) {
-              FBApplicationProcess *appProcess = (FBApplicationProcess*)process;
-              BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(appProcess, "_bksProcess");
-              [appProcess processWillExpire:bkProcess];
-            }
         }
     }
 

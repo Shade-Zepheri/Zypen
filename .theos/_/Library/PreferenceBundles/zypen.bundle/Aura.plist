@@ -48,7 +48,7 @@
 			</dict>
 			<dict>
 				<key>cell</key>
-				<string>PSSegmentCell</string>
+				<string>PSLinkListCell</string>
 				<key>label</key>
 				<string>Background Mode</string>
 				<key>key</key>
@@ -79,6 +79,8 @@
 				</array>
 				<key>default</key>
 				<integer>1</integer>
+				<key>detail</key>
+				<string>PSListItemsController</string>
 				<key>defaults</key>
 				<string>com.shade.zypen</string>
 				<key>PostNotification</key>
@@ -89,6 +91,24 @@
 				<string>PSGroupCell</string>
         <key>label</key>
         <string>Specific</string>
+			</dict>
+			<dict>
+				<key>bundle</key>
+				<string>AppList</string>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>isController</key>
+				<true/>
+				<key>label</key>
+				<string>Enabled Applications</string>
+				<key>ALSettingsPath</key>
+				<string>/var/mobile/Library/Preferences/com.shade.zypen.plist</string>
+				<key>ALSettingsKeyPrefix</key>
+				<string>SLAppEnabled-</string>
+				<key>ALChangeNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+				<key>ALSettingsDefaultValue</key>
+				<true/>
 			</dict>
 		</array>
 		<key>title</key>

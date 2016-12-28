@@ -29,7 +29,3 @@
 @interface ZYPAppChooserOptionsListController : PSListController
 
 @end
-
-@interface ZYBackgroundingListItemsController : PSListItemsController
-
-@end

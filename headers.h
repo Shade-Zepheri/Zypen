@@ -210,6 +210,7 @@ return sharedInstance;
 @end
 
 @interface FBProcess : NSObject
+@property (nonatomic,copy,readonly) NSString * bundleIdentifier;
 @end
 
 @interface FBSSceneSettings : NSObject <NSCopying, NSMutableCopying>
@@ -977,6 +978,8 @@ typedef struct {
 @end
 
 @interface FBApplicationProcess : NSObject
+@property (assign,getter=isRecordingAudio,nonatomic) BOOL recordingAudio;                                                         //@synthesize recordingAudio=_recordingAudio - In the implementation block
+@property (assign,getter=isNowPlayingWithAudio,nonatomic) BOOL nowPlayingWithAudio;
 - (void)launchIfNecessary;
 - (BOOL)bootstrapAndExec;
 - (void)killForReason:(int)arg1 andReport:(BOOL)arg2 withDescription:(id)arg3 completion:(id/*block*/)arg4;
