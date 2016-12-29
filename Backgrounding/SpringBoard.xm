@@ -17,8 +17,9 @@
 %end
 
 // STAY IN "FOREGROUND"
-%hook FBUIApplicationResignActiveManager
-- (void)_sendResignActiveForReason:(int)arg1 toProcess:(__unsafe_unretained FBApplicationProcess*)arg2 {
+%hook FBUIApplicationResignActiveManager //iOS 8
+- (void)_sendResignActiveForReason:(int)arg1 toProcess:(FBApplicationProcess *)arg2 {
+    HBLogDebug(@"Resign for %@", arg2.bundleIdentifier);
     if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg2.bundleIdentifier]) {
       return;
     }
@@ -26,6 +27,7 @@
     %orig;
 
     if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg2.bundleIdentifier]) {
+        HBLogDebug(@"Will Suspend");
         BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(arg2, "_bksProcess");
         [arg2 processWillExpire:bkProcess];
     }
@@ -39,6 +41,15 @@
     }
     return %orig;
 }
+%end
+
+%hook FBUIApplicationServiceDelegate
+
+- (void)applicationService:(id)arg1 suspendApplicationWithBundleIdentifier:(id)arg2 {
+  HBLogDebug(@"Suspending app %@", arg2);
+  %orig(arg1, arg2);
+}
+
 %end
 
 %hook FBSSceneImpl
@@ -56,8 +67,7 @@
 %end
 
 %hook FBUIApplicationWorkspaceScene
--(void) host:(__unsafe_unretained FBScene*)arg1 didUpdateSettings:(__unsafe_unretained FBSSceneSettings*)arg2 withDiff:(unsafe_id)arg3 transitionContext:(unsafe_id)arg4 completion:(unsafe_id)arg5
-{
+- (void)host:(__unsafe_unretained FBScene*)arg1 didUpdateSettings:(__unsafe_unretained FBSSceneSettings*)arg2 withDiff:(unsafe_id)arg3 transitionContext:(unsafe_id)arg4 completion:(unsafe_id)arg5 {
     [ZYBackgrounder.sharedInstance removeTemporaryOverrideForIdentifier:arg1.identifier];
     if (arg1 && arg1.identifier && arg2 && arg1.clientProcess) {// FIX: sanity check to prevent NC App crash. untested/not working.
 
@@ -68,7 +78,7 @@
                 if ([proc isKindOfClass:[%c(FBApplicationProcess) class]]) {
                     FBApplicationProcess *proc2 = (FBApplicationProcess*)proc;
                     [proc2 killForReason:1 andReport:NO withDescription:@"ReachApp.Backgrounder.killOnExit" completion:nil];
-                    //[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:ZYIconIndicatorViewInfoForceDeath];
+                    [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:ZYIconIndicatorViewInfoForceDeath];
                     if ([ZYBackgrounder.sharedInstance shouldRemoveFromSwitcherWhenKilledOnExit:arg1.identifier]) {
                         [%c(ZYAppSwitcherModelWrapper) removeItemWithIdentifier:arg1.identifier];
                     }
@@ -77,18 +87,18 @@
             }
 
             if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg1.identifier]) {
-                //[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
+                [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
                 return;
             } else if ([ZYBackgrounder.sharedInstance backgroundModeForIdentifier:arg1.identifier] == ZYBackgroundModeNative) {
-                //[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
+                [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
-                //[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
+                [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             }
         } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
-            //[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
+            [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
         }
     }
 
@@ -100,7 +110,7 @@
 %hook FBApplicationProcess
 - (void)killForReason:(int)arg1 andReport:(BOOL)arg2 withDescription:(unsafe_id)arg3 completion:(unsafe_id/*block*/)arg4 {
     if ([ZYBackgrounder.sharedInstance preventKillingOfIdentifier:self.bundleIdentifier]) {
-        //[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:self.bundleIdentifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier]];
+        [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:self.bundleIdentifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier]];
         return;
     }
     %orig;

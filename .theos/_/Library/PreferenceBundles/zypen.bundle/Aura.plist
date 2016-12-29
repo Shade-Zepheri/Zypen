@@ -88,27 +88,33 @@
 			</dict>
 			<dict>
 				<key>cell</key>
+				<string>PSLinkListCell</string>
+				<key>detail</key>
+				<string>ZYBackgrounderIconIndicatorOptionsListController</string>
+				<key>label</key>
+				<string>Icon Indicator Options</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkListCell</string>
+				<key>detail</key>
+				<string>ZYBackgrounderStatusbarOptionsListController</string>
+				<key>label</key>
+				<string>Status Bar Indicator Options</string>
+			</dict>
+			<dict>
+				<key>cell</key>
 				<string>PSGroupCell</string>
         <key>label</key>
         <string>Specific</string>
 			</dict>
 			<dict>
-				<key>bundle</key>
-				<string>AppList</string>
 				<key>cell</key>
 				<string>PSLinkCell</string>
-				<key>isController</key>
-				<true/>
 				<key>label</key>
-				<string>Enabled Applications</string>
-				<key>ALSettingsPath</key>
-				<string>/var/mobile/Library/Preferences/com.shade.zypen.plist</string>
-				<key>ALSettingsKeyPrefix</key>
-				<string>SLAppEnabled-</string>
-				<key>ALChangeNotification</key>
-				<string>com.shade.zypen/ReloadPrefs</string>
-				<key>ALSettingsDefaultValue</key>
-				<true/>
+				<string>Per App</string>
+				<key>detail</key>
+				<string>ZYPPerAppController</string>
 			</dict>
 		</array>
 		<key>title</key>

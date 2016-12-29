@@ -1,4 +1,5 @@
 #import <Preferences/PSListController.h>
+#import <Preferences/PSListItemsController.h>
 
 @interface PSListItemsController (tableView)
 - (void)tableView:(id)arg1 didSelectRowAtIndexPath:(id)arg2;
@@ -27,5 +28,17 @@
 @end
 
 @interface ZYPAppChooserOptionsListController : PSListController
+
+@end
+
+@interface ZYBackgrounderIconIndicatorOptionsListController : PSListController
+
+@end
+
+@interface ZYBackgrounderStatusbarOptionsListController : PSListController
+
+@end
+
+@interface ZYPPerAppController : PSListController
 
 @end

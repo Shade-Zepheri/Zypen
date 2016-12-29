@@ -155,7 +155,7 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 	id val = dict[@"backgroundModes"][mode];
 	return [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled ? (val ? [val boolValue] : -1) : -1;
 }
-/*
+
 - (ZYIconIndicatorViewInfo)allAggregatedIndicatorInfoForIdentifier:(NSString*)identifier {
 	int info = ZYIconIndicatorViewInfoNone;
 
@@ -197,5 +197,5 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 	BOOL globalSetting = [[%c(ZYSettings) sharedSettings] shouldShowStatusBarIcons];
 	return globalSetting ? ([dct objectForKey:@"showStatusBarIcon"] == nil ? YES : [dct[@"showStatusBarIcon"] boolValue]) : NO;
 }
-*/
+
 @end

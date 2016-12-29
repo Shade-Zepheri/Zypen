@@ -48,10 +48,8 @@ NSString *FriendlyNameForBackgroundMode(ZYBackgroundMode mode);
 - (void)removeTemporaryOverrideForIdentifier:(NSString*)identifier;
 
 - (NSInteger)application:(NSString*)identifier overrideBackgroundMode:(NSString*)mode;
-/* Might add status Bar Icons Later
 - (ZYIconIndicatorViewInfo)allAggregatedIndicatorInfoForIdentifier:(NSString*)identifier;
 - (void)updateIconIndicatorForIdentifier:(NSString*)identifier withInfo:(ZYIconIndicatorViewInfo)info;
 - (BOOL)shouldShowIndicatorForIdentifier:(NSString*)identifier;
 - (BOOL)shouldShowStatusBarIconForIdentifier:(NSString*)identifier;
-*/
 @end

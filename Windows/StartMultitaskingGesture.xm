@@ -99,7 +99,7 @@ BOOL locationIsInValidArea(CGFloat x) {
                         appView.center = originalCenter;
                     }
                 } completion:^(BOOL _) {
-                    //ZYIconIndicatorViewInfo indicatorInfo = [[%c(ZYBackgrounder) sharedInstance] allAggregatedIndicatorInfoForIdentifier:topApp.bundleIdentifier];
+                    ZYIconIndicatorViewInfo indicatorInfo = [[%c(ZYBackgrounder) sharedInstance] allAggregatedIndicatorInfoForIdentifier:topApp.bundleIdentifier];
 
                     // Close app
                     [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:topApp andCloseForegroundApp:NO];
@@ -119,7 +119,7 @@ BOOL locationIsInValidArea(CGFloat x) {
                     // Pop forced foreground backgrounding
                     [[%c(ZYBackgrounder) sharedInstance] queueRemoveTemporaryOverrideForIdentifier:topApp.bundleIdentifier];
                     [[%c(ZYBackgrounder) sharedInstance] removeTemporaryOverrideForIdentifier:topApp.bundleIdentifier];
-                    //[[%c(ZYBackgrounder) sharedInstance] updateIconIndicatorForIdentifier:topApp.bundleIdentifier withInfo:indicatorInfo];
+                    [[%c(ZYBackgrounder) sharedInstance] updateIconIndicatorForIdentifier:topApp.bundleIdentifier withInfo:indicatorInfo];
                 }];
             } else {
                 appView.center = originalCenter;
