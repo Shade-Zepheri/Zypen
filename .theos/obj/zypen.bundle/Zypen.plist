@@ -29,14 +29,48 @@
 			<dict>
 				<key>cell</key>
 				<string>PSGroupCell</string>
+				<key>footerText</key>
+				<string>Change How apps Background</string>
 			</dict>
 			<dict>
 				<key>cell</key>
 				<string>PSLinkCell</string>
 				<key>label</key>
-				<string>Options</string>
+				<string>Aura</string>
+				<key>detail</key>
+				<string>ZYPAuraController</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>footerText</key>
+				<string>Run Apps in the Reachability View</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>label</key>
+				<string>Zypen</string>
 				<key>detail</key>
 				<string>ZYPOptionsController</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>footerText</key>
+				<string>Run apps In Windows</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>label</key>
+				<string>Empoleon</string>
+				<key>detail</key>
+				<string>ZYPEmpoleonController</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
 			</dict>
 			<dict>
 				<key>cell</key>

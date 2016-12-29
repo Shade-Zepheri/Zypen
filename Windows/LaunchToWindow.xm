@@ -30,7 +30,7 @@ BOOL allowOpenApp = NO;
 	// Broken
 	//if (launchNextOpenIntoWindow)
 
-	if ([ZYSettings.sharedSettings windowedMultitaskingEnabled] &&[ZYSettings.sharedSettings launchIntoWindows] && allowOpenApp != YES) {
+	if ([ZYSettings.sharedSettings windowedMultitaskingEnabled] && [ZYSettings.sharedSettings launchIntoWindows] && allowOpenApp != YES) {
 		[ZYDesktopManager.sharedInstance.currentDesktop createAppWindowForSBApplication:arg1 animated:YES];
 		//launchNextOpenIntoWindow = NO;
 		return;
@@ -44,7 +44,7 @@ BOOL allowOpenApp = NO;
 	// Broken
 	//if (launchNextOpenIntoWindow)
 
-	if ([ZYSettings.sharedSettings windowedMultitaskingEnabled] &&[ZYSettings.sharedSettings launchIntoWindows] && allowOpenApp != YES) {
+	if ([ZYSettings.sharedSettings windowedMultitaskingEnabled] && [ZYSettings.sharedSettings launchIntoWindows] && allowOpenApp != YES) {
 		[ZYDesktopManager.sharedInstance.currentDesktop createAppWindowForSBApplication:arg1 animated:YES];
 		//launchNextOpenIntoWindow = NO;
 		return;
