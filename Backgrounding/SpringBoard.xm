@@ -43,15 +43,6 @@
 }
 %end
 
-%hook FBUIApplicationServiceDelegate
-
-- (void)applicationService:(id)arg1 suspendApplicationWithBundleIdentifier:(id)arg2 {
-  HBLogDebug(@"Suspending app %@", arg2);
-  %orig(arg1, arg2);
-}
-
-%end
-
 %hook FBSSceneImpl
 - (id)_initWithQueue:(unsafe_id)arg1 callOutQueue:(unsafe_id)arg2 identifier:(unsafe_id)arg3 display:(unsafe_id)arg4 settings:(__unsafe_unretained UIMutableApplicationSceneSettings*)arg5 clientSettings:(unsafe_id)arg6 {
     if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg3]) {
@@ -70,7 +61,6 @@
 - (void)host:(__unsafe_unretained FBScene*)arg1 didUpdateSettings:(__unsafe_unretained FBSSceneSettings*)arg2 withDiff:(unsafe_id)arg3 transitionContext:(unsafe_id)arg4 completion:(unsafe_id)arg5 {
     [ZYBackgrounder.sharedInstance removeTemporaryOverrideForIdentifier:arg1.identifier];
     if (arg1 && arg1.identifier && arg2 && arg1.clientProcess) {// FIX: sanity check to prevent NC App crash. untested/not working.
-
         if (arg2.backgrounded) {
             if ([ZYBackgrounder.sharedInstance killProcessOnExit:arg1.identifier]) {
                 FBProcess *proc = arg1.clientProcess;
@@ -82,6 +72,15 @@
                     if ([ZYBackgrounder.sharedInstance shouldRemoveFromSwitcherWhenKilledOnExit:arg1.identifier]) {
                         [%c(ZYAppSwitcherModelWrapper) removeItemWithIdentifier:arg1.identifier];
                     }
+                }
+                [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
+            } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
+                FBProcess *process = arg1.clientProcess;
+                if ([process isKindOfClass:[%c(FBApplicationProcess) class]]) {
+                  FBApplicationProcess *appProcess = (FBApplicationProcess*)process;
+                  BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(appProcess, "_bksProcess");
+                  [appProcess processWillExpire:bkProcess];
+                  [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 }
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             }

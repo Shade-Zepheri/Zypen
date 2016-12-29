@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -88,22 +89,6 @@
 			</dict>
 			<dict>
 				<key>cell</key>
-				<string>PSLinkListCell</string>
-				<key>detail</key>
-				<string>ZYBackgrounderIconIndicatorOptionsListController</string>
-				<key>label</key>
-				<string>Icon Indicator Options</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSLinkListCell</string>
-				<key>detail</key>
-				<string>ZYBackgrounderStatusbarOptionsListController</string>
-				<key>label</key>
-				<string>Status Bar Indicator Options</string>
-			</dict>
-			<dict>
-				<key>cell</key>
 				<string>PSGroupCell</string>
         <key>label</key>
         <string>Specific</string>
@@ -114,7 +99,7 @@
 				<key>label</key>
 				<string>Per App</string>
 				<key>detail</key>
-				<string>ZYPPerAppController</string>
+				<string>ZYBGPerAppController</string>
 			</dict>
 		</array>
 		<key>title</key>
