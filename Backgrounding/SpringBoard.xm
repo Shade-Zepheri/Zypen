@@ -76,10 +76,13 @@
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
                 FBProcess *process = arg1.clientProcess;
+                
                 if ([process isKindOfClass:[%c(FBApplicationProcess) class]]) {
                   FBApplicationProcess *appProcess = (FBApplicationProcess*)process;
-                  BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(appProcess, "_bksProcess");
-                  [appProcess processWillExpire:bkProcess];
+                  if (!appProcess.nowPlayingWithAudio && !appProcess.recordingAudio) {
+                    BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(appProcess, "_bksProcess");
+                    [appProcess processWillExpire:bkProcess];
+                  }
                   [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 }
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];

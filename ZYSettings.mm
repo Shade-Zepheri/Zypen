@@ -22,10 +22,9 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	static BOOL installed = NO;
 	static dispatch_once_t onceToken = 0;
 	dispatch_once(&onceToken, ^{
-		if ([NSFileManager.defaultManager fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/libactivator.dylib"])
-		{
+		if ([NSFileManager.defaultManager fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/libactivator.dylib"]) {
 			installed = YES;
-	        dlopen("/Library/MobileSubstrate/DynamicLibraries/libactivator.dylib", RTLD_LAZY);
+	    dlopen("/Library/MobileSubstrate/DynamicLibraries/libactivator.dylib", RTLD_LAZY);
 		}
 	});
 	return installed;
@@ -36,8 +35,9 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	static dispatch_once_t onceToken = 0;
 	dispatch_once(&onceToken, ^{
 		if ([NSFileManager.defaultManager fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/libstatusbar.dylib"]) {
+			HBLogDebug(@"Looks Like its Installed");
 			installed = YES;
-	        dlopen("/Library/MobileSubstrate/DynamicLibraries/libstatusbar.dylib", RTLD_LAZY);
+	    dlopen("/Library/MobileSubstrate/DynamicLibraries/libstatusbar.dylib", RTLD_LAZY);
 		}
 	});
 	return installed;
@@ -54,7 +54,7 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	return self;
 }
 
--(void) reloadSettings {
+- (void)reloadSettings {
 	@autoreleasepool {
 		// Prepare specialized setting change cases
 
@@ -75,23 +75,23 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 			CFRelease(keyList);
 
 			if (!_settings) {
-				//NSLog(@"[ReachApp] failure loading from CFPreferences");
+				//HBLogDebug(@"[ReachApp] failure loading from CFPreferences");
 				failed = YES;
 			}
 		}
 		else {
-			//NSLog(@"[ReachApp] failure loading keyList");
+			//HBLogDebug(@"[ReachApp] failure loading keyList");
 			failed = YES;
 		}
 		CFRelease(appID);
 
 		if (failed) {
 			_settings = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.shade.zypen.plist"];
-			//NSLog(@"[ReachApp] settings sandbox load: %@", _settings == nil ? @"failed" : @"succeed");
+			//HBLogDebug(@"[ReachApp] settings sandbox load: %@", _settings == nil ? @"failed" : @"succeed");
 		}
 
 		if (_settings == nil) {
-			NSLog(@"[ReachApp] could not load settings from CFPreferences or NSDictionary");
+			HBLogDebug(@"[ReachApp] could not load settings from CFPreferences or NSDictionary");
 		}
 
 		if ([self shouldShowStatusBarIcons] == NO && [objc_getClass("SBApplication") respondsToSelector:@selector(ZY_clearAllStatusBarIcons)])
@@ -102,7 +102,7 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	}
 }
 
--(void) resetSettings {
+- (void)resetSettings {
 	IF_NOT_SPRINGBOARD {
 		@throw [NSException exceptionWithName:@"NotSpringBoardException" reason:@"Cannot reset settings outside of SpringBoard" userInfo:nil];
 	}
@@ -113,9 +113,8 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	if (keyList) {
 		CFPreferencesSetMultiple(NULL, keyList, appID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
 		CFRelease(keyList);
-	}
-	else {
-		NSLog(@"[ReachApp] unable to get keyList to reset settings");
+	} else {
+		HBLogDebug(@"[ReachApp] unable to get keyList to reset settings");
 	}
 	CFPreferencesAppSynchronize(appID);
 	CFRelease(appID);
@@ -300,7 +299,7 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 }
 
 -(BOOL) isFirstRun {
-	NSLog(@"[ReachApp] %d", BOOL(@"isFirstRun", YES));
+	HBLogDebug(@"[ReachApp] %d", BOOL(@"isFirstRun", YES));
 	return BOOL(@"isFirstRun", YES);
 }
 
@@ -330,8 +329,8 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	return BOOL(@"windowedMultitaskingCompleteAnimations", NO);
 }
 
--(NSString*) currentThemeIdentifier {
-	return _settings[@"currentThemeIdentifier"] ?: @"com.eljahandandrew.multiplexer.themes.default";
+- (NSString*)currentThemeIdentifier {
+	return _settings[@"currentThemeIdentifier"] ?: @"com.shade.zypen.themes.default";
 }
 
 -(NSInteger) missionControlDesktopStyle {

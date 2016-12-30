@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>items</key>
+		<array>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.shade.zypen</string>
+				<key>PostNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+				<key>key</key>
+				<string>showIconIndicators</string>
+				<key>label</key>
+				<string>Show Icon Indicators</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<false/>
+				<key>defaults</key>
+				<string>com.shade.zypen</string>
+				<key>PostNotification</key>
+				<string>com.shade.zypen/ReloadPrefs</string>
+				<key>key</key>
+				<string>showNativeStateIconIndicators</string>
+				<key>label</key>
+				<string>Show Native Mode Indicators</string>
+			</dict>
+		</array>
+		<key>title</key>
+		<string>Icon Indicator Options</string>
+	</dict>
+</plist>

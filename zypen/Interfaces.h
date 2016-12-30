@@ -38,7 +38,3 @@
 @interface ZYBackgrounderStatusbarOptionsListController : PSListController
 
 @end
-
-@interface ZYPPerAppController : PSListController
-
-@end

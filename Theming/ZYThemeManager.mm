@@ -4,12 +4,12 @@
 #import "headers.h"
 
 @implementation ZYThemeManager
-+(instancetype) sharedInstance {
++ (instancetype)sharedInstance {
 	SHARED_INSTANCE2(ZYThemeManager, [sharedInstance invalidateCurrentThemeAndReload:nil]); // will be reloaded by ZYSettings
 }
 
--(ZYTheme*) currentTheme { return currentTheme; }
--(NSArray*) allThemes { return allThemes.allValues; }
+- (ZYTheme*)currentTheme { return currentTheme; }
+- (NSArray*)allThemes { return allThemes.allValues; }
 
 -(void) invalidateCurrentThemeAndReload:(NSString*)currentIdentifier {
 	currentTheme = nil;
@@ -19,14 +19,12 @@
 	NSString *folderName = [NSString stringWithFormat:@"%@/Themes/", ZY_BASE_PATH];
 	NSArray *themeFileNames = [NSFileManager.defaultManager subpathsAtPath:folderName];
 
-	for (NSString *themeName in themeFileNames)
-	{
-		if ([themeName hasSuffix:@"plist"] == NO)
+	for (NSString *themeName in themeFileNames) {
+		if ([themeName hasSuffix:@"plist"] == NO) {
 			continue;
-
+		}
 		ZYTheme *theme = [ZYThemeLoader loadFromFile:themeName];
-		if (theme && theme.themeIdentifier)
-		{
+		if (theme && theme.themeIdentifier) {
 			//NSLog(@"[ReachApp] adding %@", theme.themeIdentifier);
 			allThemes[theme.themeIdentifier] = theme;
 
@@ -34,11 +32,9 @@
 				currentTheme = theme;
 		}
 	}
-	if (!currentTheme)
-	{
+	if (!currentTheme) {
 		currentTheme = [allThemes objectForKey:@"com.eljahandandrew.multiplexer.themes.default"];
-		if (!currentTheme && allThemes.allKeys.count > 0)
-		{
+		if (!currentTheme && allThemes.allKeys.count > 0) {
 			currentTheme = allThemes[allThemes.allKeys[0]];
 		}
 	}

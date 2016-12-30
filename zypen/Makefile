@@ -4,7 +4,7 @@ LDFLAGS = -F$(THEOS)/frameworks
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = zypen
-zypen_FILES = $(wildcard *.m) $(shell find $(THEOS)/include/SettingsKit -name '*.m') $(wildcard *.xm)
+zypen_FILES = $(wildcard *.m) $(shell find $(THEOS)/include/SettingsKit -name '*.m') $(wildcard *.xm) $(wildcard ../Theming/*.mm) 
 zypen_INSTALL_PATH = /Library/PreferenceBundles
 zypen_FRAMEWORKS = UIKit MessageUI Social QuartzCore CoreGraphics
 zypen_PRIVATE_FRAMEWORKS = Preferences

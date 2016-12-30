@@ -1,4 +1,5 @@
 #include "Interfaces.h"
+#import "ZYThemeManager.h"
 
 @implementation ZYPRootListController
 
@@ -52,6 +53,24 @@
 		[alert addAction:defaultAction];
 		[alert addAction:cancelAction];
 		[self presentViewController:alert animated:YES completion:nil];
+}
+
+- (NSArray*)themeTitles {
+    NSArray *themes = [ZYThemeManager.sharedInstance allThemes];
+    NSMutableArray *ret = [NSMutableArray array];
+    for (ZYTheme *theme in themes) {
+			[ret addObject:theme.themeName];
+		}
+    return ret;
+}
+
+- (NSArray*)themeValues {
+    NSArray *themes = [ZYThemeManager.sharedInstance allThemes];
+    NSMutableArray *ret = [NSMutableArray array];
+    for (ZYTheme *theme in themes) {
+			[ret addObject:theme.themeIdentifier];
+		}
+    return ret;
 }
 
 @end
