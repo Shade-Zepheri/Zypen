@@ -5,7 +5,7 @@
 // REASON: HEADERS.H IMPORTS THIS FILE
 
 @interface __SBWorkspace__class_impl_dummy : NSObject
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 @end
 
 Class SBWorkspace_class_implementation_class = nil;

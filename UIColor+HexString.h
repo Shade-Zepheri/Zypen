@@ -9,6 +9,6 @@
 
 @interface UIColor (HexString)
 
-+ (UIColor *) ZY_colorWithHexString:(NSString*)hexString;
++ (UIColor *)ZY_colorWithHexString:(NSString*)hexString;
 
 @end

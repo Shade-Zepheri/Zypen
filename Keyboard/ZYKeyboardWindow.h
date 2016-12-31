@@ -5,8 +5,8 @@
 	ZYRemoteKeyboardView *kbView;
 }
 
--(void) setupForKeyboardAndShow:(NSString*)identifier;
--(void) removeKeyboard;
+- (void)setupForKeyboardAndShow:(NSString*)identifier;
+- (void)removeKeyboard;
 
--(unsigned int) contextId;
+- (NSUInteger)contextId;
 @end

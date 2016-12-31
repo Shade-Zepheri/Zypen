@@ -143,7 +143,7 @@ BOOL wasEnabled = NO;
 
 id SBWorkspace$sharedInstance;
 %hook SB_WORKSPACE_CLASS
-%new + (id)sharedInstance {
+%new + (instancetype)sharedInstance {
     return SBWorkspace$sharedInstance;
 }
 
@@ -737,7 +737,7 @@ CGFloat startingY = -1;
 }
 
 %new - (void)appViewItemTap:(UITapGestureRecognizer*)sender {
-    int pid = [sender.view tag];
+    NSInteger pid = [sender.view tag];
     SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithPid:pid];
     if (!app) {
         app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:sender.view.restorationIdentifier];

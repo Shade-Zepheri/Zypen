@@ -10,23 +10,20 @@ extern BOOL overrideDisableForStatusBar;
 ZYKeyboardWindow *keyboardWindow;
 
 @implementation ZYSpringBoardKeyboardActivation
-+(id) sharedInstance
-{
++ (instancetype)sharedInstance {
     SHARED_INSTANCE2(ZYSpringBoardKeyboardActivation,
         [ZYRunningAppsProvider.sharedInstance addTarget:self]
     );
 }
 
--(void) showKeyboardForAppWithIdentifier:(NSString*)identifier
-{
-    if (keyboardWindow)
-    {
+- (void)showKeyboardForAppWithIdentifier:(NSString*)identifier {
+    if (keyboardWindow) {
         [self hideKeyboard];
-        //NSLog(@"[ReachApp] springboard cancelling - keyboardWindow exists");
+        //HBLogDebug(@"[ReachApp] springboard cancelling - keyboardWindow exists");
         //return;
     }
 
-    NSLog(@"[ReachApp] showing kb window %@", identifier);
+    HBLogDebug(@"[ReachApp] showing kb window %@", identifier);
     keyboardWindow = [[ZYKeyboardWindow alloc] init];
     overrideDisableForStatusBar = YES;
     [keyboardWindow setupForKeyboardAndShow:identifier];
@@ -34,23 +31,21 @@ ZYKeyboardWindow *keyboardWindow;
     _currentIdentifier = identifier;
 }
 
--(void) hideKeyboard
-{
-    NSLog(@"[ReachApp] remove kb window (%@)", _currentIdentifier);
+- (void)hideKeyboard {
+    HBLogDebug(@"[ReachApp] remove kb window (%@)", _currentIdentifier);
     keyboardWindow.hidden = YES;
     [keyboardWindow removeKeyboard];
     keyboardWindow = nil;
     _currentIdentifier = nil;
 }
 
--(void) appDidDie:(SBApplication*)app
-{
-    if ([_currentIdentifier isEqual:app.bundleIdentifier])
-        [self hideKeyboard];
+- (void)appDidDie:(SBApplication*)app {
+    if ([_currentIdentifier isEqual:app.bundleIdentifier]) {
+      [self hideKeyboard];
+    }
 }
 
--(UIWindow*) keyboardWindow
-{
+- (UIWindow*)keyboardWindow {
     return keyboardWindow;
 }
 @end

@@ -26,7 +26,7 @@ const NSUInteger ZYGesturePriorityDefault = ZYGesturePriorityLow;
 	NSMutableArray *gestures;
 	NSMutableDictionary *ignoredAreas;
 }
-+(id) sharedInstance;
++(instancetype) sharedInstance;
 
 -(void) addGestureRecognizer:(ZYGestureCallbackBlock)callbackBlock withCondition:(ZYGestureConditionBlock)conditionBlock forEdge:(UIRectEdge)screenEdge identifier:(NSString*)identifier priority:(NSUInteger)priority;
 -(void) addGestureRecognizer:(ZYGestureCallbackBlock)callbackBlock withCondition:(ZYGestureConditionBlock)conditionBlock forEdge:(UIRectEdge)screenEdge identifier:(NSString*)identifier;

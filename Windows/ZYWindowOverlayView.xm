@@ -12,8 +12,7 @@
 @end
 
 @implementation ZYWindowOverlayView
--(void) show
-{
+- (void)show {
 	probablyAnimating = NO;
 
 	UIVisualEffect *effect = [UIBlurEffect effectWithStyle:THEMED(windowedMultitaskingBlurStyle)];
@@ -96,18 +95,14 @@
 	rotationLockButton.layer.cornerRadius = buttonSize/2;
 	[self addSubview:rotationLockButton];
 
-	if (self.appWindow.isLocked)
-	{
+	if (self.appWindow.isLocked) {
 		[rotationLockButton setImage:[ZYResourceImageProvider imageForFilename:@"Lock" size:CGSizeMake(imageSize, imageSize) tintedTo:THEMED(windowedMultitaskingRotationIconOverlayColor)] forState:UIControlStateNormal];
-	}
-	else
-	{
+	} else {
 		[rotationLockButton setImage:[ZYResourceImageProvider imageForFilename:@"Unlocked" size:CGSizeMake(imageSize, imageSize) tintedTo:THEMED(windowedMultitaskingRotationIconOverlayColor)] forState:UIControlStateNormal];
 	}
 }
 
-- (void) buttonPress:(UIButton*)button
-{
+- (void)buttonPress:(UIButton*)button {
 	if ([ZYSettings.sharedSettings windowedMultitaskingCompleteAnimations])
 		probablyAnimating = YES;
 	//[UIView animateWithDuration:0.2 animations:^{
@@ -133,8 +128,7 @@
 	});
 }
 
-- (void) buttonRelease:(UIButton*)button
-{
+- (void)buttonRelease:(UIButton*)button {
 	if ([ZYSettings.sharedSettings windowedMultitaskingCompleteAnimations])
 		probablyAnimating = YES;
 	//[UIView animateWithDuration:0.2 animations:^{
@@ -160,13 +154,11 @@
 	});
 }
 
--(void) dismiss_
-{
+- (void)dismiss_ {
 	[self.appWindow hideOverlay];
 }
 
--(void) dismiss
-{
+- (void)dismiss {
 	[UIView animateWithDuration:0.5 animations:^{
 		self.alpha = 0;
 	} completion:^(BOOL _) {
@@ -174,40 +166,36 @@
 	}];
 }
 
--(void) closeButtonTap
-{
-	if (probablyAnimating)
+- (void)closeButtonTap {
+	if (probablyAnimating) {
 		[self performSelector:@selector(closeButtonTap) withObject:nil afterDelay:0.1];
-	else
+	} else {
 		[self.appWindow close];
+	}
 }
 
--(void) maximizeButtonTap
-{
-	if (probablyAnimating)
+- (void)maximizeButtonTap {
+	if (probablyAnimating) {
 		[self performSelector:@selector(maximizeButtonTap) withObject:nil afterDelay:0.1];
-	else
+	} else {
 		[self.appWindow maximize];
+	}
 }
 
--(void) minimizeButtonTap
-{
-	if (probablyAnimating)
+- (void)minimizeButtonTap {
+	if (probablyAnimating) {
 		[self performSelector:@selector(minimizeButtonTap) withObject:nil afterDelay:0.1];
-	else
+	} else {
 		[self.appWindow minimize];
+	}
 }
 
--(void) rotationLockButtonTap
-{
+- (void)rotationLockButtonTap {
 	[self.appWindow sizingLockButtonTap:nil];
 
-	if (self.appWindow.isLocked)
-	{
+	if (self.appWindow.isLocked) {
 		[rotationLockButton setImage:[ZYResourceImageProvider imageForFilename:@"Lock" size:CGSizeMake(imageSize, imageSize) tintedTo:THEMED(windowedMultitaskingRotationIconOverlayColor)] forState:UIControlStateNormal];
-	}
-	else
-	{
+	} else {
 		[rotationLockButton setImage:[ZYResourceImageProvider imageForFilename:@"Unlocked" size:CGSizeMake(imageSize, imageSize) tintedTo:THEMED(windowedMultitaskingRotationIconOverlayColor)] forState:UIControlStateNormal];
 	}
 }

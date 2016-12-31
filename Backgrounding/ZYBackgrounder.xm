@@ -22,7 +22,7 @@ NSMutableDictionary *temporaryOverrides = [NSMutableDictionary dictionary];
 NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 
 @implementation ZYBackgrounder
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
 	SHARED_INSTANCE(ZYBackgrounder);
 }
 

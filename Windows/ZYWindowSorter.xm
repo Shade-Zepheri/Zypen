@@ -73,8 +73,8 @@
 			CGFloat maxScale = factor / (ceil(sqrt(numberOfWindows)) * [windows[0] bounds].size.height);
 
 			CGFloat x = 0, y = 0;
-			int panesPerLine = floor(1.0 / maxScale);// (numberOfWindows & ~1) /* round down to nearest even number */
-			int currentPane = 0;
+			NSInteger panesPerLine = floor(1.0 / maxScale);// (numberOfWindows & ~1) /* round down to nearest even number */
+			NSInteger currentPane = 0;
 
 			for (ZYWindowBar *bar in windows) {
 				[bar scaleTo:maxScale animated:YES derotate:YES];

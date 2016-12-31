@@ -29,7 +29,7 @@ enum ZYIconIndicatorViewInfo {
 NSString *FriendlyNameForBackgroundMode(ZYBackgroundMode mode);
 
 @interface ZYBackgrounder : NSObject
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 
 - (BOOL)shouldAutoLaunchApplication:(NSString*)identifier;
 - (BOOL)shouldAutoRelaunchApplication:(NSString*)identifier;

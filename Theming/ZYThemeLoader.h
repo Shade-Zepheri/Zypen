@@ -1,7 +1,7 @@
 #import "ZYTheme.h"
 
 @interface ZYThemeLoader : NSObject
-+(ZYTheme*)loadFromFile:(NSString*)baseName;
++ (ZYTheme*)loadFromFile:(NSString*)baseName;
 
-+(ZYTheme*) themeFromDictionary:(NSDictionary*)dict;
++ (ZYTheme*)themeFromDictionary:(NSDictionary*)dict;
 @end

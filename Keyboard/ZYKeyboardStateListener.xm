@@ -12,14 +12,12 @@ extern BOOL overrideDisableForStatusBar;
 BOOL isShowing = NO;
 
 @implementation ZYKeyboardStateListener
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
     SHARED_INSTANCE(ZYKeyboardStateListener);
 }
 
-- (void)didShow:(NSNotification*)notif
-{
-    NSLog(@"[ReachApp] keyboard didShow");
+- (void)didShow:(NSNotification*)notif {
+    HBLogDebug(@"[ReachApp] keyboard didShow");
     _visible = YES;
     _size = [[notif.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
 
@@ -27,33 +25,28 @@ BOOL isShowing = NO;
         CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.shade.zypen.keyboard.didShow"), NULL, NULL, true);
         [ZYMessagingClient.sharedInstance notifyServerOfKeyboardSizeUpdate:_size];
 
-        if ([ZYMessagingClient.sharedInstance shouldUseExternalKeyboard])
-        {
+        if ([ZYMessagingClient.sharedInstance shouldUseExternalKeyboard]) {
             [ZYMessagingClient.sharedInstance notifyServerToShowKeyboard];
             isShowing = YES;
         }
     }
 }
 
-- (void)didHide
-{
-    NSLog(@"[ReachApp] keyboard didHide");
+- (void)didHide {
+    HBLogDebug(@"[ReachApp] keyboard didHide");
     _visible = NO;
 
     IF_NOT_SPRINGBOARD {
         CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.shade.zypen.keyboard.didHide"), NULL, NULL, true);
-        if ([ZYMessagingClient.sharedInstance shouldUseExternalKeyboard] || isShowing)
-        {
+        if ([ZYMessagingClient.sharedInstance shouldUseExternalKeyboard] || isShowing) {
             isShowing = NO;
             [ZYMessagingClient.sharedInstance notifyServerToHideKeyboard];
         }
     }
 }
 
-- (id)init
-{
-    if ((self = [super init]))
-    {
+- (id)init {
+    if ((self = [super init])) {
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         [center addObserver:self selector:@selector(didShow:) name:UIKeyboardDidShowNotification object:nil];
         [center addObserver:self selector:@selector(didHide) name:UIKeyboardWillHideNotification object:nil];
@@ -62,61 +55,56 @@ BOOL isShowing = NO;
     return self;
 }
 
--(void) _setVisible:(BOOL)val { _visible = val; }
--(void) _setSize:(CGSize)size { _size = size; }
+- (void)_setVisible:(BOOL)val {
+  _visible = val;
+}
+
+- (void)_setSize:(CGSize)size {
+  _size = size;
+}
+
 @end
 
-void externalKeyboardDidShow(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-{
+void externalKeyboardDidShow(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
     [ZYKeyboardStateListener.sharedInstance _setVisible:YES];
 }
 
-void externalKeyboardDidHide(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-{
-    //NSLog(@"[ReachApp] externalKeyboardDidHide");
+void externalKeyboardDidHide(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    //HBLogDebug(@"[ReachApp] externalKeyboardDidHide");
     [ZYKeyboardStateListener.sharedInstance _setVisible:NO];
 }
 
 %hook UIKeyboard
--(void) activate
-{
+- (void)activate {
     %orig;
 
     void (^block)() = ^{
         IF_NOT_SPRINGBOARD {
-            unsigned int contextID = 0;
-            if (objc_getClass("UIRemoteKeyboardWindow") != nil && [UIKeyboard activeKeyboard] && [[UIKeyboard activeKeyboard] window])
-                contextID = [[[UIKeyboard activeKeyboard] window] _contextId]; // ((UITextEffectsWindow*)[%c(UIRemoteKeyboardWindow) remoteKeyboardWindowForScreen:UIScreen.mainScreen create:NO])._contextId;
-            else
-                contextID = UITextEffectsWindow.sharedTextEffectsWindow._contextId;
+            NSUInteger contextID = 0;
+            if (objc_getClass("UIRemoteKeyboardWindow") != nil && [UIKeyboard activeKeyboard] && [[UIKeyboard activeKeyboard] window]) {
+              contextID = [[[UIKeyboard activeKeyboard] window] _contextId]; // ((UITextEffectsWindow*)[%c(UIRemoteKeyboardWindow) remoteKeyboardWindowForScreen:UIScreen.mainScreen create:NO])._contextId;
+            } else {
+              contextID = UITextEffectsWindow.sharedTextEffectsWindow._contextId;
+            }
             [ZYMessagingClient.sharedInstance notifyServerWithKeyboardContextId:contextID];
-
-    #if DEBUG && NO
-            assert([[[UIKeyboard activeKeyboard] window] _contextId]);
-            assert(contextID != 0);
-            assert(contextID == [[[UIKeyboard activeKeyboard] window] _contextId]);
-    #endif
-
-            NSLog(@"[ReachApp] c id %d", contextID);
+            HBLogDebug(@"[ReachApp] c id %tu", contextID);
         }
     };
 
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0"))
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), block);
-    else
-        block();
-
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
+      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), block);
+    } else {
+      block();
+    }
 }
 %end
 
-%ctor
-{
+%ctor {
     // Any process
     [ZYKeyboardStateListener sharedInstance];
 
     // Just SpringBoard
-    IF_SPRINGBOARD
-    {
+    IF_SPRINGBOARD {
         CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, externalKeyboardDidShow, CFSTR("com.shade.zypen.keyboard.didShow"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, externalKeyboardDidHide, CFSTR("com.shade.zypen.keyboard.didHide"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     }

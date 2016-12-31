@@ -5,10 +5,10 @@
 	ZYTheme *currentTheme;
 }
 
-+(instancetype) sharedInstance;
++ (instancetype)sharedInstance;
 
--(ZYTheme*) currentTheme;
--(NSArray*) allThemes;
+- (ZYTheme*)currentTheme;
+- (NSArray*)allThemes;
 
--(void) invalidateCurrentThemeAndReload:(NSString*)currentIdentifier;
+- (void)invalidateCurrentThemeAndReload:(NSString*)currentIdentifier;
 @end

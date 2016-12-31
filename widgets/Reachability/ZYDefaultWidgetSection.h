@@ -2,5 +2,5 @@
 #import "ZYWidget.h"
 
 @interface ZYDefaultWidgetSection : ZYWidgetSection
-+ (id)sharedDefaultWidgetSection;
++ (instancetype)sharedDefaultWidgetSection;
 @end

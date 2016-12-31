@@ -148,13 +148,13 @@ extern BOOL launchNextOpenIntoWindow;
 		    }];
         }
 	} else if ([identifier isEqual:ZYMessagingGoToDesktopOnTheLeftMessageName]) {
-		int newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex - 1;
+		NSInteger newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex - 1;
 		BOOL isValid = newIndex >= 0 && newIndex <= ZYDesktopManager.sharedInstance.numberOfDesktops;
 		if (isValid) {
 			[ZYDesktopManager.sharedInstance switchToDesktop:newIndex];
 		}
 	} else if ([identifier isEqual:ZYMessagingGoToDesktopOnTheRightMessageName]) {
-		int newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex + 1;
+		NSInteger newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex + 1;
 		BOOL isValid = newIndex >= 0 && newIndex < ZYDesktopManager.sharedInstance.numberOfDesktops;
 		if (isValid) {
 			[ZYDesktopManager.sharedInstance switchToDesktop:newIndex];
@@ -229,7 +229,7 @@ extern BOOL launchNextOpenIntoWindow;
 	}
 }
 
-- (void)sendDataWithCurrentTries:(int)tries toAppWithBundleIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
+- (void)sendDataWithCurrentTries:(NSInteger)tries toAppWithBundleIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier];
 	if (!app.isRunning || [app mainScene] == nil) {
 		if (tries > 4) {
@@ -422,12 +422,12 @@ extern BOOL launchNextOpenIntoWindow;
 	[ZYSpringBoardKeyboardActivation.sharedInstance hideKeyboard];
 }
 
-- (void)setKeyboardContextId:(unsigned int)id forIdentifier:(NSString*)identifier {
-	HBLogDebug(@"[ReachApp] got c id %d", id);
+- (void)setKeyboardContextId:(NSUInteger)id forIdentifier:(NSString*)identifier {
+	HBLogDebug(@"[ReachApp] got c id %tu", id);
 	contextIds[identifier] = @(id);
 }
 
-- (unsigned int)getStoredKeyboardContextIdForApp:(NSString*)identifier {
+- (NSUInteger)getStoredKeyboardContextIdForApp:(NSString*)identifier {
 	return [contextIds objectForKey:identifier] != nil ? [contextIds[identifier] unsignedIntValue] : 0;
 }
 @end

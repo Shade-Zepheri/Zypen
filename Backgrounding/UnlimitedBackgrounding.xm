@@ -15,7 +15,7 @@ BKSProcessAssertion *keepAlive$temp;
             reason:kProcessAssertionReasonBackgroundUI
             name:@"reachapp"
 			withHandler:^{
-				NSLog(@"ReachApp: %d kept alive: %@", [app pid], [keepAlive$temp valid] ? @"TRUE" : @"FALSE");
+				HBLogDebug(@"ReachApp: %d kept alive: %@", [app pid], [keepAlive$temp valid] ? @"TRUE" : @"FALSE");
 				if (keepAlive$temp.valid) {
           processAssertions[arg1.identifier] = keepAlive$temp;
         } else {

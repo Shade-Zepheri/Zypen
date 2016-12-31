@@ -5,7 +5,7 @@
 #import "ZYMessagingServer.h"
 
 @implementation ZYReachabilityManager
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
 	SHARED_INSTANCE(ZYReachabilityManager);
 }
 

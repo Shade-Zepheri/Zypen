@@ -48,7 +48,7 @@ CGSize forcePhoneModeSize = ZY_6P_SIZE;
 	IF_SPRINGBOARD {
 		return [ZYMessagingServer.sharedInstance getDataForIdentifier:identifier].forcePhoneMode;
 	}
-	NSLog(@"[ReachApp] WARNING: +[ZYFakePhoneMode shouldFakeForAppWithIdentifier:] called from outside SpringBoard!");
+	HBLogDebug(@"[ReachApp] WARNING: +[ZYFakePhoneMode shouldFakeForAppWithIdentifier:] called from outside SpringBoard!");
 	return NO;
 }
 

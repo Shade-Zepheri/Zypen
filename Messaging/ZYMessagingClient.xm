@@ -14,7 +14,7 @@ extern BOOL allowClosingReachabilityNatively;
 @implementation ZYMessagingClient
 @synthesize allowedProcess;
 
-+(instancetype) sharedInstance {
++ (instancetype)sharedInstance {
 	IF_SPRINGBOARD {
 		@throw [NSException exceptionWithName:@"IsSpringBoardException" reason:@"Cannot use ZYMessagingClient in SpringBoard" userInfo:nil];
 	}
@@ -63,15 +63,7 @@ extern BOOL allowClosingReachabilityNatively;
 		HBLogError(@"%@", description);
 }
 
-- (void)_requestUpdateFromServerWithTries:(int)tries {
-	/*if (!NSBundle.mainBundle.bundleIdentifier ||
-		IS_PROCESS("assertiond") ||  // Don't need to load into this anyway
-		IS_PROCESS("searchd") ||  // safe-mode crash fix
-		IS_PROCESS("gputoolsd") || // iMohkles found this crashes (no uikit)
-		IS_PROCESS("filecoordinationd") || // ???
-		IS_PROCESS("backboardd") // Backboardd uses its own messaging center for what it does.
-		)*/
-
+- (void)_requestUpdateFromServerWithTries:(NSInteger)tries {
 	if (allowedProcess == NO) {
 		return;
 	}
@@ -124,7 +116,7 @@ extern BOOL allowClosingReachabilityNatively;
 	allowClosingReachabilityNatively = YES;
 }
 
-- (void)notifyServerWithKeyboardContextId:(unsigned int)cid {
+- (void)notifyServerWithKeyboardContextId:(NSUInteger)cid {
 	NSDictionary *dict = @{ @"contextId": @(cid), @"bundleIdentifier": NSBundle.mainBundle.bundleIdentifier };
 	[serverCenter sendMessageName:ZYMessagingUpdateKeyboardContextIdMessageName userInfo:dict];
 }

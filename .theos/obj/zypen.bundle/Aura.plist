@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -26,6 +25,18 @@
         <string>Activator</string>
         <key>footerText</key>
         <string>If enabled, the current app will be closed after performing the activation method.</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>label</key>
+				<string>Activation Method</string>
+				<key>isController</key>
+				<true/>
+				<key>bundle</key>
+				<string>LibActivator</string>
+				<key>activatorListener</key>
+				<string>com.shade.zypen.aura.togglemode</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -86,6 +97,22 @@
 				<string>com.shade.zypen</string>
 				<key>PostNotification</key>
 				<string>com.shade.zypen/ReloadPrefs</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>label</key>
+				<string>Icon Indicator Options</string>
+				<key>detail</key>
+				<string>ZYBackgrounderIconIndicatorOptionsListController</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>label</key>
+				<string>Status Bar Indicator Options</string>
+				<key>detail</key>
+				<string>ZYBackgrounderStatusbarOptionsListController</string>
 			</dict>
 			<dict>
 				<key>cell</key>

@@ -1062,8 +1062,7 @@ typedef struct {
 @property(readonly, nonatomic) BOOL valid;
 @end
 
-typedef NS_ENUM(NSUInteger, BKSProcessAssertionReason)
-{
+typedef NS_ENUM(NSUInteger, BKSProcessAssertionReason) {
     kProcessAssertionReasonNone = 0,
     kProcessAssertionReasonAudio = 1,
     kProcessAssertionReasonLocation = 2,
@@ -1097,8 +1096,7 @@ typedef NS_ENUM(NSUInteger, BKSProcessAssertionReason)
     // 50004+ unknown
 };
 
-typedef NS_ENUM(NSUInteger, ProcessAssertionFlags)
-{
+typedef NS_ENUM(NSUInteger, ProcessAssertionFlags) {
     ProcessAssertionFlagNone = 0,
     ProcessAssertionFlagPreventSuspend         = 1 << 0,
     ProcessAssertionFlagPreventThrottleDownCPU = 1 << 1,

@@ -6,28 +6,28 @@
 @interface ZYMessagingClient : NSObject {
 	CPDistributedMessagingCenter *serverCenter;
 }
-+(instancetype) sharedInstance;
++ (instancetype)sharedInstance;
 
 @property (nonatomic, readonly) ZYMessageAppData currentData;
 @property (nonatomic) BOOL hasRecievedData;
 @property (nonatomic, retain) NSString *knownFrontmostApp;
 
--(void) requestUpdateFromServer;
+- (void)requestUpdateFromServer;
 
--(void) notifyServerWithKeyboardContextId:(unsigned int)cid;
--(void) notifyServerOfKeyboardSizeUpdate:(CGSize)size;
--(void) notifyServerToShowKeyboard;
--(void) notifyServerToHideKeyboard;
--(BOOL) notifyServerToOpenURL:(NSURL*)url openInWindow:(BOOL)openWindow;
--(void) notifySpringBoardOfFrontAppChangeToSelf;
+- (void)notifyServerWithKeyboardContextId:(NSUInteger)cid;
+- (void)notifyServerOfKeyboardSizeUpdate:(CGSize)size;
+- (void)notifyServerToShowKeyboard;
+- (void)notifyServerToHideKeyboard;
+- (BOOL)notifyServerToOpenURL:(NSURL*)url openInWindow:(BOOL)openWindow;
+- (void)notifySpringBoardOfFrontAppChangeToSelf;
 
 // Methods to ease the currentData usage
--(BOOL) shouldResize;
--(CGSize) resizeSize;
--(BOOL) shouldHideStatusBar;
--(BOOL) shouldShowStatusBar;
--(UIInterfaceOrientation) forcedOrientation;
--(BOOL) shouldForceOrientation;
--(BOOL) shouldUseExternalKeyboard;
--(BOOL) isBeingHosted;
+- (BOOL)shouldResize;
+- (CGSize)resizeSize;
+- (BOOL)shouldHideStatusBar;
+- (BOOL)shouldShowStatusBar;
+- (UIInterfaceOrientation)forcedOrientation;
+- (BOOL)shouldForceOrientation;
+- (BOOL)shouldUseExternalKeyboard;
+- (BOOL)isBeingHosted;
 @end

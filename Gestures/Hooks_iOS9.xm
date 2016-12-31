@@ -30,8 +30,7 @@ struct VelocityData {
 };
 
 %hook _UIScreenEdgePanRecognizer
-- (void)incorporateTouchSampleAtLocation:(CGPoint)location timestamp:(double)timestamp modifier:(NSInteger)modifier interfaceOrientation:(UIInterfaceOrientation)orientation forceState:(int)arg5
-{
+- (void)incorporateTouchSampleAtLocation:(CGPoint)location timestamp:(double)timestamp modifier:(NSInteger)modifier interfaceOrientation:(UIInterfaceOrientation)orientation forceState:(int)arg5 {
     %orig;
 
     VelocityData newData;
@@ -51,8 +50,7 @@ struct VelocityData {
 }
 
 %new
-- (CGPoint)ZY_velocity
-{
+- (CGPoint)ZY_velocity {
     VelocityData data;
     [objc_getAssociatedObject(self, @selector(ZY_velocityData)) getValue:&data];
 
@@ -87,7 +85,7 @@ struct VelocityData {
             location.y = location.x;
             location.x = t;
         }
-        //NSLog(@"[ReachApp] _UIScreenEdgePanRecognizer location: %@", NSStringFromCGPoint(location));
+        //HBLogDebug(@"[ReachApp] _UIScreenEdgePanRecognizer location: %@", NSStringFromCGPoint(location));
         if ([ZYGestureManager.sharedInstance handleMovementOrStateUpdate:UIGestureRecognizerStateBegan withPoint:location velocity:screenEdgePanRecognizer.ZY_velocity forEdge:screenEdgePanRecognizer.targetEdges]) {
             currentEdge9 = screenEdgePanRecognizer.targetEdges;
             BKSHIDServicesCancelTouchesOnMainDisplay(); // This is needed or open apps, etc will still get touch events. For example open settings app + swipeover without this line and you can still scroll up/down through the settings
@@ -114,14 +112,14 @@ void touch_event(void *target, void *refcon, IOHIDServiceRef service, IOHIDEvent
             if (interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
                 rotatedX = y;
                 rotatedY = UIScreen.mainScreen.bounds.size.height - x;
-            } else if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft){
+            } else if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
                 rotatedX = UIScreen.mainScreen._referenceBounds.size.height - y;
                 rotatedY = x;
             }
 
             CGPoint rotatedLocation = (CGPoint) { rotatedX, rotatedY };
 
-            //NSLog(@"[ReachApp] (%f, %d) %@ -> %@", density, isTracking, NSStringFromCGPoint(location), NSStringFromCGPoint(rotatedLocation));
+            //HBLogDebug(@"[ReachApp] (%f, %d) %@ -> %@", density, isTracking, NSStringFromCGPoint(location), NSStringFromCGPoint(rotatedLocation));
 
             if (isTracking == NO) {
                 for (_UIScreenEdgePanRecognizer *recognizer in gestureRecognizers) {
@@ -143,7 +141,7 @@ void touch_event(void *target, void *refcon, IOHIDServiceRef service, IOHIDEvent
                 currentEdge9 = UIRectEdgeNone;
                 isTracking = NO;
 
-                //NSLog(@"[ReachApp] touch ended.");
+                //HBLogDebug(@"[ReachApp] touch ended.");
             } else {
                 _UIScreenEdgePanRecognizer *targetRecognizer = nil;
 

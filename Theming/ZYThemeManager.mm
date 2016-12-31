@@ -8,10 +8,15 @@
 	SHARED_INSTANCE2(ZYThemeManager, [sharedInstance invalidateCurrentThemeAndReload:nil]); // will be reloaded by ZYSettings
 }
 
-- (ZYTheme*)currentTheme { return currentTheme; }
-- (NSArray*)allThemes { return allThemes.allValues; }
+- (ZYTheme*)currentTheme {
+	return currentTheme;
+}
 
--(void) invalidateCurrentThemeAndReload:(NSString*)currentIdentifier {
+- (NSArray*)allThemes {
+	return allThemes.allValues;
+}
+
+- (void)invalidateCurrentThemeAndReload:(NSString*)currentIdentifier {
 	currentTheme = nil;
 	[allThemes removeAllObjects];
 	allThemes = [NSMutableDictionary dictionary];
@@ -25,7 +30,7 @@
 		}
 		ZYTheme *theme = [ZYThemeLoader loadFromFile:themeName];
 		if (theme && theme.themeIdentifier) {
-			//NSLog(@"[ReachApp] adding %@", theme.themeIdentifier);
+			//HBLogDebug(@"[ReachApp] adding %@", theme.themeIdentifier);
 			allThemes[theme.themeIdentifier] = theme;
 
 			if ([theme.themeIdentifier isEqual:currentIdentifier])
@@ -39,4 +44,5 @@
 		}
 	}
 }
+
 @end

@@ -188,6 +188,36 @@
 				<key>key</key>
 				<string>windowRotationLockMode</string>
 			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Activator</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>label</key>
+				<string>Sort Windows Activation</string>
+				<key>isController</key>
+				<true/>
+				<key>bundle</key>
+				<string>LibActivator</string>
+				<key>activatorListener</key>
+				<string>com.shade.zypen.empoleon.sortWindows</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>label</key>
+				<string>Easy-Tap-Mode Activation</string>
+				<key>isController</key>
+				<true/>
+				<key>bundle</key>
+				<string>LibActivator</string>
+				<key>activatorListener</key>
+				<string>com.shade.zypen.empoleon.toggleEditMode</string>
+			</dict>
 		</array>
 		<key>title</key>
 		<string>Empoleon</string>

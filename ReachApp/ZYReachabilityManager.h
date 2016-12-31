@@ -3,7 +3,7 @@
 @class ZYAppSliderProviderView;
 
 @interface ZYReachabilityManager : NSObject
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 
 - (void)launchTopAppWithIdentifier:(NSString*)identifier;
 - (void)launchWidget:(ZYWidget*)widget;

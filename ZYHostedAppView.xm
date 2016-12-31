@@ -20,7 +20,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     UILabel *authenticationDidFailLabel;
     UITapGestureRecognizer *authenticationFailedRetryTapGesture;
 
-    int startTries;
+    NSInteger startTries;
     BOOL disablePreload;
 
     NSTimer *loadedTimer;

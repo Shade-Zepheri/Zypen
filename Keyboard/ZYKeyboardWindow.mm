@@ -4,14 +4,13 @@
 #import "ZYDesktopManager.h"
 
 @implementation ZYKeyboardWindow
--(void) setupForKeyboardAndShow:(NSString*)identifier
-{
+- (void)setupForKeyboardAndShow:(NSString*)identifier {
 	self.userInteractionEnabled = YES;
 	self.backgroundColor = UIColor.clearColor;
 
-	if (kbView)
+	if (kbView) {
 		[self removeKeyboard];
-
+	}
 	kbView = [[ZYRemoteKeyboardView alloc] initWithFrame:UIScreen.mainScreen.bounds];
 	[kbView connectToKeyboardWindowForApp:identifier];
 	[self addSubview:kbView];
@@ -21,12 +20,14 @@
 	[self makeKeyAndVisible];
 }
 
--(void) removeKeyboard
-{
+- (void)removeKeyboard {
 	[kbView connectToKeyboardWindowForApp:nil];
 	[kbView removeFromSuperview];
 	kbView = nil;
 }
 
--(unsigned int) contextId { return kbView.layerHost.contextId; }
+- (NSUInteger)contextId {
+	return kbView.layerHost.contextId;
+}
+
 @end

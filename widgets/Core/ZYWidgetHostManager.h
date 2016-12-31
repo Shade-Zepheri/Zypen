@@ -4,7 +4,7 @@
 @interface ZYWidgetHostManager : NSObject {
 	NSMutableArray *widgets;
 }
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 
 - (void)addWidget:(ZYWidgetBase*)widget;
 - (void)removeWidget:(ZYWidgetBase*)widget;

@@ -10,7 +10,7 @@
 @property (nonatomic, retain) UIColor *backgroundingIndicatorTextColor;
 
 // Mission Control
-@property (nonatomic) int missionControlBlurStyle;
+@property (nonatomic) NSInteger missionControlBlurStyle;
 @property (nonatomic, retain) UIColor *missionControlScrollViewBackgroundColor;
 @property (nonatomic) CGFloat missionControlScrollViewOpacity;
 @property (nonatomic) CGFloat missionControlIconPreviewShadowRadius;
@@ -35,18 +35,18 @@
 
 @property (nonatomic, retain) UIColor *windowedMultitaskingBarTitleColor;
 @property (nonatomic) NSTextAlignment windowedMultaskingBarTitleTextAlignment;
-@property (nonatomic) int windowedMultitaskingBarTitleTextInset;
+@property (nonatomic) NSInteger windowedMultitaskingBarTitleTextInset;
 
-@property (nonatomic) int windowedMultitaskingCloseButtonAlignment;
-@property (nonatomic) int windowedMultitaskingCloseButtonPriority;
-@property (nonatomic) int windowedMultitaskingMaxButtonAlignment;
-@property (nonatomic) int windowedMultitaskingMaxButtonPriority;
-@property (nonatomic) int windowedMultitaskingMinButtonAlignment;
-@property (nonatomic) int windowedMultitaskingMinButtonPriority;
-@property (nonatomic) int windowedMultitaskingRotationAlignment;
-@property (nonatomic) int windowedMultitaskingRotationPriority;
+@property (nonatomic) NSInteger windowedMultitaskingCloseButtonAlignment;
+@property (nonatomic) NSInteger windowedMultitaskingCloseButtonPriority;
+@property (nonatomic) NSInteger windowedMultitaskingMaxButtonAlignment;
+@property (nonatomic) NSInteger windowedMultitaskingMaxButtonPriority;
+@property (nonatomic) NSInteger windowedMultitaskingMinButtonAlignment;
+@property (nonatomic) NSInteger windowedMultitaskingMinButtonPriority;
+@property (nonatomic) NSInteger windowedMultitaskingRotationAlignment;
+@property (nonatomic) NSInteger windowedMultitaskingRotationPriority;
 
-@property (nonatomic) int windowedMultitaskingBlurStyle;
+@property (nonatomic) NSInteger windowedMultitaskingBlurStyle;
 @property (nonatomic, retain) UIColor *windowedMultitaskingOverlayColor;
 
 // Quick Access

@@ -14,7 +14,7 @@ BOOL locationIsInValidArea(CGFloat x) {
     }
     switch ([ZYSettings.sharedSettings windowedMultitaskingGrabArea]) {
         case ZYGrabAreaBottomLeftThird:
-        NSLog(@"[ReachApp] StartMultitaskingGesture: %f %f", x, UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width);
+        HBLogDebug(@"[ReachApp] StartMultitaskingGesture: %f %f", x, UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width);
             return x <= UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width / 3.0;
         case ZYGrabAreaBottomMiddleThird:
             return x >= UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width / 3.0 && x <= (UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width / 3.0) * 2;
@@ -26,7 +26,7 @@ BOOL locationIsInValidArea(CGFloat x) {
 }
 
 %ctor {
-    if (!IS_SPRINGBOARD) {
+    IF_NOT_SPRINGBOARD {
       return;
     }
     __weak __block UIView *appView = nil;
@@ -34,7 +34,7 @@ BOOL locationIsInValidArea(CGFloat x) {
     __block CGPoint originalCenter;
     [[ZYGestureManager sharedInstance] addGestureRecognizer:^ZYGestureCallbackResult(UIGestureRecognizerState state, CGPoint location, CGPoint velocity) {
 
-        SBApplication *topApp = [[UIApplication sharedApplication] _accessibilityFrontMostApplication];
+        SBApplication *topApp = [UIApplication.sharedApplication _accessibilityFrontMostApplication];
 
         // Dismiss potential CC
         //[[%c(SBUIController) sharedInstance] _showControlCenterGestureEndedWithLocation:CGPointMake(0, UIScreen.mainScreen.bounds.size.height - 1) velocity:CGPointZero];

@@ -1,7 +1,7 @@
 #import "ZYWidgetHostManager.h"
 
 @implementation ZYWidgetHostManager
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
 	SHARED_INSTANCE2(ZYWidgetHostManager, sharedInstance->widgets = [NSMutableArray array]);
 }
 

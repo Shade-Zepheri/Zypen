@@ -6,16 +6,14 @@
 //#define COLOR(name) [UIColor ZY_colorWithHexString:dict[name]]
 
 @implementation ZYThemeLoader
-+(ZYTheme*)loadFromFile:(NSString*)baseName
-{
++ (ZYTheme*)loadFromFile:(NSString*)baseName {
 	NSString *fullPath = [NSString stringWithFormat:@"%@/Themes/%@.plist",ZY_BASE_PATH,[[baseName lastPathComponent] stringByDeletingPathExtension]];
 
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:fullPath];
 	return [ZYThemeLoader themeFromDictionary:dict];
 }
 
-+(ZYTheme*) themeFromDictionary:(NSDictionary*)dict
-{
++ (ZYTheme*)themeFromDictionary:(NSDictionary*)dict {
 	ZYTheme *ret = [[ZYTheme alloc] init];
 
 	ret.themeIdentifier = dict[@"identifier"];
@@ -69,10 +67,8 @@
 	return ret;
 }
 
-+(NSTextAlignment) getTextAlignment:(NSObject*)value
-{
-	if ([value isKindOfClass:[NSString class]])
-	{
++ (NSTextAlignment)getTextAlignment:(NSObject*)value {
+	if ([value isKindOfClass:[NSString class]]) {
 		if ([value isEqual:@"NSTextAlignmentLeft"] || [value isEqual:@"0"] || [value isEqual:@"Left"])
 			return NSTextAlignmentLeft;
 		if ([value isEqual:@"NSTextAlignmentCenter"] || [value isEqual:@"1"] || [value isEqual:@"Center"])
@@ -83,10 +79,8 @@
 			return NSTextAlignmentJustified;
 		if ([value isEqual:@"NSTextAlignmentNatural"] || [value isEqual:@"4"] || [value isEqual:@"Natural"])
 			return NSTextAlignmentNatural;
-	}
-	else if ([value isKindOfClass:[NSNumber class]])
-	{
-		int actualValue = [((NSNumber*)value) intValue];
+	} else if ([value isKindOfClass:[NSNumber class]]) {
+		NSInteger actualValue = [((NSNumber*)value) intValue];
 		if (actualValue == 0)
 			return NSTextAlignmentLeft;
 		else if (actualValue == 1)
@@ -101,8 +95,7 @@
 	return NSTextAlignmentCenter;
 }
 
-+(UIColor*) tryGetColorFromThemeImageName:(NSString*)name
-{
++ (UIColor*)tryGetColorFromThemeImageName:(NSString*)name {
 	NSString *expandedPath = [NSString stringWithFormat:@"%@/ThemingImages/%@.png",ZY_BASE_PATH,[[name lastPathComponent] stringByDeletingPathExtension]];
 	BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:expandedPath];
 	if (!exists)

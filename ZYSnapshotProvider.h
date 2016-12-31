@@ -3,7 +3,7 @@
 @interface ZYSnapshotProvider : NSObject {
 	NSCache *imageCache;
 }
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 
 - (UIImage*)snapshotForDesktop:(ZYDesktopWindow*)desktop;
 - (void)forceReloadSnapshotOfDesktop:(ZYDesktopWindow*)desktop;
