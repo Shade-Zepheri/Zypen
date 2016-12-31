@@ -35,7 +35,6 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	static dispatch_once_t onceToken = 0;
 	dispatch_once(&onceToken, ^{
 		if ([NSFileManager.defaultManager fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/libstatusbar.dylib"]) {
-			HBLogDebug(@"Looks Like its Installed");
 			installed = YES;
 	    dlopen("/Library/MobileSubstrate/DynamicLibraries/libstatusbar.dylib", RTLD_LAZY);
 		}

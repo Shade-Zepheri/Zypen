@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.shade.zypen.fsdaemon</string>
+	<key>Program</key>
+	<string>/usr/bin/ReachAppFSDaemon</string>
+	<key>RunAtLoad</key>
+	<false/>
+  <key>ExecuteAllowed</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/dev/null</string>
+	<key>WatchPaths</key>
+	<array>
+		<string>/User/Library/.zypen.uiappexitsonsuspend.wantstochangerootapp</string>
+	</array>
+	<key>user</key>
+	<string>root</string>
+	<key>group</key>
+	<string>wheel</string>
+</dict>
+</plist>

@@ -1,7 +1,7 @@
 ARCHS = armv7  arm64
 
 CFLAGS = -I../ -I../Theming/
-CFLAGS += -fno-objc-arc -O2
+CFLAGS += -fno-objc-arc -O2 -Wno-deprecated-declarations
 
 include $(THEOS)/makefiles/common.mk
 

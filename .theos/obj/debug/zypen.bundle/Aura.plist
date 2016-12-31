@@ -28,6 +28,18 @@
 			</dict>
 			<dict>
 				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>label</key>
+				<string>Activation Method</string>
+				<key>isController</key>
+				<true/>
+				<key>bundle</key>
+				<string>LibActivator</string>
+				<key>activatorListener</key>
+				<string>com.shade.zypen.aura.togglemode</string>
+			</dict>
+			<dict>
+				<key>cell</key>
 				<string>PSSwitchCell</string>
 				<key>default</key>
 				<true/>

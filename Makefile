@@ -1,6 +1,6 @@
 ARCHS = armv7 arm64
-CFLAGS = -I./ -Iwidgets/ -Iwidgets/Core/ -Iwidgets/Reachability/ -IReachApp/ -IGestures/ -IWindows/ -IMessaging/ -IKeyboard/ -ITheming/ -IBackgrounding/
-CFLAGS += -fobjc-arc -O2 -Wno-deprecated-declarations
+CFLAGS = -I./ -Iwidgets/ -Iwidgets/Core/ -Iwidgets/Reachability/ -IReachApp/ -IGestures/ -IWindows/ -IMessaging/ -IKeyboard/ -ITheming/ -IBackgrounding/ -O2 -Wno-deprecated-declarations
+CFLAGS += -fobjc-arc
 TARGET = iphone:9.2
 
 include $(THEOS)/makefiles/common.mk
@@ -27,7 +27,9 @@ after-install::
 
 SUBPROJECTS += zypen
 SUBPROJECTS += Backgrounding
-SUBPROJECTS += ZYFakePhoneMode
 SUBPROJECTS += ZY_assertiond
+SUBPROJECTS += ZYDaemon
+SUBPROJECTS += ZYFakePhoneMode
+
 
 include $(THEOS_MAKE_PATH)/aggregate.mk

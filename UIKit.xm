@@ -84,7 +84,7 @@ static Class $memorized$UITextEffectsWindow$class;
 }
 */
 - (void)_setStatusBarHidden:(BOOL)arg1 animationParameters:(unsafe_id)arg2 changeApplicationFlag:(BOOL)arg3 {
-	//if ([ZYSettings.sharedInstance unifyStatusBar])
+	//if ([ZYSettings.sharedSettings unifyStatusBar])
     if ([ZYMessagingClient.sharedInstance shouldHideStatusBar]) {
         arg1 = YES;
         arg3 = YES;
