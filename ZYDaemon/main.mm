@@ -26,6 +26,7 @@ int main(int argc, char **argv, char **envp) {
       if (!success) {
         HBLogDebug(@"[ReachApp] FS Daemon: error writing to plist: %@", path);
       } else {
+				HBLogDebug(@"Wrote to Plist and Removing");
         [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
       }
 

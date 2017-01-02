@@ -46,7 +46,7 @@ static ZYActivatorBackgrounderToggleModeListener *sharedInstance$ZYActivatorBack
 @end
 
 %ctor {
-    if ([NSBundle.mainBundle.bundleIdentifier isEqualToString:@"com.apple.springboard"]) {
+    IF_SPRINGBOARD {
         sharedInstance$ZYActivatorBackgrounderToggleModeListener = [[ZYActivatorBackgrounderToggleModeListener alloc] init];
         [[%c(LAActivator) sharedInstance] registerListener:sharedInstance$ZYActivatorBackgrounderToggleModeListener forName:@"com.shade.zypen.aura.togglemode"];
     }

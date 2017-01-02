@@ -1,5 +1,6 @@
 #import "ZYBackgrounder.h"
 #import "ZYSettings.h"
+#import "Zypen.h"
 
 NSString *FriendlyNameForBackgroundMode(ZYBackgroundMode mode) {
 	switch (mode) {
@@ -141,11 +142,11 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 	[temporaryShouldPop removeObjectForKey:app.bundleIdentifier];
 
 	if (close) {
-        FBWorkspaceEvent *event = [objc_getClass("FBWorkspaceEvent") eventWithName:@"ActivateSpringBoard" handler:^{
-            SBAppToAppWorkspaceTransaction *transaction = [[objc_getClass("SBAppExitedWorkspaceTransaction") alloc] initWithAlertManager:nil exitedApp:app];
+        FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:@"ActivateSpringBoard" handler:^{
+            SBAppToAppWorkspaceTransaction *transaction = [%c(Zypen) createSBAppToAppWorkspaceTransactionForExitingApp:app];
             [transaction begin];
         }];
-        [(FBWorkspaceEventQueue*)[objc_getClass("FBWorkspaceEventQueue") sharedInstance] executeOrAppendEvent:event];
+        [(FBWorkspaceEventQueue*)[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
 	}
 }
 
@@ -157,7 +158,7 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 }
 
 - (ZYIconIndicatorViewInfo)allAggregatedIndicatorInfoForIdentifier:(NSString*)identifier {
-	int info = ZYIconIndicatorViewInfoNone;
+	NSInteger info = ZYIconIndicatorViewInfoNone;
 
 	if ([self backgroundModeForIdentifier:identifier] == ZYBackgroundModeNative)
 		info |= ZYIconIndicatorViewInfoNative;
@@ -180,8 +181,13 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 - (void)updateIconIndicatorForIdentifier:(NSString*)identifier withInfo:(ZYIconIndicatorViewInfo)info {
 	@autoreleasepool {
 		SBIconView *ret = nil;
-    SBApplicationIcon *icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:identifier];
-    ret = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] mappedIconViewForIcon:icon];
+		if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
+			SBApplicationIcon *icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForBundleIdentifier:identifier];
+			ret = [[%c(SBIconViewMap) homescreenMap] mappedIconViewForIcon:icon];
+		} else {
+			SBApplicationIcon *icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:identifier];
+			ret = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] mappedIconViewForIcon:icon];
+		}
     [ret ZY_updateIndicatorView:info];
 	}
 }

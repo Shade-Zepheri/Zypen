@@ -11,6 +11,7 @@
 #import "ZYWidgetSectionManager.h"
 #import "ZYSettings.h"
 #import "ZYAppSliderProviderView.h"
+#import "ZYBackgrounder.h"
 #import "ZYDesktopManager.h"
 #import "ZYDesktopWindow.h"
 #import "ZYMessagingServer.h"
@@ -474,7 +475,13 @@ CGFloat startingY = -1;
     }
 
     [self handleReachabilityModeDeactivated];
+    SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:ident];
     [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
+    [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:app andCloseForegroundApp:NO];
+    /*
+    [[%c(ZYBackgrounder) sharedInstance] queueRemoveTemporaryOverrideForIdentifier:ident];
+    [[%c(ZYBackgrounder) sharedInstance] removeTemporaryOverrideForIdentifier:ident];
+    */
 }
 
 %new - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {

@@ -102,18 +102,11 @@ BOOL locationIsInValidArea(CGFloat x) {
                     ZYIconIndicatorViewInfo indicatorInfo = [[%c(ZYBackgrounder) sharedInstance] allAggregatedIndicatorInfoForIdentifier:topApp.bundleIdentifier];
 
                     // Close app
-                    [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:topApp andCloseForegroundApp:NO];
-                    FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:@"ActivateSpringBoard" handler:^{
-                        SBAppToAppWorkspaceTransaction *transaction = [Zypen createSBAppToAppWorkspaceTransactionForExitingApp:topApp];
-                        [transaction begin];
-
-                        // Open in window
-                        ZYWindowBar *windowBar = [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowForSBApplication:topApp animated:YES];
-                        if (ZYDesktopManager.sharedInstance.lastUsedWindow == nil) {
-                          ZYDesktopManager.sharedInstance.lastUsedWindow = windowBar;
-                        }
-                    }];
-                    [(FBWorkspaceEventQueue*)[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
+                    [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:topApp andCloseForegroundApp:YES];
+                    ZYWindowBar *windowBar = [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowForSBApplication:topApp animated:YES];
+                    if (ZYDesktopManager.sharedInstance.lastUsedWindow == nil) {
+                      ZYDesktopManager.sharedInstance.lastUsedWindow = windowBar;
+                    }
                     [[%c(SBWallpaperController) sharedInstance] endRequiringWithReason:@"BeautifulAnimation"];
 
                     // Pop forced foreground backgrounding

@@ -81,9 +81,9 @@ extern BOOL overrideDisableForStatusBar;
 - (void)_didComplete {
     %orig;
 
-    //if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [ZYHostedAppView iPad_iOS83_fixHosting];
-    //}
+    }
     // can't hurt to check all devices - especially if it changes/has changed to include phones.
     // however this was presumably done in preparation for the iOS 9 multitasking
 
@@ -109,7 +109,7 @@ extern BOOL overrideDisableForStatusBar;
 
 
 %hook UIScreen
-%new -(CGRect) ZY_interfaceOrientedBounds {
+%new - (CGRect)ZY_interfaceOrientedBounds {
     if ([self respondsToSelector:@selector(_interfaceOrientedBounds)]) {
         return [self _interfaceOrientedBounds];
     }

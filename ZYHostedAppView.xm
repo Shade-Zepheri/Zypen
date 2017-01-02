@@ -126,9 +126,9 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     [self addSubview:view];
 
     [ZYMessagingServer.sharedInstance setHosted:YES forIdentifier:app.bundleIdentifier completion:nil];
-    //if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [ZYHostedAppView iPad_iOS83_fixHosting];
-    //}
+    }
 
     [ZYRunningAppsProvider.sharedInstance addTarget:self];
 

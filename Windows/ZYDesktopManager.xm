@@ -111,9 +111,10 @@ BOOL overrideUIWindow = NO;
 	}
 }
 
--(void) updateWindowSizeForApplication:(NSString*)identifier {
-	for (ZYDesktopManager *w in windows)
+- (void)updateWindowSizeForApplication:(NSString*)identifier {
+	for (ZYDesktopManager *w in windows) {
 		[w updateWindowSizeForApplication:identifier];
+	}
 }
 
 - (void)setLastUsedWindow:(ZYWindowBar*)window {
@@ -136,55 +137,33 @@ BOOL overrideUIWindow = NO;
 	//self.lastUsedWindow = nil;
 }
 
-- (ZYDesktopWindow*) desktopAtIndex:(NSUInteger)index {
+- (ZYDesktopWindow*)desktopAtIndex:(NSUInteger)index {
 	return windows[index];
 }
 
-- (NSArray*) availableDesktops {
+- (NSArray*)availableDesktops {
 	return windows;
 }
 
-- (NSUInteger) currentDesktopIndex {
+- (NSUInteger)currentDesktopIndex {
 	return currentDesktopIndex;
 }
 
-- (ZYDesktopWindow*) currentDesktop {
+- (ZYDesktopWindow*)currentDesktop {
 	return currentDesktop;
 }
 
 @end
 
-/*
-%hook UIWindow
--(void) makeKeyAndVisible
-{
-	%orig;
-	if (overrideUIWindow)
-	{
-		static Class c1 = [%c(ZYMissionControlWindow) class];
-		static Class c2 = [%c(SBAppSwitcherWindow) class];
-		if ([self isKindOfClass:c1] || [self isKindOfClass:c2])
-			return;
-		__weak RADesktopWindow *currentDesktop = RADesktopManager.sharedInstance.currentDesktop;
-		if (currentDesktop && self != currentDesktop && currentDesktop.hidden == NO)
-		{
-			//[RADesktopManager.sharedInstance.currentDesktop performSelector:@selector(_orderFrontWithoutMakingKey)];
-			[currentDesktop makeKeyAndVisible];
-		}
-	}
-}
-%end
-*/
-
 %hook SpringBoard
--(void)noteInterfaceOrientationChanged:(UIInterfaceOrientation)arg1 duration:(CGFloat)arg2 {
+- (void)noteInterfaceOrientationChanged:(UIInterfaceOrientation)arg1 duration:(CGFloat)arg2 {
 	%orig;
 	[ZYDesktopManager.sharedInstance updateRotationOnClients:arg1];
 }
 %end
 
 %ctor {
-	if ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"]) {
+	IF_SPRINGBOARD {
 		%init;
 	}
 }

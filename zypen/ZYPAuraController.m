@@ -28,7 +28,7 @@
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-		_specifiers = [self loadSpecifiersFromPlistName:@"AuraStatusBar" target:self];
+		_specifiers = [self loadSpecifiersFromPlistName:@"AuraStatusBarOptions" target:self];
 	}
 
 	return _specifiers;

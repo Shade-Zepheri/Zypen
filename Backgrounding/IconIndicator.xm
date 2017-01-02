@@ -112,7 +112,7 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 		}
 }
 
--(void) dealloc {
+- (void)dealloc {
 	if (self) {
 		UIView *view = [self viewWithTag:9962];
 		if (view) {
@@ -152,21 +152,34 @@ NSMutableDictionary *lsbitems = [[[NSMutableDictionary alloc] init] retain];
 %hook SBApplication
 
 %new - (void)ZY_addStatusBarIconForSelfIfOneDoesNotExist {
-
-
 	if (objc_getClass("LSStatusBarItem") && [lsbitems objectForKey:self.bundleIdentifier] == nil && [ZYBackgrounder.sharedInstance shouldShowStatusBarIconForIdentifier:self.bundleIdentifier]) {
-		if ([[[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] visibleIconIdentifiers] containsObject:self.bundleIdentifier]) {
-			ZYIconIndicatorViewInfo info = [ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier];
-			BOOL native = (info & ZYIconIndicatorViewInfoNative);
-			if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedSettings] shouldShowStatusBarNativeIcons])) {
-		    	LSStatusBarItem *item = [[%c(LSStatusBarItem) alloc] initWithIdentifier:[NSString stringWithFormat:@"zypen-%@",self.bundleIdentifier] alignment:StatusBarAlignmentLeft];
+		if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
+			if ([[[[%c(SBIconViewMap) homescreenMap] iconModel] visibleIconIdentifiers] containsObject:self.bundleIdentifier]) {
+				ZYIconIndicatorViewInfo info = [ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier];
+				BOOL native = (info & ZYIconIndicatorViewInfoNative);
+				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedInstance] shouldShowStatusBarNativeIcons])) {
+		    	LSStatusBarItem *item = [[%c(LSStatusBarItem) alloc] initWithIdentifier:[NSString stringWithFormat:@"multiplexer-%@",self.bundleIdentifier] alignment:StatusBarAlignmentLeft];
 		    	if ([item customViewClass] == nil) {
 						item.customViewClass = @"ZYAppIconStatusBarIconView";
 					}
-	        item.imageName = [NSString stringWithFormat:@"zypen-%@",self.bundleIdentifier];
+	        item.imageName = [NSString stringWithFormat:@"multiplexer-%@",self.bundleIdentifier];
 	    		lsbitems[self.bundleIdentifier] = item;
 	    	}
-    	}
+			}
+		} else {
+			if ([[[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] visibleIconIdentifiers] containsObject:self.bundleIdentifier]) {
+				ZYIconIndicatorViewInfo info = [ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier];
+				BOOL native = (info & ZYIconIndicatorViewInfoNative);
+				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedSettings] shouldShowStatusBarNativeIcons])) {
+			    	LSStatusBarItem *item = [[%c(LSStatusBarItem) alloc] initWithIdentifier:[NSString stringWithFormat:@"zypen-%@",self.bundleIdentifier] alignment:StatusBarAlignmentLeft];
+			    	if ([item customViewClass] == nil) {
+							item.customViewClass = @"ZYAppIconStatusBarIconView";
+						}
+		        item.imageName = [NSString stringWithFormat:@"zypen-%@",self.bundleIdentifier];
+		    		lsbitems[self.bundleIdentifier] = item;
+		    }
+	    }
+		}
 	}
 }
 

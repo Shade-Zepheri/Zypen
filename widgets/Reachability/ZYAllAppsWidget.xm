@@ -53,7 +53,11 @@
 
 	static NSMutableArray *allApps = nil;
 	if (!allApps) {
-		allApps = [[[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] visibleIconIdentifiers] mutableCopy];
+		if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
+			allApps = [[[[%c(SBIconViewMap) homescreenMap] iconModel] visibleIconIdentifiers] mutableCopy];
+		} else {
+			allApps = [[[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] visibleIconIdentifiers] mutableCopy];
+		}
     [allApps sortUsingComparator: ^(NSString* a, NSString* b) {
     	NSString *a_ = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:a].displayName;
     	NSString *b_ = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:b].displayName;
@@ -66,8 +70,15 @@
 	hasSecondRow = NO;
 	for (NSString *str in allApps) {
 		app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:str];
-    SBApplicationIcon *icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
-    SBIconView *iconView = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] _iconViewForIcon:icon];
+		SBApplicationIcon *icon = nil;
+		SBIconView *iconView = nil;
+		if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
+			icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
+			iconView = [[%c(SBIconViewMap) homescreenMap] _iconViewForIcon:icon];
+		} else {
+			icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
+			iconView = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] _iconViewForIcon:icon];
+		}
     if (!iconView || [icon isKindOfClass:[%c(SBApplicationIcon) class]] == NO) {
 			continue;
 		}

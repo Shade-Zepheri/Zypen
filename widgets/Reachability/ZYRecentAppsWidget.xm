@@ -66,8 +66,15 @@
 
 	for (NSString *str in recents) {
 		app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:str];
-    SBApplicationIcon *icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
-    SBIconView *iconView = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] _iconViewForIcon:icon];
+		SBApplicationIcon *icon = nil;
+		SBIconView *iconView = nil;
+		if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
+			icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
+			iconView = [[%c(SBIconViewMap) homescreenMap] _iconViewForIcon:icon];
+		} else {
+			icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:app.bundleIdentifier];
+			iconView = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] _iconViewForIcon:icon];
+		}
     if (!iconView) {
       continue;
     }

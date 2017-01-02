@@ -844,6 +844,7 @@ typedef struct {
 
 @interface SBMainWorkspaceTransitionRequest : NSObject
 - (id)initWithDisplay:(id)arg1;
+- (void)setApplicationContext:(SBWorkspaceApplicationTransitionContext *)arg1 ;
 @end
 
 @interface SBControlCenterController : UIViewController

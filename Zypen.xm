@@ -44,17 +44,17 @@
     //set layout role to 'side' (deactivating)
     SBWorkspaceDeactivatingEntity *deactivatingEntity = [%c(SBWorkspaceDeactivatingEntity) entity];
     [deactivatingEntity setLayoutRole:3];
-    [transitionContext setEntity:deactivatingEntity forLayoutRole:3];
+    [transitionContext setEntity:deactivatingEntity forLayoutRole:2];
 
     //set layout role for 'primary' (activating)
     SBWorkspaceHomeScreenEntity *homescreenEntity = [[%c(SBWorkspaceHomeScreenEntity) alloc] init];
-    [transitionContext setEntity:homescreenEntity forLayoutRole:2];
+    [transitionContext setEntity:homescreenEntity forLayoutRole:1];
 
     [transitionContext setAnimationDisabled:YES];
 
     //create transititon request
     SBMainWorkspaceTransitionRequest *transitionRequest = [[%c(SBMainWorkspaceTransitionRequest) alloc] initWithDisplay:[[UIScreen mainScreen] valueForKey:@"_fbsDisplay"]];
-    [transitionRequest setValue:transitionContext forKey:@"_applicationContext"];
+    [transitionRequest setApplicationContext:transitionContext];
 
     return [[%c(SBAppToAppWorkspaceTransaction) alloc] initWithTransitionRequest:transitionRequest];
     // ** //
