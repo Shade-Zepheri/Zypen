@@ -27,7 +27,7 @@
     %orig;
 
     if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg2.bundleIdentifier]) {
-        HBLogDebug(@"Will Suspend");
+        HBLogDebug(@"Does this Work?");
         BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(arg2, "_bksProcess");
         [arg2 processWillExpire:bkProcess];
     }
@@ -75,14 +75,16 @@
                 }
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
+                HBLogDebug(@"Suspending");
                 FBProcess *process = arg1.clientProcess;
 
                 if ([process isKindOfClass:[%c(FBApplicationProcess) class]]) {
+                  HBLogDebug(@"Is Application Process");
                   FBApplicationProcess *appProcess = (FBApplicationProcess*)process;
                   if (!appProcess.nowPlayingWithAudio && !appProcess.recordingAudio) {
-                    BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(appProcess, "_bksProcess");
-                    [appProcess processWillExpire:bkProcess];
+                    HBLogDebug(@"Not Playing/Recording Audio");
                     [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
+
                   }
                 }
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
@@ -95,12 +97,7 @@
             } else if ([ZYBackgrounder.sharedInstance backgroundModeForIdentifier:arg1.identifier] == ZYBackgroundModeNative) {
                 [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
-            } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
-                [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
-                [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             }
-        } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
-            [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
         }
     }
 

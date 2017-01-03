@@ -1,6 +1,6 @@
 #import "headers.h"
 
-enum ZYBackgroundMode {
+typedef NS_ENUM(NSInteger, ZYBackgroundMode) {
     ZYBackgroundModeNative = 1,
     ZYBackgroundModeForceNativeForOldApps = 2,
     ZYBackgroundModeForcedForeground = 3,
@@ -9,7 +9,7 @@ enum ZYBackgroundMode {
     ZYBackgroundModeUnlimitedBackgroundingTime = 6,
 };
 
-enum ZYIconIndicatorViewInfo {
+typedef NS_ENUM(NSInteger, ZYIconIndicatorViewInfo)  {
 	ZYIconIndicatorViewInfoNone = 0,
 	ZYIconIndicatorViewInfoNative = 1,
 	ZYIconIndicatorViewInfoForced = 2,
