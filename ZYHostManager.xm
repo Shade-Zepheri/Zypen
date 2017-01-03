@@ -28,14 +28,14 @@
 	    if (!settings) {
 				return nil;
 			}
+			[[UIApplication sharedApplication] launchApplicationWithIdentifier:app.bundleIdentifier suspended:YES];
 
 	    [settings setBackgrounded:NO];
 	    [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
 
-			[[UIApplication sharedApplication] launchApplicationWithIdentifier:app.bundleIdentifier suspended:YES];
-
 	    [contextHostManager enableHostingForRequester:@"Zypen" orderFront:YES];
-			return  [contextHostManager hostViewForRequester:@"Zypen" enableAndOrderFront:YES];
+			UIView *hostView = [contextHostManager hostViewForRequester:@"Zypen" enableAndOrderFront:YES];
+			return  hostView;
 	}
 
 	[ZYCompatibilitySystem showWarning:@"Unable to find valid method for accessing context host views"];
