@@ -157,7 +157,7 @@ NSMutableDictionary *lsbitems = [[[NSMutableDictionary alloc] init] retain];
 			if ([[[[%c(SBIconViewMap) homescreenMap] iconModel] visibleIconIdentifiers] containsObject:self.bundleIdentifier]) {
 				ZYIconIndicatorViewInfo info = [ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier];
 				BOOL native = (info & ZYIconIndicatorViewInfoNative);
-				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedInstance] shouldShowStatusBarNativeIcons])) {
+				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedSettings] shouldShowStatusBarNativeIcons])) {
 		    	LSStatusBarItem *item = [[%c(LSStatusBarItem) alloc] initWithIdentifier:[NSString stringWithFormat:@"multiplexer-%@",self.bundleIdentifier] alignment:StatusBarAlignmentLeft];
 		    	if ([item customViewClass] == nil) {
 						item.customViewClass = @"ZYAppIconStatusBarIconView";

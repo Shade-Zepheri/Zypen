@@ -1079,7 +1079,13 @@ typedef NS_ENUM(NSUInteger, BKSProcessAssertionReason) {
     kProcessAssertionReasonVOiP = 12,
     kProcessAssertionReasonExtension = 13,
     kProcessAssertionReasonContinuityStreams = 14,
-    // 15-9999 unknown
+    kProcessAssertionReasonHealthKit = 15,
+    kProcessAssertionReasonWatch = 16,
+    kProcessAssertionReasonSnapShot = 17,
+    kProcessAssertionReasonComplicationUpdate = 18,
+    kProcessAssertionReasonWorkoutProcessing = 19,
+    kProcessAssertionReasonComplicationPushUpdate = 20,
+    // 21-9999 unknown
     kProcessAssertionReasonActivation = 10000,
     kProcessAssertionReasonSuspend = 10001,
     kProcessAssertionReasonTransientWakeup = 10002,
@@ -1089,12 +1095,14 @@ typedef NS_ENUM(NSUInteger, BKSProcessAssertionReason) {
     kProcessAssertionReasonContinuous = 10005,
     kProcessAssertionReasonBackgroundContentFetching = 10006,
     kProcessAssertionReasonNotificationAction = 10007,
-    // 10008-49999 unknown
+    kProcessAssertionReasonPictureInPicture = 10008,
+    // 10009-49999 unknown
     kProcessAssertionReasonFinishTaskAfterBackgroundContentFetching = 50000,
     kProcessAssertionReasonFinishTaskAfterBackgroundDownload = 50001,
     kProcessAssertionReasonFinishTaskAfterPeriodicTask = 50002,
     kProcessAssertionReasonAFterNoficationAction = 50003,
-    // 50004+ unknown
+    kProcessAssertionReasonFinishTaskAfterWatchConectivity = 50004,
+    // 50005+ unknown
 };
 
 typedef NS_ENUM(NSUInteger, ProcessAssertionFlags) {

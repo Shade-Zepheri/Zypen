@@ -31,24 +31,14 @@
         if (!identifier) {
           goto ORIGINAL;
         }
-        //HBLogDebug(@"[ReachApp] BKSProcessAssertion initWithPID:'%d' flags:'%d' reason:'%d' name:'%@' withHandler:'%@' process identifier:'%@'", arg1, arg2, arg3, arg4, arg5, identifier);
 
         if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:identifier]) {
+
             if ((arg3 >= kProcessAssertionReasonAudio && arg3 <= kProcessAssertionReasonVOiP)) {
                 //HBLogDebug(@"[ReachApp] blocking BKSProcessAssertion");
-								HBLogDebug(@"Is this freezing apps?");
-                //if (arg5)
-                //{
-                    //void (^arg5fix)() = arg5;
-                    //arg5fix();
-                    // ^^ causes crashes with share menu
-                //}
+								//I think this part may be causing potential audio issues, need reports to confirm
                 return nil;
             }
-            //else if (arg3 == kProcessAssertionReasonActivation)
-            //{
-            //    arg2 = ProcessAssertionFlagAllowIdleSleep;
-            //}
         }
     }
 ORIGINAL:
