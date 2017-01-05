@@ -2,6 +2,8 @@
 #import "ZYSettings.h"
 #import <libstatusbar/LSStatusBarItem.h>
 #import <applist/ALApplicationList.h>
+#import "ColorBadges.h"
+#import "Anemone.h"
 
 NSMutableDictionary *indicatorStateDict = [[[NSMutableDictionary alloc] init] retain];
 #define SET_INFO_(x, y)    indicatorStateDict[x] = [NSNumber numberWithInt:y]
@@ -13,33 +15,24 @@ NSMutableDictionary *indicatorStateDict = [[[NSMutableDictionary alloc] init] re
 NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 	NSString *ret = @"";
 
-	if (info & ZYIconIndicatorViewInfoNone) {
-    return nil;
-  }
+	if (info & ZYIconIndicatorViewInfoNone)
+		return nil;
 
 	if ([[%c(ZYSettings) sharedSettings] showNativeStateIconIndicators] && (info & ZYIconIndicatorViewInfoNative)) {
-    ret = [ret stringByAppendingString:@"N"];
-  }
-
+		ret = [ret stringByAppendingString:@"N"];
+	}
 	if (info & ZYIconIndicatorViewInfoForced) {
-    ret = [ret stringByAppendingString:@"F"];
-  }
-
-	//if (info & ZYIconIndicatorViewInfoForceDeath)
-	//	[ret appendString:@"D"];
-
+		ret = [ret stringByAppendingString:@"F"];
+	}
 	if (info & ZYIconIndicatorViewInfoSuspendImmediately) {
 		ret = [ret stringByAppendingString:@"ll"];
 	}
-
 	if (info & ZYIconIndicatorViewInfoUnkillable) {
 		ret = [ret stringByAppendingString:@"U"];
 	}
-
 	if (info & ZYIconIndicatorViewInfoUnlimitedBackgroundTime) {
 		ret = [ret stringByAppendingString:@"∞"];
 	}
-
 	return ret;
 }
 
@@ -49,7 +42,7 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 		if (info == ZYIconIndicatorViewInfoTemporarilyInhibit || info == ZYIconIndicatorViewInfoInhibit) {
 			[[self viewWithTag:9962] removeFromSuperview];
 			[self ZY_setIsIconIndicatorInhibited:YES];
-			if (info == ZYIconIndicatorViewInfoTemporarilyInhibit){
+			if (info == ZYIconIndicatorViewInfoTemporarilyInhibit) {
 				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 					[self ZY_setIsIconIndicatorInhibited:NO showAgainImmediately:NO];
 				});
@@ -78,10 +71,41 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 			badge.textAlignment = NSTextAlignmentCenter;
 			badge.clipsToBounds = YES;
 			badge.font = [%c(SBIconBadgeView) _textFont];
-			//badge.textColor = GET_ACCEPTABLE_TEXT_COLOR(badge.backgroundColor, THEMED(backgroundingIndicatorTextColor));
-			badge.textColor = THEMED(backgroundingIndicatorTextColor);
 
+			// Note that my macros for this deal with the situation where ColorBadges is not installed
+			badge.backgroundColor = GET_COLORBADGES_COLOR(self.icon, THEMED(backgroundingIndicatorBackgroundColor));
+
+			//badge.textColor = GET_ACCEPTABLE_TEXT_COLOR(badge.backgroundColor, THEMED(backgroundingIndicatorTextColor));
+			if (HAS_COLORBADGES && [%c(ColorBadges) isEnabled]) {
+				NSInteger bgColor = RGBFromUIColor(badge.backgroundColor);
+				NSInteger txtColor = RGBFromUIColor(THEMED(backgroundingIndicatorTextColor));
+
+				if ([%c(ColorBadges) isDarkColor:bgColor]) {
+					// dark color
+					if ([%c(ColorBadges) isDarkColor:txtColor]) {
+						// dark + dark
+						badge.textColor = [UIColor whiteColor];
+					} else {
+						// dark + light
+						badge.textColor = THEMED(backgroundingIndicatorTextColor);
+					}
+				} else {
+					// light color
+					if ([%c(ColorBadges) isDarkColor:txtColor]) {
+						// light + dark
+						badge.textColor = THEMED(backgroundingIndicatorTextColor);
+					} else {
+						//light + light
+						badge.textColor = [UIColor blackColor];
+					}
+				}
+			} else {
+				badge.textColor = THEMED(backgroundingIndicatorTextColor);
+			}
 			UIImage *bgImage = [%c(SBIconBadgeView) _checkoutBackgroundImage];
+			if (HAS_ANEMONE && [[[%c(ANEMSettingsManager) sharedManager] themeSettings] containsObject:@"ModernBadges"]) {
+				badge.backgroundColor = [UIColor colorWithPatternImage:bgImage];
+			}
 
 			[self addSubview:badge];
 			[badge release];
@@ -90,8 +114,23 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 			badge.frame = CGRectMake(-overhang.x, -overhang.y, bgImage.size.width, bgImage.size.height);
 			badge.layer.cornerRadius = MAX(badge.frame.size.width, badge.frame.size.height) / 2.0;
 		}
-		[badge performSelectorOnMainThread:@selector(setText:) withObject:text waitUntilDone:YES];
 
+		if (HAS_ANEMONE && [[[%c(ANEMSettingsManager) sharedManager] themeSettings] containsObject:@"ModernBadges"]) {
+			UIImageView *textImageView = (UIImageView*)[badge viewWithTag:42];
+			if (!textImageView) {
+				CGFloat padding = [objc_getClass("SBIconBadgeView") _textPadding];
+
+				textImageView = [[UIImageView alloc] initWithFrame:CGRectMake(padding, padding, badge.frame.size.width - (padding * 2.0), badge.frame.size.height - (padding * 2.0))];
+				textImageView.center = CGPointMake((badge.frame.size.width / 2.0) + [%c(SBIconBadgeView) _textOffset].x, (badge.frame.size.height / 2.0) + [%c(SBIconBadgeView) _textOffset].y);
+				textImageView.tag = 42;
+				[badge addSubview:textImageView];
+			}
+
+			UIImage *textImage = [%c(SBIconBadgeView) _checkoutImageForText:text highlighted:NO];
+			textImageView.image = textImage;
+		} else {
+			[badge performSelectorOnMainThread:@selector(setText:) withObject:text waitUntilDone:YES];
+		}
 		SET_INFO(info);
 	}
 }
@@ -119,7 +158,6 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 			[view removeFromSuperview];
 		}
 	}
-
 	%orig;
 }
 
@@ -138,7 +176,7 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 - (void)setIsEditing:(_Bool)arg1 animated:(_Bool)arg2 {
 	%orig;
 
-	if (arg1){
+	if (arg1) {
 		// inhibit icon indicator
 		[self ZY_setIsIconIndicatorInhibited:YES];
 	} else {
@@ -157,7 +195,7 @@ NSMutableDictionary *lsbitems = [[[NSMutableDictionary alloc] init] retain];
 			if ([[[[%c(SBIconViewMap) homescreenMap] iconModel] visibleIconIdentifiers] containsObject:self.bundleIdentifier]) {
 				ZYIconIndicatorViewInfo info = [ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier];
 				BOOL native = (info & ZYIconIndicatorViewInfoNative);
-				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedSettings] shouldShowStatusBarNativeIcons])) {
+				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedInstance] shouldShowStatusBarNativeIcons])) {
 		    	LSStatusBarItem *item = [[%c(LSStatusBarItem) alloc] initWithIdentifier:[NSString stringWithFormat:@"multiplexer-%@",self.bundleIdentifier] alignment:StatusBarAlignmentLeft];
 		    	if ([item customViewClass] == nil) {
 						item.customViewClass = @"ZYAppIconStatusBarIconView";
@@ -183,7 +221,7 @@ NSMutableDictionary *lsbitems = [[[NSMutableDictionary alloc] init] retain];
 	}
 }
 
-- (void)setApplicationState:(unsigned int)arg1 {
+- (void)setApplicationState:(NSUInteger)arg1 {
     %orig;
 
     if (self.isRunning == NO) {

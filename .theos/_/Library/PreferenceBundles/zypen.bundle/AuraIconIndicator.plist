@@ -14,9 +14,9 @@
 				<key>PostNotification</key>
 				<string>com.shade.zypen/ReloadPrefs</string>
 				<key>key</key>
-				<string>shouldShowStatusBarIcons</string>
+				<string>showIconIndicators</string>
 				<key>label</key>
-				<string>Show on Status Bar</string>
+				<string>Show Icon Indicators</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -28,12 +28,12 @@
 				<key>PostNotification</key>
 				<string>com.shade.zypen/ReloadPrefs</string>
 				<key>key</key>
-				<string>shouldShowStatusBarNativeIcons</string>
+				<string>showNativeStateIconIndicators</string>
 				<key>label</key>
-				<string>Show Native in Status Bar</string>
+				<string>Show Native Mode Indicators</string>
 			</dict>
 		</array>
 		<key>title</key>
-		<string>Status Bar Indicator Options</string>
+		<string>Icon Indicator</string>
 	</dict>
 </plist>

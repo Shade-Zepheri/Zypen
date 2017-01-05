@@ -34,7 +34,7 @@
 
         if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:identifier]) {
 
-            if ((arg3 >= kProcessAssertionReasonAudio && arg3 <= kProcessAssertionReasonVOiP)) {
+            if ((arg3 >= kProcessAssertionReasonLocation && arg3 <= kProcessAssertionReasonVOiP)) {
                 //HBLogDebug(@"[ReachApp] blocking BKSProcessAssertion");
 								//I think this part may be causing potential audio issues, need reports to confirm
                 return nil;

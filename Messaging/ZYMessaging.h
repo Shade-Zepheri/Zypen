@@ -1,13 +1,13 @@
 #import <UIKit/UIKit.h>
 
-enum {
+typedef NS_ENUM(NSInteger, ZYMessageType) {
 	ZYMessageTypeUpdateAppData = 0,
 
 	ZYMessageTypeShowKeyboard,
 	ZYMessageTypeHideKeyboard,
 	ZYMessageTypeUpdateKeyboardContextId,
 	ZYMessageTypeRetrieveKeyboardContextId,
-} ZYMessageType;
+};
 
 typedef struct {
 	BOOL shouldForceSize;
