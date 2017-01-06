@@ -41,11 +41,9 @@
 @end
 */
 
-static inline int RGBFromUIColor(UIColor *self)
-{
+static inline int RGBFromUIColor(UIColor *self) {
     CGFloat red, green, blue;
-    if ([self getRed:&red green:&green blue:&blue alpha:NULL])
-    {
+    if ([self getRed:&red green:&green blue:&blue alpha:NULL]) {
         NSUInteger redInt = (NSUInteger)(red * 255 + 0.5);
         NSUInteger greenInt = (NSUInteger)(green * 255 + 0.5);
         NSUInteger blueInt = (NSUInteger)(blue * 255 + 0.5);

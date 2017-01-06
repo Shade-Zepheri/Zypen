@@ -117,7 +117,6 @@ BOOL locationIsInValidArea(CGFloat x) {
                             ZYDesktopManager.sharedInstance.lastUsedWindow = windowBar;
                     }];
                     [(FBWorkspaceEventQueue*)[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
-                    //[[%c(SBWallpaperController) sharedInstance] endRequiringWithReason:@"BeautifulAnimation"];
 
                     // Pop forced foreground backgrounding
                     [[%c(ZYBackgrounder) sharedInstance] queueRemoveTemporaryOverrideForIdentifier:topApp.bundleIdentifier];

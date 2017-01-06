@@ -16,6 +16,7 @@
 #import "ZYDesktopWindow.h"
 #import "ZYMessagingServer.h"
 #import "ZYAppSwitcherModelWrapper.h"
+#import "Zypen.h"
 
 #define SPRINGBOARD ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"])
 
@@ -476,12 +477,20 @@ CGFloat startingY = -1;
 
     [self handleReachabilityModeDeactivated];
     SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:ident];
-    [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
+    ZYIconIndicatorViewInfo indicatorInfo = [[%c(ZYBackgrounder) sharedInstance] allAggregatedIndicatorInfoForIdentifier:ident];
+
     [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:app andCloseForegroundApp:NO];
-    /*
+    SBDeactivationSettings *deactiveSets = [[%c(SBDeactivationSettings) alloc] init];
+    [deactiveSets setFlag:YES forDeactivationSetting:20];
+    [deactiveSets setFlag:NO forDeactivationSetting:2];
+    [app _setDeactivationSettings:deactiveSets];
+
+    [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
+
+    // Pop forced foreground backgrounding
     [[%c(ZYBackgrounder) sharedInstance] queueRemoveTemporaryOverrideForIdentifier:ident];
     [[%c(ZYBackgrounder) sharedInstance] removeTemporaryOverrideForIdentifier:ident];
-    */
+    [[%c(ZYBackgrounder) sharedInstance] updateIconIndicatorForIdentifier:ident withInfo:indicatorInfo];
 }
 
 %new - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {

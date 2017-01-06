@@ -1,7 +1,7 @@
 Package: com.shade.zypen
 Name: Zypen
 Depends: mobilesubstrate, preferenceloader, applist, com.rpetrich.rocketbootstrap
-Version: 0.6.3
+Version: 0.7
 Architecture: iphoneos-arm
 Description: 1/2 of Multiplexer
 Maintainer: Shade Zepheri
