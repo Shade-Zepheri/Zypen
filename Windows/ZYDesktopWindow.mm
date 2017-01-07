@@ -4,7 +4,6 @@
 #import "ZYDesktopManager.h"
 #import "ZYSnapshotProvider.h"
 #import "ZYMessagingServer.h"
-#import "ZYFakePhoneMode.h"
 
 @implementation ZYDesktopWindow
 - (id)initWithFrame:(CGRect)frame {
@@ -25,11 +24,7 @@
 		}
 	}
 
-	if ([ZYFakePhoneMode shouldFakeForAppWithIdentifier:view.app.bundleIdentifier]) {
-		view.frame = (CGRect){ { 0, 100 }, [ZYFakePhoneMode fakeSizeForAppWithIdentifier:view.app.bundleIdentifier] };
-	} else {
-		view.frame = CGRectMake(0, 100, UIScreen.mainScreen._referenceBounds.size.width, UIScreen.mainScreen._referenceBounds.size.height);
-	}
+	view.frame = CGRectMake(0, 100, UIScreen.mainScreen._referenceBounds.size.width, UIScreen.mainScreen._referenceBounds.size.height);
 	view.center = self.center;
 
 	ZYWindowBar *windowBar = [[ZYWindowBar alloc] init];
@@ -49,9 +44,9 @@
 	}
 	view.hideStatusBar = YES;
 	windowBar.transform = CGAffineTransformMakeScale(0.5, 0.5);
-	if (![ZYFakePhoneMode shouldFakeForAppWithIdentifier:view.app.bundleIdentifier]) {
+	//if (![ZYFakePhoneMode shouldFakeForAppWithIdentifier:view.app.bundleIdentifier]) {
 		windowBar.transform = CGAffineTransformRotate(windowBar.transform, DEGREES_TO_RADIANS([self baseRotationForOrientation]));
-	}
+	//}
 	windowBar.hidden = NO;
 
 	lastKnownOrientation = -1;
@@ -111,7 +106,7 @@
 				[appViews removeObject:view];
 				[self saveInfo];
 
-				if (dontClearForcedPhoneState == NO && [ZYFakePhoneMode shouldFakeForAppWithIdentifier:identifier]) {
+				if (dontClearForcedPhoneState == NO) {
 					[ZYMessagingServer.sharedInstance forcePhoneMode:NO forIdentifier:identifier andRelaunchApp:YES];
 				}
 			};
@@ -138,15 +133,6 @@
 			[self removeAppWithIdentifier:identifier animated:NO forceImmediateUnload:YES];
 			[self createAppWindowWithIdentifier:identifier animated:NO];
 			dontClearForcedPhoneState = NO;
-
-			/*CGAffineTransform t = view.transform;
-			CGPoint origin = view.frame.origin;
-			view.transform = CGAffineTransformIdentity;
-			if ([ZYFakePhoneMode shouldFakeForAppWithIdentifier:view.app.bundleIdentifier])
-				view.frame = (CGRect){ origin, [ZYFakePhoneMode fakeSizeForAppWithIdentifier:view.app.bundleIdentifier] };
-			else
-				view.frame = CGRectMake(origin.x, origin.y, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height);
-			view.transform = t;*/
 		}
 	}
 }

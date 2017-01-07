@@ -524,7 +524,7 @@ CGFloat startingY = -1;
         sliderView.frame = topFrame;
     }
 
-    /*if ([ZYSettings.sharedInstance flipTopAndBottom])
+    /*if ([ZYSettings.sharedSettings flipTopAndBottom])
     {
         CGRect tmp = topFrame;
         topFrame = bottomFrame;
@@ -675,11 +675,11 @@ CGFloat startingY = -1;
         [w addSubview:view];
     }
 
-    //if ([ZYSettings.sharedInstance enableRotation] && ![ZYSettings.sharedInstance scalingRotationMode])
+    //if ([ZYSettings.sharedSettings enableRotation] && ![ZYSettings.sharedSettings scalingRotationMode])
     {
         [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
     }
-    /*else if ([ZYSettings.sharedInstance scalingRotationMode] && [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
+    /*else if ([ZYSettings.sharedSettings scalingRotationMode] && [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
     {
         overrideDisableForStatusBar = YES;
         // Force portrait

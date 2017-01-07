@@ -4,7 +4,7 @@
 #import "ZYMessagingServer.h"
 #import "ZYSnapshotProvider.h"
 #import "ZYSpringBoardKeyboardActivation.h"
-#import "Asphaleia2.h"
+#import "Asphaleia3.h"
 #import "dispatch_after_cancel.h"
 #import "headers.h"
 
@@ -188,7 +188,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
             [self _actualLoadApp];
         }, failedBlock /* stupid commas */);
     } else {
-        IF_ASPHALEIA2 {
+        IF_ASPHALEIA3 {
             void (^failedBlock)() = ^{
                 [self removeLoadingIndicator];
                 if (!authenticationDidFailLabel) {
@@ -199,7 +199,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
                     authenticationDidFailLabel.font = [UIFont systemFontOfSize:36];
                     authenticationDidFailLabel.numberOfLines = 0;
                     authenticationDidFailLabel.lineBreakMode = NSLineBreakByWordWrapping;
-                    authenticationDidFailLabel.text = [NSString stringWithFormat:@"Asphaleia 2\n authentication failed for\n %@.\nTap to try again.", self.app.displayName];
+                    authenticationDidFailLabel.text = [NSString stringWithFormat:@"Asphaleia 3\n authentication failed for\n %@.\nTap to try again.", self.app.displayName];
                     [self addSubview:authenticationDidFailLabel];
 
                     authenticationFailedRetryTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadApp)];
@@ -207,7 +207,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
                     self.userInteractionEnabled = YES;
                 }
             };
-            ASPHALEIA2_AUTHENTICATE_APP(app.bundleIdentifier, ^{
+            ASPHALEIA3_AUTHENTICATE_APP(app.bundleIdentifier, ^{
                 [self _actualLoadApp];
             }, failedBlock);
         } else {

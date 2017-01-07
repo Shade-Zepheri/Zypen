@@ -29,7 +29,5 @@ SUBPROJECTS += zypen
 SUBPROJECTS += Backgrounding
 SUBPROJECTS += ZY_assertiond
 SUBPROJECTS += ZYDaemon
-SUBPROJECTS += ZYFakePhoneMode
-
 
 include $(THEOS_MAKE_PATH)/aggregate.mk

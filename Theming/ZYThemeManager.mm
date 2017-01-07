@@ -38,7 +38,7 @@
 		}
 	}
 	if (!currentTheme) {
-		currentTheme = [allThemes objectForKey:@"com.eljahandandrew.multiplexer.themes.default"];
+		currentTheme = [allThemes objectForKey:@"com.shade.zypen.themes.default"];
 		if (!currentTheme && allThemes.allKeys.count > 0) {
 			currentTheme = allThemes[allThemes.allKeys[0]];
 		}
