@@ -280,6 +280,7 @@ return sharedInstance;
 - (void)_applyMutableSettings:(id)arg1 withTransitionContext:(id)arg2 completion:(id)arg3;
 @property (nonatomic, readonly) NSString *identifier;
 @property (nonatomic, readonly, retain) FBProcess *clientProcess;
+@property (nonatomic,retain,readonly) FBSSceneSettings *settings; 
 @end
 
 @interface FBWindowContextHostWrapperView : UIView

@@ -125,9 +125,6 @@ BOOL locationIsInValidArea(CGFloat x) {
                 }];
             } else {
                 appView.center = originalCenter;
-                [UIView animateWithDuration:0.2 animations:^{ appView.transform = CGAffineTransformIdentity; } completion:^(BOOL _) {
-                    //[[%c(SBWallpaperController) sharedInstance] endRequiringWithReason:@"BeautifulAnimation"];
-                }];
             }
             appView = nil;
         }
@@ -135,5 +132,5 @@ BOOL locationIsInValidArea(CGFloat x) {
         return ZYGestureCallbackResultSuccess;
     } withCondition:^BOOL(CGPoint location, CGPoint velocity) {
         return [ZYSettings.sharedSettings windowedMultitaskingEnabled] && (locationIsInValidArea(location.x) || appView) && ![[%c(SBUIController) sharedInstance] isAppSwitcherShowing] && ![[%c(SBLockScreenManager) sharedInstance] isUILocked] && [UIApplication.sharedApplication _accessibilityFrontMostApplication] != nil && ![[%c(SBNotificationCenterController) sharedInstance] isVisible];
-    } forEdge:UIRectEdgeBottom identifier:@"com.efrederickson.reachapp.windowedmultitasking.systemgesture" priority:ZYGesturePriorityDefault];
+    } forEdge:UIRectEdgeBottom identifier:@"com.shade.zypen.empoleon.systemgesture" priority:ZYGesturePriorityDefault];
 }

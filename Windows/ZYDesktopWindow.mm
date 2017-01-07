@@ -44,9 +44,7 @@
 	}
 	view.hideStatusBar = YES;
 	windowBar.transform = CGAffineTransformMakeScale(0.5, 0.5);
-	//if (![ZYFakePhoneMode shouldFakeForAppWithIdentifier:view.app.bundleIdentifier]) {
-		windowBar.transform = CGAffineTransformRotate(windowBar.transform, DEGREES_TO_RADIANS([self baseRotationForOrientation]));
-	//}
+	windowBar.transform = CGAffineTransformRotate(windowBar.transform, DEGREES_TO_RADIANS([self baseRotationForOrientation]));
 	windowBar.hidden = NO;
 
 	lastKnownOrientation = -1;

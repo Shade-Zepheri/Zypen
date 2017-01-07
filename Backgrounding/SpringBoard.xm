@@ -16,14 +16,6 @@
 }
 %end
 
-%hook FBUIApplicationSceneDeactivationManager
-
-- (void)_untrackScene:(id)arg1 {
-    HBLogDebug(@"Untracking Scene Eventually right?");
-}
-
-%end
-
 // STAY IN "FOREGROUND"
 %hook FBUIApplicationResignActiveManager //iOS 8
 - (void)_sendResignActiveForReason:(NSInteger)arg1 toProcess:(FBApplicationProcess *)arg2 {
@@ -92,14 +84,12 @@
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
                 FBProcess *process = arg1.clientProcess;
-                HBLogDebug(@"Freezing App");
+
                 if ([process isKindOfClass:[%c(FBApplicationProcess) class]]) {
                     FBApplicationProcess *appProcess = (FBApplicationProcess*)process;
-                    if (!appProcess.nowPlayingWithAudio && !appProcess.recordingAudio) {
-                      BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(appProcess, "_bksProcess");
-                      [appProcess processWillExpire:bkProcess];
-                      [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
-                    }
+                    BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(appProcess, "_bksProcess");
+                    [appProcess processWillExpire:bkProcess];
+                    [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 }
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             }
