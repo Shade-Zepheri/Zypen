@@ -116,7 +116,7 @@
 
 		ZYAppSliderProvider *provider = [[ZYAppSliderProvider alloc] init];
 		provider.availableIdentifiers = [[ZYAppSwitcherModelWrapper appSwitcherAppIdentiferList] mutableCopy];
-		[((NSMutableArray*)provider.availableIdentifiers) removeObject:UIApplication.sharedApplication._accessibilityFrontMostApplication.bundleIdentifier;
+		[((NSMutableArray*)provider.availableIdentifiers) removeObject:UIApplication.sharedApplication._accessibilityFrontMostApplication.bundleIdentifier];
 		provider.currentIndex = gesture.view.tag;
 
 		ZYAppSliderProviderView *view = [[ZYAppSliderProviderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen._referenceBounds.size.width, UIScreen.mainScreen._referenceBounds.size.height / 2)];

@@ -23,11 +23,11 @@ static BOOL isTracking = NO;
 static NSMutableSet *gestureRecognizers;
 UIRectEdge currentEdge9;
 
-typedef struct VelocityData {
+typedef struct {
     CGPoint velocity;
     double timestamp;
     CGPoint location;
-};
+} VelocityData;
 
 %hook _UIScreenEdgePanRecognizer
 - (void)incorporateTouchSampleAtLocation:(CGPoint)location timestamp:(double)timestamp modifier:(NSInteger)modifier interfaceOrientation:(UIInterfaceOrientation)orientation forceState:(int)arg5 {

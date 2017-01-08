@@ -13,7 +13,7 @@ NSString *FriendlyNameForBackgroundMode(ZYBackgroundMode mode) {
 		case ZYBackgroundModeSuspendImmediately:
 			return @"Suspend Immediately";
 		case ZYBackgroundModeUnlimitedBackgroundingTime:
-			return @"Unlimited Backrounding";
+			return @"Unlimited Backgrounding Time";
 		default:
 			return @"Unknown";
 	}

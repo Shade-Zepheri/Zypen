@@ -86,7 +86,7 @@ BOOL locationIsInValidArea(CGFloat x) {
         } else if (state == UIGestureRecognizerStateEnded) {
             [ZYControlCenterInhibitor setInhibited:NO];
 
-            if (lastY <= (UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.height / 4) * 3 && lastY != 0) {// 75% down, 0 == gesture ended in most situations
+            if (lastY <= (UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.height / 4) * 3 && lastY != 0) {
                 [UIView animateWithDuration:.3 animations:^{
 
                     if ([ZYWindowStatePreservationSystemManager.sharedInstance hasWindowInformationForIdentifier:topApp.bundleIdentifier]) {
@@ -103,20 +103,17 @@ BOOL locationIsInValidArea(CGFloat x) {
                     // Close app
                     [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:topApp andCloseForegroundApp:NO];
                     FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:@"ActivateSpringBoard" handler:^{
-                        SBDeactivationSettings *deactiveSets = [[%c(SBDeactivationSettings) alloc] init];
-                        [deactiveSets setFlag:YES forDeactivationSetting:20];
-                        [deactiveSets setFlag:NO forDeactivationSetting:2];
-                        [topApp _setDeactivationSettings:deactiveSets];
-
                         SBAppToAppWorkspaceTransaction *transaction = [Zypen createSBAppToAppWorkspaceTransactionForExitingApp:topApp];
                         [transaction begin];
 
                         // Open in window
                         ZYWindowBar *windowBar = [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowForSBApplication:topApp animated:YES];
-                        if (ZYDesktopManager.sharedInstance.lastUsedWindow == nil)
-                            ZYDesktopManager.sharedInstance.lastUsedWindow = windowBar;
+                        if (ZYDesktopManager.sharedInstance.lastUsedWindow == nil) {
+                          ZYDesktopManager.sharedInstance.lastUsedWindow = windowBar;
+                        }
                     }];
                     [(FBWorkspaceEventQueue*)[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
+                    [[%c(SBWallpaperController) sharedInstance] endRequiringWithReason:@"BeautifulAnimation"];
 
                     // Pop forced foreground backgrounding
                     [[%c(ZYBackgrounder) sharedInstance] queueRemoveTemporaryOverrideForIdentifier:topApp.bundleIdentifier];
@@ -125,6 +122,9 @@ BOOL locationIsInValidArea(CGFloat x) {
                 }];
             } else {
                 appView.center = originalCenter;
+                [UIView animateWithDuration:0.2 animations:^{ appView.transform = CGAffineTransformIdentity; } completion:^(BOOL _) {
+                    [[%c(SBWallpaperController) sharedInstance] endRequiringWithReason:@"BeautifulAnimation"];
+                }];
             }
             appView = nil;
         }
