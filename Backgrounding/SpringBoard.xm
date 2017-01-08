@@ -17,9 +17,8 @@
 %end
 
 // STAY IN "FOREGROUND"
-%hook FBUIApplicationResignActiveManager //iOS 8
-- (void)_sendResignActiveForReason:(NSInteger)arg1 toProcess:(FBApplicationProcess *)arg2 {
-    HBLogDebug(@"Resign for %@", arg2.bundleIdentifier);
+%hook FBUIApplicationResignActiveManager
+-(void) _sendResignActiveForReason:(int)arg1 toProcess:(__unsafe_unretained FBApplicationProcess*)arg2 {
     if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg2.bundleIdentifier]) {
       return;
     }
@@ -28,6 +27,7 @@
 
     if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg2.bundleIdentifier]) {
         BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(arg2, "_bksProcess");
+        //[bkProcess _handleExpirationWarning:nil];
         [arg2 processWillExpire:bkProcess];
     }
 }
@@ -83,14 +83,7 @@
                 [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {
-                FBProcess *process = arg1.clientProcess;
-
-                if ([process isKindOfClass:[%c(FBApplicationProcess) class]]) {
-                    FBApplicationProcess *appProcess = (FBApplicationProcess*)process;
-                    BKSProcess *bkProcess = MSHookIvar<BKSProcess*>(appProcess, "_bksProcess");
-                    [appProcess processWillExpire:bkProcess];
-                    [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
-                }
+                [ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:arg1.identifier withInfo:[ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:arg1.identifier]];
                 [ZYBackgrounder.sharedInstance queueRemoveTemporaryOverrideForIdentifier:arg1.identifier];
             }
         } else if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:arg1.identifier]) {

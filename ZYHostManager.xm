@@ -28,7 +28,7 @@
 	    if (!settings) {
 				return nil;
 			}
-			[[UIApplication sharedApplication] launchApplicationWithIdentifier:app.bundleIdentifier suspended:YES];
+			[UIApplication.sharedApplication launchApplicationWithIdentifier:app.bundleIdentifier suspended:YES];
 
 	    [settings setBackgrounded:NO];
 	    [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];

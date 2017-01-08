@@ -16,7 +16,7 @@
     NSArray *_themeSettings;
 }
 + (instancetype)sharedManager;
-- (NSArray *)themeSettings;
+- (NSArray*)themeSettings;
 @end
 
 #define HAS_ANEMONE (objc_getClass("ANEMSettingsManager") != nil)

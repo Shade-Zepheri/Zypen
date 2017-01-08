@@ -39,7 +39,7 @@
 	viewFrame = frame;
 	CGSize size = [%c(SBIconView) defaultIconSize];
 	spacing = (frame.size.width - (iconsPerLine * size.width)) / (iconsPerLine + 0);
-	NSString *currentBundleIdentifier = [[UIApplication sharedApplication] _accessibilityFrontMostApplication].bundleIdentifier;
+	NSString *currentBundleIdentifier = UIApplication.sharedApplication._accessibilityFrontMostApplication.bundleIdentifier;
 	if (!currentBundleIdentifier) {
     return nil;
   }
@@ -116,14 +116,14 @@
 
 		ZYAppSliderProvider *provider = [[ZYAppSliderProvider alloc] init];
 		provider.availableIdentifiers = [[ZYAppSwitcherModelWrapper appSwitcherAppIdentiferList] mutableCopy];
-		[((NSMutableArray*)provider.availableIdentifiers) removeObject:[[UIApplication sharedApplication] _accessibilityFrontMostApplication].bundleIdentifier];
+		[((NSMutableArray*)provider.availableIdentifiers) removeObject:UIApplication.sharedApplication._accessibilityFrontMostApplication.bundleIdentifier;
 		provider.currentIndex = gesture.view.tag;
 
 		ZYAppSliderProviderView *view = [[ZYAppSliderProviderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen._referenceBounds.size.width, UIScreen.mainScreen._referenceBounds.size.height / 2)];
 		view.swipeProvider = provider;
 		view.isSwipeable = YES;
 
-		[[ZYReachabilityManager sharedInstance] showAppWithSliderProvider:view];
+		[ZYReachabilityManager.sharedInstance showAppWithSliderProvider:view];
 	}
 }
 @end

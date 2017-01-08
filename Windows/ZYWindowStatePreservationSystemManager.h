@@ -2,32 +2,32 @@
 #import "ZYDesktopWindow.h"
 #import "ZYWindowBar.h"
 
-struct ZYPreservedWindowInformation {
+ typedef struct {
 	CGPoint center;
 	CGAffineTransform transform;
-};
+} ZYPreservedWindowInformation;
 
-struct ZYPreservedDesktopInformation {
+typedef struct {
 	NSUInteger index;
 	NSArray *openApps; //NSArray<NSString>
-};
+} ZYPreservedDesktopInformation;
 
 @interface ZYWindowStatePreservationSystemManager : NSObject {
 	NSMutableDictionary *dict;
 }
-+(id) sharedInstance;
++ (instancetype)sharedInstance;
 
--(void) loadInfo;
--(void) saveInfo;
+- (void)loadInfo;
+- (void)saveInfo;
 
 // Desktop
--(void) saveDesktopInformation:(ZYDesktopWindow*)desktop;
--(BOOL) hasDesktopInformationAtIndex:(NSInteger)index;
--(ZYPreservedDesktopInformation) desktopInformationForIndex:(NSInteger)index;
+- (void)saveDesktopInformation:(ZYDesktopWindow*)desktop;
+- (BOOL)hasDesktopInformationAtIndex:(NSInteger)index;
+- (ZYPreservedDesktopInformation)desktopInformationForIndex:(NSInteger)index;
 
 // Window
--(void) saveWindowInformation:(ZYWindowBar*)window;
--(BOOL) hasWindowInformationForIdentifier:(NSString*)appIdentifier;
--(ZYPreservedWindowInformation) windowInformationForAppIdentifier:(NSString*)identifier;
--(void) removeWindowInformationForIdentifier:(NSString*)appIdentifier;
+- (void)saveWindowInformation:(ZYWindowBar*)window;
+- (BOOL)hasWindowInformationForIdentifier:(NSString*)appIdentifier;
+- (ZYPreservedWindowInformation)windowInformationForAppIdentifier:(NSString*)identifier;
+- (void)removeWindowInformationForIdentifier:(NSString*)appIdentifier;
 @end

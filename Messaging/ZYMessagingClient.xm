@@ -192,7 +192,7 @@ void reloadClientData(CFNotificationCenterRef center,
                     CFStringRef name,
                     const void *object,
                     CFDictionaryRef userInfo) {
-	[[ZYMessagingClient sharedInstance] requestUpdateFromServer];
+	[ZYMessagingClient.sharedInstance requestUpdateFromServer];
 }
 
 void updateFrontmostApp(CFNotificationCenterRef center,

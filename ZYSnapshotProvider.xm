@@ -4,7 +4,9 @@
 
 @implementation ZYSnapshotProvider
 + (instancetype)sharedInstance {
-	SHARED_INSTANCE2(ZYSnapshotProvider, sharedInstance->imageCache = [NSCache new]);
+	SHARED_INSTANCE2(ZYSnapshotProvider,
+		sharedInstance->imageCache = [NSCache new]
+	);
 }
 
 - (UIImage*)snapshotForIdentifier:(NSString*)identifier orientation:(UIInterfaceOrientation)orientation {
@@ -21,8 +23,9 @@
 
 	@autoreleasepool {
 
-		if ([imageCache objectForKey:identifier] != nil) return [imageCache objectForKey:identifier];
-
+		if ([imageCache objectForKey:identifier] != nil) {
+			return [imageCache objectForKey:identifier];
+		}
 		UIImage *image = nil;
 
 		SBDisplayItem *item = [%c(SBDisplayItem) displayItemWithType:@"App" displayIdentifier:identifier];
@@ -33,8 +36,8 @@
 				view = [[[%c(SBUIController) sharedInstance] switcherController] performSelector:@selector(_snapshotViewForDisplayItem:) withObject:item];
 				[view setOrientation:orientation orientationBehavior:0];
 			} else {
-				//SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier];
-				//view = [[%c(SBAppSwitcherSnapshotView) alloc] initWithDisplayItem:item application:app orientation:orientation preferringDownscaledSnapshot:NO async:NO withQueue:nil];
+				SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier];
+				view = [[%c(SBAppSwitcherSnapshotView) alloc] initWithDisplayItem:item application:app orientation:orientation preferringDownscaledSnapshot:NO async:NO withQueue:nil];
 			}
 		});
 
@@ -113,7 +116,7 @@
 }
 
 - (NSString*)createKeyForDesktop:(ZYDesktopWindow*)desktop {
-	return [NSString stringWithFormat:@"desktop-%lu", (unsigned long)desktop.hash];
+	return [NSString stringWithFormat:@"desktop-%tu", (NSUInteger)desktop.hash];
 }
 
 - (UIImage*)snapshotForDesktop:(ZYDesktopWindow*)desktop {
@@ -176,7 +179,7 @@
 	return newImage;
 }
 
--(UIImage*) renderPreviewForDesktop:(ZYDesktopWindow*)desktop {
+- (UIImage*)renderPreviewForDesktop:(ZYDesktopWindow*)desktop {
 	@autoreleasepool {
 		UIGraphicsBeginImageContextWithOptions(UIScreen.mainScreen.bounds.size, YES, UIScreen.mainScreen.scale);
 		CGContextRef c = UIGraphicsGetCurrentContext();

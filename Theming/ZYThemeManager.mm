@@ -5,7 +5,9 @@
 
 @implementation ZYThemeManager
 + (instancetype)sharedInstance {
-	SHARED_INSTANCE2(ZYThemeManager, [sharedInstance invalidateCurrentThemeAndReload:nil]); // will be reloaded by ZYSettings
+	SHARED_INSTANCE2(ZYThemeManager,
+		[sharedInstance invalidateCurrentThemeAndReload:nil]
+	); // will be reloaded by ZYSettings
 }
 
 - (ZYTheme*)currentTheme {

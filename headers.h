@@ -280,7 +280,7 @@ return sharedInstance;
 - (void)_applyMutableSettings:(id)arg1 withTransitionContext:(id)arg2 completion:(id)arg3;
 @property (nonatomic, readonly) NSString *identifier;
 @property (nonatomic, readonly, retain) FBProcess *clientProcess;
-@property (nonatomic,retain,readonly) FBSSceneSettings *settings; 
+@property (nonatomic,retain,readonly) FBSSceneSettings *settings;
 @end
 
 @interface FBWindowContextHostWrapperView : UIView
@@ -436,7 +436,8 @@ return sharedInstance;
 - (void)_loadSnapshotAsync;
 - (void)_loadZoomUpSnapshotSync;
 - (void)_loadSnapshotSync;
-- (id)initWithDisplayItem:(id)arg1 application:(id)arg2 orientation:(long long)arg3 preferringDownscaledSnapshot:(_Bool)arg4 async:(_Bool)arg5 withQueue:(id)arg6;
+- (id)initWithDisplayItem:(id)arg1 application:(id)arg2 orientation:(long long)arg3 preferringDownscaledSnapshot:(BOOL)arg4 async:(BOOL)arg5 withQueue:(id)arg6;
++ (id)appSwitcherSnapshotViewForDisplayItem:(id)arg1 orientation:(long long)arg2 preferringDownscaledSnapshot:(BOOL)arg3 loadAsync:(BOOL)arg4 withQueue:(id)arg5;
 @end
 
 @interface SBUIController : NSObject
@@ -763,14 +764,14 @@ typedef NS_ENUM(NSInteger, UIScreenEdgePanRecognizerType) {
 @end
 
 @interface UIWindow ()
-+(instancetype) keyWindow;
--(id) firstResponder;
++ (instancetype) keyWindow;
+- (id) firstResponder;
 + (void)setAllWindowsKeepContextInBackground:(BOOL)arg1;
 - (void)_setRotatableViewOrientation:(UIInterfaceOrientation)orientation duration:(CGFloat)duration force:(BOOL)force;
 - (void)_setRotatableViewOrientation:(int)arg1 updateStatusBar:(BOOL)arg2 duration:(double)arg3 force:(BOOL)arg4;
 - (void)_rotateWindowToOrientation:(int)arg1 updateStatusBar:(BOOL)arg2 duration:(double)arg3 skipCallbacks:(BOOL)arg4;
 - (unsigned int)_contextId;
--(UIInterfaceOrientation) _windowInterfaceOrientation;
+- (UIInterfaceOrientation) _windowInterfaceOrientation;
 @end
 
 @interface UIImage ()

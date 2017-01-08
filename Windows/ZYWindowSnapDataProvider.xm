@@ -1,13 +1,11 @@
 #import "ZYWindowSnapDataProvider.h"
 
 @implementation ZYWindowSnapDataProvider
-+(BOOL) shouldSnapWindow:(ZYWindowBar*)bar
-{
++ (BOOL)shouldSnapWindow:(ZYWindowBar*)bar {
 	return [ZYWindowSnapDataProvider snapLocationForWindow:bar] != ZYWindowSnapLocationInvalid;
 }
 
-+(ZYWindowSnapLocation) snapLocationForWindow:(ZYWindowBar*)windowBar
-{
++ (ZYWindowSnapLocation)snapLocationForWindow:(ZYWindowBar*)windowBar {
 	CGRect location = windowBar.frame;
 
 	// Convienence values
@@ -101,8 +99,7 @@ try_bottom:
 	return ZYWindowSnapLocationNone;
 }
 
-+(CGPoint) snapCenterForWindow:(ZYWindowBar*)window toLocation:(ZYWindowSnapLocation)location
-{
++ (CGPoint)snapCenterForWindow:(ZYWindowBar*)window toLocation:(ZYWindowSnapLocation)location {
 	// Convienence values
 	CGFloat width = UIScreen.mainScreen._referenceBounds.size.width;
 	CGFloat height = UIScreen.mainScreen._referenceBounds.size.height;
@@ -113,8 +110,7 @@ try_bottom:
 
 	BOOL adjustStatusBar = NO;
 
-	switch (location)
-	{
+	switch (location) {
 		case ZYWindowSnapLocationLeftTop:
 			newCenter = CGPointMake(frame.size.width / 2, (frame.size.height / 2) + 20);
 			adjustStatusBar = YES;
@@ -155,28 +151,22 @@ try_bottom:
 			break;
 	}
 
-	if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight && adjustStatusBar)
-	{
+	if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight && adjustStatusBar) {
 		newCenter.y -= 20;
 	}
-	if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight && (location == ZYWindowSnapLocationRightMiddle || location == ZYWindowSnapLocationRightBottom || location == ZYWindowSnapLocationRightTop))
-	{
+	if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight && (location == ZYWindowSnapLocationRightMiddle || location == ZYWindowSnapLocationRightBottom || location == ZYWindowSnapLocationRightTop)) {
 		newCenter.x -= 20;
-	}
-	else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft && adjustStatusBar)
-	{
+	} else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft && adjustStatusBar) {
 		newCenter.y -= 20;
 	}
-	if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft && (location == ZYWindowSnapLocationLeftMiddle || location == ZYWindowSnapLocationLeftBottom || location == ZYWindowSnapLocationLeftTop))
-	{
+	if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft && (location == ZYWindowSnapLocationLeftMiddle || location == ZYWindowSnapLocationLeftBottom || location == ZYWindowSnapLocationLeftTop)) {
 		newCenter.x += 20;
 	}
 
 	return newCenter;
 }
 
-+(void) snapWindow:(ZYWindowBar*)window toLocation:(ZYWindowSnapLocation)location animated:(BOOL)animated
-{
++ (void)snapWindow:(ZYWindowBar*)window toLocation:(ZYWindowSnapLocation)location animated:(BOOL)animated {
 	/*
 	// Convienence values
 	CGFloat width = UIScreen.mainScreen.bounds.size.width;
@@ -227,21 +217,17 @@ try_bottom:
 	[self snapWindow:window toLocation:location animated:animated completion:nil];
 }
 
-+(void) snapWindow:(ZYWindowBar*)window toLocation:(ZYWindowSnapLocation)location animated:(BOOL)animated completion:(dispatch_block_t)completionBlock
-{
++ (void)snapWindow:(ZYWindowBar*)window toLocation:(ZYWindowSnapLocation)location animated:(BOOL)animated completion:(dispatch_block_t)completionBlock {
 	CGPoint newCenter = [ZYWindowSnapDataProvider snapCenterForWindow:window toLocation:location];
 
-	if (animated)
-	{
+	if (animated) {
 		[UIView animateWithDuration:0.2 animations:^{
 			window.center = newCenter;
 		} completion:^(BOOL _) {
 			if (completionBlock)
 				completionBlock();
 		}];
-	}
-	else
-	{
+	} else {
 		window.center = newCenter;
 		if (completionBlock)
 			completionBlock();
@@ -249,10 +235,8 @@ try_bottom:
 }
 @end
 
-ZYWindowSnapLocation ZYWindowSnapLocationGetLeftOfScreen()
-{
-	switch (UIApplication.sharedApplication.statusBarOrientation)
-	{
+ZYWindowSnapLocation ZYWindowSnapLocationGetLeftOfScreen() {
+	switch (UIApplication.sharedApplication.statusBarOrientation) {
 		case UIInterfaceOrientationPortrait:
 			return ZYWindowSnapLocationLeft;
 		case UIInterfaceOrientationLandscapeRight:
@@ -265,10 +249,8 @@ ZYWindowSnapLocation ZYWindowSnapLocationGetLeftOfScreen()
 	return ZYWindowSnapLocationLeft;
 }
 
-ZYWindowSnapLocation ZYWindowSnapLocationGetRightOfScreen()
-{
-	switch (UIApplication.sharedApplication.statusBarOrientation)
-	{
+ZYWindowSnapLocation ZYWindowSnapLocationGetRightOfScreen() {
+	switch (UIApplication.sharedApplication.statusBarOrientation) {
 		case UIInterfaceOrientationPortrait:
 			return ZYWindowSnapLocationRight;
 		case UIInterfaceOrientationLandscapeRight:

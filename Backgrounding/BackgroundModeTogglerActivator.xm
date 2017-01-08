@@ -9,7 +9,7 @@ static ZYActivatorBackgrounderToggleModeListener *sharedInstance$ZYActivatorBack
 
 @implementation ZYActivatorBackgrounderToggleModeListener
 - (void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event {
-    SBApplication *app = [UIApplication sharedApplication]._accessibilityFrontMostApplication;
+    SBApplication *app = UIApplication.sharedApplication._accessibilityFrontMostApplication;
 
     if (!app) {
       return;

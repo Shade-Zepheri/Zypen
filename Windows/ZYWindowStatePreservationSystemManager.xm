@@ -5,8 +5,10 @@
 #define FILE_PATH @"/User/Library/Preferences/com.shade.empoleon.windowstates.plist"
 
 @implementation ZYWindowStatePreservationSystemManager
-+ (id)sharedInstance {
-	SHARED_INSTANCE2(ZYWindowStatePreservationSystemManager, [sharedInstance loadInfo]);
++ (instancetype)sharedInstance {
+	SHARED_INSTANCE2(ZYWindowStatePreservationSystemManager,
+		[sharedInstance loadInfo]
+	);
 }
 
 - (void)loadInfo {

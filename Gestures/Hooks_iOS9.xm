@@ -16,14 +16,14 @@ typedef void* (*clientCreatePointer)(const CFAllocatorRef);
 extern "C" void BKSHIDServicesCancelTouchesOnMainDisplay();
 
 @interface _UIScreenEdgePanRecognizer (Velocity)
--(CGPoint) ZY_velocity;
+- (CGPoint)ZY_velocity;
 @end
 
 static BOOL isTracking = NO;
 static NSMutableSet *gestureRecognizers;
 UIRectEdge currentEdge9;
 
-struct VelocityData {
+typedef struct VelocityData {
     CGPoint velocity;
     double timestamp;
     CGPoint location;
@@ -177,9 +177,9 @@ __strong id __static$Hooks9$SBHandMotionExtractorReplacementByZypen;
         class_addProtocol(objc_getClass("Hooks9$SBHandMotionExtractorReplacementByZypen"), @protocol(_UIScreenEdgePanRecognizerDelegate));
 
         UIRectEdge edgesToWatch[] = { UIRectEdgeBottom, UIRectEdgeLeft, UIRectEdgeRight, UIRectEdgeTop };
-        int edgeCount = sizeof(edgesToWatch) / sizeof(UIRectEdge);
+        NSInteger edgeCount = sizeof(edgesToWatch) / sizeof(UIRectEdge);
         gestureRecognizers = [[NSMutableSet alloc] initWithCapacity:edgeCount];
-        for (int i = 0; i < edgeCount; i++) {
+        for (NSInteger i = 0; i < edgeCount; i++) {
             _UIScreenEdgePanRecognizer *recognizer = [[_UIScreenEdgePanRecognizer alloc] initWithType:2];
             recognizer.targetEdges = edgesToWatch[i];
             recognizer.screenBounds = UIScreen.mainScreen.bounds;

@@ -127,7 +127,7 @@ extern BOOL launchNextOpenIntoWindow;
 
 - (void)handleKeyboardEvent:(NSString*)identifier userInfo:(NSDictionary*)info {
 	if ([identifier isEqual:ZYMessagingDetachCurrentAppMessageName]) {
-        SBApplication *topApp = [[UIApplication sharedApplication] _accessibilityFrontMostApplication];
+        SBApplication *topApp = UIApplication.sharedApplication._accessibilityFrontMostApplication;
 
         if (topApp) {
 	        [[%c(SBWallpaperController) sharedInstance] beginRequiringWithReason:@"BeautifulAnimation"];

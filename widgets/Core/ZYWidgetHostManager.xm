@@ -2,12 +2,15 @@
 
 @implementation ZYWidgetHostManager
 + (instancetype)sharedInstance {
-	SHARED_INSTANCE2(ZYWidgetHostManager, sharedInstance->widgets = [NSMutableArray array]);
+	SHARED_INSTANCE2(ZYWidgetHostManager,
+		sharedInstance->widgets = [NSMutableArray array]
+	);
 }
 
 - (void)addWidget:(ZYWidgetBase*)widget {
-	if ([widgets containsObject:widget] == NO)
+	if ([widgets containsObject:widget] == NO) {
 		[widgets addObject:widget];
+	}
 }
 
 - (void)removeWidget:(ZYWidgetBase*)widget {

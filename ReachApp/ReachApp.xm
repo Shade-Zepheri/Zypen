@@ -187,7 +187,7 @@ id SBWorkspace$sharedInstance;
 
     if ([ZYSettings.sharedSettings showNCInstead]) {
       showingNC = NO;
-      UIWindow *window = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
+      SBWindow *window = MSHookIvar<SBWindow*>(self, "_reachabilityEffectWindow");
       [window _setRotatableViewOrientation:UIInterfaceOrientationPortrait updateStatusBar:YES duration:0.0 force:YES];
       window.rootViewController = nil;
       UIViewController *viewController = [[%c(SBNotificationCenterController) performSelector:@selector(sharedInstance)] performSelector:@selector(viewController)];
@@ -290,7 +290,7 @@ id SBWorkspace$sharedInstance;
     draggerView.layer.cornerRadius = 10;
     grabberCenter_X = draggerView.center.x;
 
-    UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
+    SBWindow *w = MSHookIvar<SBWindow*>(self, "_reachabilityEffectWindow");
     if ([ZYSettings.sharedSettings showNCInstead]) {
         showingNC = YES;
 
@@ -305,10 +305,10 @@ id SBWorkspace$sharedInstance;
         [ncViewController performSelector:@selector(hostDidPresent)];
 
         if ([ZYSettings.sharedSettings enableRotation]) {
-            [w _setRotatableViewOrientation:[UIApplication sharedApplication].statusBarOrientation updateStatusBar:YES duration:0.0 force:YES];
+            [w _setRotatableViewOrientation:UIApplication.sharedApplication.statusBarOrientation updateStatusBar:YES duration:0.0 force:YES];
         }
     } else {
-        currentBundleIdentifier = [[UIApplication sharedApplication] _accessibilityFrontMostApplication].bundleIdentifier;
+        currentBundleIdentifier = UIApplication.sharedApplication._accessibilityFrontMostApplication.bundleIdentifier;
         if (!currentBundleIdentifier) {
           return;
         }
@@ -373,7 +373,7 @@ id SBWorkspace$sharedInstance;
         bottomDraggerView.layer.cornerRadius = 10;
         bottomDraggerView.backgroundColor = UIColor.lightGrayColor;
         [bottomDraggerView addGestureRecognizer:recognizer];
-        [MSHookIvar<UIWindow*>(self,"_reachabilityWindow") addSubview:bottomDraggerView];
+        [MSHookIvar<SBWindow*>(self,"_reachabilityWindow") addSubview:bottomDraggerView];
     }
 
     // Update sizes of reachability (and their contained apps) and the location of the dragger view
@@ -385,7 +385,7 @@ id SBWorkspace$sharedInstance;
       [self ZY_closeCurrentView];
     }
 
-    UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
+    SBWindow *w = MSHookIvar<SBWindow*>(self, "_reachabilityEffectWindow");
     static CGSize fullSize = [%c(SBIconView) defaultIconSize];
     fullSize.height = fullSize.width; // otherwise it often looks like {60,74}
     CGFloat padding = 20;
@@ -398,7 +398,7 @@ id SBWorkspace$sharedInstance;
     }
     padding = (w.frame.size.width - (numIconsPerLine * fullSize.width)) / numIconsPerLine;
 
-    UIView *widgetSelectorView = [[ZYWidgetSectionManager sharedInstance] createViewForEnabledSectionsWithBaseFrame:w.frame preferredIconSize:fullSize iconsThatFitPerLine:numIconsPerLine spacing:padding];
+    UIView *widgetSelectorView = [ZYWidgetSectionManager.sharedInstance createViewForEnabledSectionsWithBaseFrame:w.frame preferredIconSize:fullSize iconsThatFitPerLine:numIconsPerLine spacing:padding];
     widgetSelectorView.frame = (CGRect){ { 0, 0 }, widgetSelectorView.frame.size };
     //widgetSelectorView.frame = w.frame;
 
@@ -562,10 +562,10 @@ CGFloat startingY = -1;
             //height = sliderView.clientFrame.size.height;
 
 
-            if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+            if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
                 width = center.y;
                 height = topWindow.frame.size.width;
-            } else if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
+            } else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
                 //width = topWindow.frame.size.height;
                 width = bottomWindow.frame.origin.y;
                 height = topWindow.frame.size.width;
@@ -574,10 +574,10 @@ CGFloat startingY = -1;
                 height = sliderView.clientFrame.size.height;
             }
         } else {
-            if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+            if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
                 width = center.y;
                 height = topWindow.frame.size.width;
-            } else if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
+            } else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
                 width = bottomWindow.frame.origin.y;
                 height = topWindow.frame.size.width;
             } else {
@@ -591,7 +591,7 @@ CGFloat startingY = -1;
             targetIdentifier = [((ZYAppSliderProviderView*)view) currentBundleIdentifier];
         }
 
-        if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
+        if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
             [ZYMessagingServer.sharedInstance moveApp:targetIdentifier toOrigin:CGPointMake(bottomWindow.frame.size.height, 0) completion:nil];
         }
         [ZYMessagingServer.sharedInstance resizeApp:targetIdentifier toSize:CGSizeMake(width, height) completion:nil];
@@ -607,10 +607,10 @@ CGFloat startingY = -1;
 
     CGFloat width = -1, height = -1;
 
-    if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+    if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
         width = bottomWindow.frame.size.height;
         height = bottomWindow.frame.size.width;
-    } else if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
+    } else if (UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
         //width = center.y;
         width = bottomWindow.frame.size.height;
         height = bottomWindow.frame.size.width;
@@ -629,7 +629,7 @@ CGFloat startingY = -1;
 }
 
 %new - (void)ZY_launchTopAppWithIdentifier:(NSString*)bundleIdentifier {
-    UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
+    SBWindow *w = MSHookIvar<SBWindow*>(self, "_reachabilityEffectWindow");
     SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:lastBundleIdentifier];
     FBScene *scene = [app mainScene];
     if (app == nil) {
@@ -662,7 +662,7 @@ CGFloat startingY = -1;
 
     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
 
-    [[UIApplication sharedApplication] launchApplicationWithIdentifier:bundleIdentifier suspended:YES];
+    [UIApplication.sharedApplication launchApplicationWithIdentifier:bundleIdentifier suspended:YES];
 
     [contextHostManager enableHostingForRequester:@"Zypen" orderFront:YES];
     view = [contextHostManager hostViewForRequester:@"Zypen" enableAndOrderFront:YES];
@@ -713,7 +713,7 @@ CGFloat startingY = -1;
 
 %new - (void)ZY_setView:(UIView*)view_ preferredHeight:(CGFloat)pHeight {
     view_.hidden = NO;
-    UIWindow *w = MSHookIvar<UIWindow*>(self, "_reachabilityEffectWindow");
+    SBWindow *w = MSHookIvar<SBWindow*>(self, "_reachabilityEffectWindow");
     if (view) {
         if ([view isKindOfClass:[ZYAppSliderProviderView class]]) {
             [ZYMessagingServer.sharedInstance endResizingApp:[((ZYAppSliderProviderView*)view) currentBundleIdentifier] completion:nil];

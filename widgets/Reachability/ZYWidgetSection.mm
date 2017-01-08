@@ -26,7 +26,7 @@
 	@throw @"This is an abstract method and should be overriden.";
 }
 
--(NSString*) identifier {
+- (NSString*)identifier {
 	@throw @"This is an abstract method and should be overriden.";
 }
 
@@ -66,7 +66,7 @@
 	[[ZYReachabilityManager sharedInstance] launchWidget:_widgets[widgetIndex]];
 }
 
--(CGFloat)titleOffset {
+- (CGFloat)titleOffset {
 	return 10;
 }
 @end

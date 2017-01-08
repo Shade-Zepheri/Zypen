@@ -32,9 +32,9 @@ BOOL locationIsInValidArea(CGFloat x) {
     __weak __block UIView *appView = nil;
     __block CGFloat lastY = 0;
     __block CGPoint originalCenter;
-    [[ZYGestureManager sharedInstance] addGestureRecognizer:^ZYGestureCallbackResult(UIGestureRecognizerState state, CGPoint location, CGPoint velocity) {
+    [ZYGestureManager.sharedInstance addGestureRecognizer:^ZYGestureCallbackResult(UIGestureRecognizerState state, CGPoint location, CGPoint velocity) {
 
-        SBApplication *topApp = [UIApplication.sharedApplication _accessibilityFrontMostApplication];
+        SBApplication *topApp = UIApplication.sharedApplication._accessibilityFrontMostApplication;
 
         // Dismiss potential CC
         //[[%c(SBUIController) sharedInstance] _showControlCenterGestureEndedWithLocation:CGPointMake(0, UIScreen.mainScreen.bounds.size.height - 1) velocity:CGPointZero];

@@ -23,7 +23,7 @@
 }
 
 + (void)removeItemWithIdentifier:(NSString*)ident {
-    SBDisplayItem *item = [%c(SBDisplayItem) displayItemWithType:@"App" displayIdentifier:ident];
-    [[%c(SBAppSwitcherModel) sharedInstance] remove:item];
+  SBDisplayItem *item = [%c(SBDisplayItem) displayItemWithType:@"App" displayIdentifier:ident];
+  [[%c(SBAppSwitcherModel) sharedInstance] remove:item];
 }
 @end

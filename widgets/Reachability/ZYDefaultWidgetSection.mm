@@ -5,7 +5,9 @@
 
 @implementation ZYDefaultWidgetSection
 + (instancetype)sharedDefaultWidgetSection {
-	SHARED_INSTANCE2(ZYDefaultWidgetSection, [[ZYWidgetSectionManager sharedInstance] registerSection:sharedInstance]);
+	SHARED_INSTANCE2(ZYDefaultWidgetSection,
+		[ZYWidgetSectionManager.sharedInstance registerSection:sharedInstance]
+	);
 }
 
 - (NSString*)displayName {
