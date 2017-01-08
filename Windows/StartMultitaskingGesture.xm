@@ -103,6 +103,11 @@ BOOL locationIsInValidArea(CGFloat x) {
                     // Close app
                     [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:topApp andCloseForegroundApp:NO];
                     FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:@"ActivateSpringBoard" handler:^{
+                        SBDeactivationSettings *deactiveSets = [[%c(SBDeactivationSettings) alloc] init];
+                        [deactiveSets setFlag:YES forDeactivationSetting:20];
+                        [deactiveSets setFlag:NO forDeactivationSetting:2];
+                        [topApp _setDeactivationSettings:deactiveSets];
+
                         SBAppToAppWorkspaceTransaction *transaction = [Zypen createSBAppToAppWorkspaceTransactionForExitingApp:topApp];
                         [transaction begin];
 
