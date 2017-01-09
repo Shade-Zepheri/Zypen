@@ -212,7 +212,7 @@ id SBWorkspace$sharedInstance;
                 if (app && [app pid] && [app mainScene]) {
                     FBScene *scene = [app mainScene];
                     FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
-                    [settings setBackgrounded:YES];
+                    SET_BACKGROUNDED(settings, YES);
                     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
                     //Dont Understand Purpose? MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
                     MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
@@ -658,8 +658,7 @@ CGFloat startingY = -1;
     FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
 
     FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
-    [settings setBackgrounded:NO];
-
+    SET_BACKGROUNDED(settings, NO);
     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
 
     [UIApplication.sharedApplication launchApplicationWithIdentifier:bundleIdentifier suspended:YES];
