@@ -4,6 +4,7 @@
 #import "ZYDesktopManager.h"
 #import "ZYSnapshotProvider.h"
 #import "ZYMessagingServer.h"
+#import "ZYFakePhoneMode.h"
 
 @implementation ZYDesktopWindow
 - (id)initWithFrame:(CGRect)frame {
@@ -24,7 +25,11 @@
 		}
 	}
 
-	view.frame = CGRectMake(0, 100, UIScreen.mainScreen._referenceBounds.size.width, UIScreen.mainScreen._referenceBounds.size.height);
+	if ([ZYFakePhoneMode shouldFakeForAppWithIdentifier:view.app.bundleIdentifier]) {
+		view.frame = (CGRect){ { 0, 100 }, [ZYFakePhoneMode fakeSizeForAppWithIdentifier:view.app.bundleIdentifier] };
+	} else {
+		view.frame = CGRectMake(0, 100, UIScreen.mainScreen._referenceBounds.size.width, UIScreen.mainScreen._referenceBounds.size.height);
+	}
 	view.center = self.center;
 
 	ZYWindowBar *windowBar = [[ZYWindowBar alloc] init];
@@ -44,7 +49,9 @@
 	}
 	view.hideStatusBar = YES;
 	windowBar.transform = CGAffineTransformMakeScale(0.5, 0.5);
-	//windowBar.transform = CGAffineTransformRotate(windowBar.transform, DEGREES_TO_RADIANS([self baseRotationForOrientation]));
+	if (![ZYFakePhoneMode shouldFakeForAppWithIdentifier:view.app.bundleIdentifier]) {
+		windowBar.transform = CGAffineTransformRotate(windowBar.transform, DEGREES_TO_RADIANS([self baseRotationForOrientation]));
+	}
 	windowBar.hidden = NO;
 
 	lastKnownOrientation = -1;
@@ -104,7 +111,7 @@
 				[appViews removeObject:view];
 				[self saveInfo];
 
-				if (dontClearForcedPhoneState == NO) {
+				if (dontClearForcedPhoneState == NO && [ZYFakePhoneMode shouldFakeForAppWithIdentifier:identifier]) {
 					[ZYMessagingServer.sharedInstance forcePhoneMode:NO forIdentifier:identifier andRelaunchApp:YES];
 				}
 			};

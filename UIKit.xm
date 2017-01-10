@@ -5,6 +5,7 @@
 #import "ZYWidgetSectionManager.h"
 #import "ZYSettings.h"
 #import "ZYMessagingClient.h"
+#import "ZYFakePhoneMode.h"
 
 UIInterfaceOrientation prevousOrientation;
 BOOL setPreviousOrientation = NO;
@@ -72,8 +73,16 @@ static Class $memorized$UITextEffectsWindow$class;
 - (void)applicationDidResume {
     %orig;
     [ZYMessagingClient.sharedInstance requestUpdateFromServer];
+    //[ZYFakePhoneMode updateAppSizing];
 }
-
+/*
++(void) _startWindowServerIfNecessary
+{
+    %orig;
+    //[ZYMessagingClient.sharedInstance requestUpdateFromServer];
+    [ZYFakePhoneMode updateAppSizing];
+}
+*/
 - (void)_setStatusBarHidden:(BOOL)arg1 animationParameters:(unsafe_id)arg2 changeApplicationFlag:(BOOL)arg3 {
 	//if ([ZYSettings.sharedSettings unifyStatusBar])
     if ([ZYMessagingClient.sharedInstance shouldHideStatusBar]) {

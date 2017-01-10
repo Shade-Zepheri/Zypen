@@ -7,6 +7,7 @@
 #import "ZYResourceImageProvider.h"
 #import "ZYInsetLabel.h"
 #import "ZYMessagingServer.h"
+#import "ZYFakePhoneMode.h"
 #import "ZYSnapshotProvider.h"
 
 @interface ZYWindowBarIconInfo : NSObject
@@ -87,6 +88,11 @@ extern BOOL allowOpenApp;
 	doubleTapGesture.numberOfTapsRequired = 2;
 	doubleTapGesture.delegate = self;
 	[self addGestureRecognizer:doubleTapGesture];
+
+	tripleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTripleTap:)];
+	tripleTapGesture.numberOfTapsRequired = 3;
+	tripleTapGesture.delegate = self;
+	[self addGestureRecognizer:tripleTapGesture];
 
 	[tapGesture requireGestureRecognizerToFail:tripleTapGesture];
 	[tapGesture requireGestureRecognizerToFail:doubleTapGesture];
@@ -524,6 +530,12 @@ extern BOOL allowOpenApp;
 	[UIView animateWithDuration:0.7 animations:^{
 		self.transform = CGAffineTransformMakeScale(0.6, 0.6);
 	}];
+}
+
+- (void)handleTripleTap:(UITapGestureRecognizer*)tap{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+		[ZYMessagingServer.sharedInstance forcePhoneMode:![ZYFakePhoneMode shouldFakeForAppWithIdentifier:attachedView.app.bundleIdentifier] forIdentifier:attachedView.app.bundleIdentifier andRelaunchApp:YES];
+	}
 }
 
 - (void)handlePan:(UIPanGestureRecognizer*)sender {
