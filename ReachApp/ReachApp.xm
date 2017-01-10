@@ -18,8 +18,6 @@
 #import "ZYAppSwitcherModelWrapper.h"
 #import "Zypen.h"
 
-#define SPRINGBOARD ([NSBundle.mainBundle.bundleIdentifier isEqual:@"com.apple.springboard"])
-
 UIView *view = nil;
 NSString *lastBundleIdentifier = @"";
 NSString *currentBundleIdentifier = @"";
@@ -789,7 +787,7 @@ CGFloat startingY = -1;
 %end
 
 %ctor {
-    if (SPRINGBOARD) {
+    IF_SPRINGBOARD {
         Class c = objc_getClass("SBMainWorkspace") ?: objc_getClass("SBWorkspace");
         %init(hooks, SB_WORKSPACE_CLASS=c);
     }
