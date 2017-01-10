@@ -4,6 +4,7 @@
 #import "ZYSnapshotProvider.h"
 #import "ZYSpringBoardKeyboardActivation.h"
 #import "dispatch_after_cancel.h"
+#import "headers.h"
 
 NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 
@@ -47,7 +48,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         if ([app mainScene]) {
             isPreloading = NO;
             if (((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive && [GET_SBWORKSPACE respondsToSelector:@selector(ZY_updateViewSizes)]) {
-                [GET_SBWORKSPACE performSelector:@selector(ZY_updateViewSizes) withObject:nil afterDelay:0.5];
+                [GET_SBWORKSPACE performSelector:@selector(ZY_updateViewSizes) withObject:nil afterDelay:0.5]; // App is launched using ReachApp - animations commence. We have to wait for those animations to finish or this won't work.
             }
         } else if (![app mainScene]) {
             if (disablePreload) {
@@ -75,8 +76,13 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     if (startTries > 5) {
         isPreloading = NO;
         HBLogDebug(@"[ReachApp] maxed out preload attempts for app %@", app.bundleIdentifier);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Zypen" message:[NSString stringWithFormat:@"Unable to start app %@", app.displayName] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Zypen"
+                               message:[NSString stringWithFormat:@"Unable to start app %@", app.displayName]
+                               preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                          handler:^(UIAlertAction * action) {}];
+        [alert addAction:defaultAction];
+        [self.inputViewController presentViewController:alert animated:YES completion:nil];
         return;
     }
 
@@ -247,8 +253,6 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 }
 
 - (void)unloadApp:(BOOL)forceImmediate {
-    [self removeLoadingIndicator];
-    [loadedTimer invalidate];
     loadedTimer = nil;
 
     [ZYRunningAppsProvider.sharedInstance removeTarget:self];
@@ -274,10 +278,6 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     if (isForemostAppLabel) {
         [isForemostAppLabel removeFromSuperview];
         isForemostAppLabel = nil;
-    }
-
-    if ([ZYSpringBoardKeyboardActivation.sharedInstance.currentIdentifier isEqual:self.bundleIdentifier]) {
-      [ZYSpringBoardKeyboardActivation.sharedInstance hideKeyboard];
     }
 
     if (contextHostManager) {
@@ -306,7 +306,6 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
         SET_BACKGROUNDED(settings, YES);
         [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
-        //FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
         didRun = YES;
     };
 
@@ -329,6 +328,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 
 - (void)rotateToOrientation:(UIInterfaceOrientation)o {
     _orientation = o;
+
     [ZYMessagingServer.sharedInstance rotateApp:self.bundleIdentifier toOrientation:o completion:nil];
 }
 

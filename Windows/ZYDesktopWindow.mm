@@ -44,7 +44,7 @@
 	}
 	view.hideStatusBar = YES;
 	windowBar.transform = CGAffineTransformMakeScale(0.5, 0.5);
-	windowBar.transform = CGAffineTransformRotate(windowBar.transform, DEGREES_TO_RADIANS([self baseRotationForOrientation]));
+	//windowBar.transform = CGAffineTransformRotate(windowBar.transform, DEGREES_TO_RADIANS([self baseRotationForOrientation]));
 	windowBar.hidden = NO;
 
 	lastKnownOrientation = -1;
@@ -108,7 +108,7 @@
 					[ZYMessagingServer.sharedInstance forcePhoneMode:NO forIdentifier:identifier andRelaunchApp:YES];
 				}
 			};
-			if (animated) {
+			if (animated)
 				[UIView animateWithDuration:0.3 animations:^{
 					view.superview.layer.transform = CATransform3DMakeScale(0.1, 0.1, 1);
 					view.superview.layer.position = CGPointMake(UIScreen.mainScreen._referenceBounds.size.width / 2, UIScreen.mainScreen._referenceBounds.size.height);
@@ -116,9 +116,8 @@
 					[ZYDesktopManager.sharedInstance findNewForemostApp];
 				//view.superview.alpha = 0;
 				} completion:^(BOOL _) { destructor(); }];
-			} else {
+			else
 				destructor();
-			}
 			return;
 		}
 	}
@@ -132,6 +131,15 @@
 			[self removeAppWithIdentifier:identifier animated:NO forceImmediateUnload:YES];
 			[self createAppWindowWithIdentifier:identifier animated:NO];
 			dontClearForcedPhoneState = NO;
+
+			/*CGAffineTransform t = view.transform;
+			CGPoint origin = view.frame.origin;
+			view.transform = CGAffineTransformIdentity;
+			if ([ZYFakePhoneMode shouldFakeForAppWithIdentifier:view.app.bundleIdentifier])
+				view.frame = (CGRect){ origin, [ZYFakePhoneMode fakeSizeForAppWithIdentifier:view.app.bundleIdentifier] };
+			else
+				view.frame = CGRectMake(origin.x, origin.y, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height);
+			view.transform = t;*/
 		}
 	}
 }
@@ -231,34 +239,37 @@
 
 	switch (base) {
 		case UIInterfaceOrientationLandscapeLeft:
-	    	if (currentRotation >= 315 || currentRotation <= 45)
-	    		return UIInterfaceOrientationLandscapeLeft;
-	    	else if (currentRotation > 45 && currentRotation <= 135)
-	    		return UIInterfaceOrientationPortraitUpsideDown;
-	    	else if (currentRotation > 135 && currentRotation <= 215)
-	    		return UIInterfaceOrientationLandscapeRight;
-	    	else
-	    		return UIInterfaceOrientationPortrait;
+	    	if (currentRotation >= 315 || currentRotation <= 45) {
+					return UIInterfaceOrientationLandscapeLeft;
+				} else if (currentRotation > 45 && currentRotation <= 135) {
+					return UIInterfaceOrientationPortraitUpsideDown;
+				} else if (currentRotation > 135 && currentRotation <= 215) {
+					return UIInterfaceOrientationLandscapeRight;
+				} else {
+					return UIInterfaceOrientationPortrait;
+				}
 
 		case UIInterfaceOrientationLandscapeRight:
-	    	if (currentRotation >= 315 || currentRotation <= 45)
-	    		return UIInterfaceOrientationLandscapeRight;
-	    	else if (currentRotation > 45 && currentRotation <= 135)
-	    		return UIInterfaceOrientationPortrait;
-	    	else if (currentRotation > 135 && currentRotation <= 215)
-	    		return UIInterfaceOrientationLandscapeLeft;
-	    	else
-	    		return UIInterfaceOrientationPortraitUpsideDown;
+	    	if (currentRotation >= 315 || currentRotation <= 45) {
+					return UIInterfaceOrientationLandscapeRight;
+				} else if (currentRotation > 45 && currentRotation <= 135) {
+					return UIInterfaceOrientationPortrait;
+				} else if (currentRotation > 135 && currentRotation <= 215) {
+					return UIInterfaceOrientationLandscapeLeft;
+				} else {
+					return UIInterfaceOrientationPortraitUpsideDown;
+				}
 
 		case UIInterfaceOrientationPortraitUpsideDown:
-			if (currentRotation >= 315 || currentRotation <= 45)
+			if (currentRotation >= 315 || currentRotation <= 45) {
 				return UIInterfaceOrientationPortraitUpsideDown;
-			else if (currentRotation > 45 && currentRotation <= 135)
+			} else if (currentRotation > 45 && currentRotation <= 135) {
 				return UIInterfaceOrientationLandscapeRight;
-			else if (currentRotation > 135 && currentRotation <= 215)
+			} else if (currentRotation > 135 && currentRotation <= 215) {
 				return UIInterfaceOrientationPortrait;
-			else
+			} else {
 				return UIInterfaceOrientationLandscapeLeft;
+			}
 
 		case UIInterfaceOrientationPortrait:
 		default:
@@ -296,8 +307,8 @@
     	if (subview.hidden) {
 				continue;
 			}
-			UIView *success = [subview hitTest:[self convertPoint:point toView:subview] withEvent:event];
-			if (success) {
+	    UIView *success = [subview hitTest:[self convertPoint:point toView:subview] withEvent:event];
+	    if (success) {
 				return success;
 			}
     }
@@ -310,13 +321,14 @@
     	if (self.rootViewController && [self.rootViewController.view isEqual:view]) {
 				continue;
 			}
-    	if (view.hidden) {
+    	if (view.hidden){
 				continue;
 			}
-		if (CGRectContainsPoint(view.frame, point) || CGRectContainsPoint(view.frame, [view convertPoint:point fromView:self])) {
-			isContained = YES;
-		}
+			if (CGRectContainsPoint(view.frame, point) || CGRectContainsPoint(view.frame, [view convertPoint:point fromView:self])) {
+				isContained = YES;
+			}
 	}
 	return isContained;
 }
+
 @end

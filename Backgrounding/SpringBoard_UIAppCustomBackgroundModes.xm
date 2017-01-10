@@ -31,11 +31,11 @@
 					goto ORIGINAL;
 				}
 
-        HBLogInfo(@"[ReachApp] BKSProcessAssertion initWithPID:'%zd' flags:'%tu' reason:'%tu' name:'%@' withHandler:'%@' process identifier:'%@'", arg1, arg2, arg3, arg4, arg5, identifier);
+        //HBLogInfo(@"[ReachApp] BKSProcessAssertion initWithPID:'%zd' flags:'%tu' reason:'%tu' name:'%@' withHandler:'%@' process identifier:'%@'", arg1, arg2, arg3, arg4, arg5, identifier);
 
         if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:identifier]) {
             if ((arg3 >= kProcessAssertionReasonAudio && arg3 <= kProcessAssertionReasonVOiP)) {
-                HBLogDebug(@"[ReachApp] blocking BKSProcessAssertion");
+                //HBLogDebug(@"[ReachApp] blocking BKSProcessAssertion");
 
                 //if (arg5)
                 //{

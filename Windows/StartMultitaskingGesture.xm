@@ -32,9 +32,9 @@ BOOL locationIsInValidArea(CGFloat x) {
     __weak __block UIView *appView = nil;
     __block CGFloat lastY = 0;
     __block CGPoint originalCenter;
-    [ZYGestureManager.sharedInstance addGestureRecognizer:^ZYGestureCallbackResult(UIGestureRecognizerState state, CGPoint location, CGPoint velocity) {
+    [[ZYGestureManager sharedInstance] addGestureRecognizer:^ZYGestureCallbackResult(UIGestureRecognizerState state, CGPoint location, CGPoint velocity) {
 
-        SBApplication *topApp = UIApplication.sharedApplication._accessibilityFrontMostApplication;
+        SBApplication *topApp = [UIApplication.sharedApplication _accessibilityFrontMostApplication];
 
         // Dismiss potential CC
         //[[%c(SBUIController) sharedInstance] _showControlCenterGestureEndedWithLocation:CGPointMake(0, UIScreen.mainScreen.bounds.size.height - 1) velocity:CGPointZero];
@@ -86,7 +86,7 @@ BOOL locationIsInValidArea(CGFloat x) {
         } else if (state == UIGestureRecognizerStateEnded) {
             [ZYControlCenterInhibitor setInhibited:NO];
 
-            if (lastY <= (UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.height / 4) * 3 && lastY != 0) {
+            if (lastY <= (UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.height / 4) * 3 && lastY != 0) {// 75% down, 0 == gesture ended in most situations
                 [UIView animateWithDuration:.3 animations:^{
 
                     if ([ZYWindowStatePreservationSystemManager.sharedInstance hasWindowInformationForIdentifier:topApp.bundleIdentifier]) {
@@ -137,5 +137,5 @@ BOOL locationIsInValidArea(CGFloat x) {
         return ZYGestureCallbackResultSuccess;
     } withCondition:^BOOL(CGPoint location, CGPoint velocity) {
         return [ZYSettings.sharedSettings windowedMultitaskingEnabled] && (locationIsInValidArea(location.x) || appView) && ![[%c(SBUIController) sharedInstance] isAppSwitcherShowing] && ![[%c(SBLockScreenManager) sharedInstance] isUILocked] && [UIApplication.sharedApplication _accessibilityFrontMostApplication] != nil && ![[%c(SBNotificationCenterController) sharedInstance] isVisible];
-    } forEdge:UIRectEdgeBottom identifier:@"com.shade.zypen.empoleon.systemgesture" priority:ZYGesturePriorityDefault];
+    } forEdge:UIRectEdgeBottom identifier:@"com.efrederickson.reachapp.windowedmultitasking.systemgesture" priority:ZYGesturePriorityDefault];
 }

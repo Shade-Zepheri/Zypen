@@ -28,9 +28,9 @@
 	    if (!settings) {
 				return nil;
 			}
-			[UIApplication.sharedApplication launchApplicationWithIdentifier:app.bundleIdentifier suspended:YES];
+			[[UIApplication sharedApplication] launchApplicationWithIdentifier:app.bundleIdentifier suspended:YES];
 
-	    [settings setBackgrounded:NO];
+	    SET_BACKGROUNDED(settings, NO);
 	    [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
 
 	    [contextHostManager enableHostingForRequester:@"Zypen" orderFront:YES];
