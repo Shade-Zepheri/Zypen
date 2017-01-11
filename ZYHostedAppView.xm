@@ -1,4 +1,5 @@
 #import "ZYHostedAppView.h"
+#import "BioLockdown.h"
 #import "ZYHostManager.h"
 #import "ZYMessagingServer.h"
 #import "ZYSnapshotProvider.h"
@@ -163,7 +164,30 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         return;
     }
 
-    IF_ASPHALEIA3 {
+    IF_BIOLOCKDOWN {
+        id failedBlock = ^{
+            [self removeLoadingIndicator];
+            if (!authenticationDidFailLabel) {
+                authenticationDidFailLabel = [[UILabel alloc] initWithFrame:self.bounds];
+                authenticationDidFailLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
+                authenticationDidFailLabel.textColor = [UIColor whiteColor];
+                authenticationDidFailLabel.textAlignment = NSTextAlignmentCenter;
+                authenticationDidFailLabel.font = [UIFont systemFontOfSize:36];
+                authenticationDidFailLabel.numberOfLines = 0;
+                authenticationDidFailLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                authenticationDidFailLabel.text = [NSString stringWithFormat:@"BioLockdown authentication failed for %@. Tap to try again.",self.app.displayName];
+                [self addSubview:authenticationDidFailLabel];
+
+                authenticationFailedRetryTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadApp)];
+                [self addGestureRecognizer:authenticationFailedRetryTapGesture];
+                self.userInteractionEnabled = YES;
+            }
+        };
+
+        BIOLOCKDOWN_AUTHENTICATE_APP(app.bundleIdentifier, ^{
+            [self _actualLoadApp];
+        }, failedBlock /* stupid commas */);
+    } else IF_ASPHALEIA3 {
         void (^failedBlock)() = ^{
             [self removeLoadingIndicator];
             if (!authenticationDidFailLabel) {
