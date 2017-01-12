@@ -1,5 +1,5 @@
 ARCHS = armv7 arm64
-CFLAGS = -I./ -Iwidgets/ -Iwidgets/Core/ -Iwidgets/Reachability/ -IReachApp/ -IGestures/ -IWindows/ -IMessaging/ -IKeyboard/ -ITheming/ -IBackgrounding/ -O2 -Wno-deprecated-declarations
+CFLAGS = -I./ -Iwidgets/ -Iwidgets/Core/ -Iwidgets/Reachability/ -IReachability/ -IGestures/ -IWindowedMultitasking/ -IMessaging/ -IKeyboard/ -ITheming/ -IBackgrounding/ -O2 -Wno-deprecated-declarations
 CFLAGS += -fobjc-arc
 TARGET = iphone:9.2
 
@@ -8,13 +8,13 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = Zypen
 Zypen_FILES = $(wildcard *.xm) $(wildcard *.mm) $(wildcard *.m) \
 		$(wildcard Gestures/*.xm) $(wildcard Gestures/*.mm) $(wildcard Gestures/*.m) \
-		$(wildcard ReachApp/*.xm) $(wildcard ReachApp/*.mm) $(wildcard ReachApp/*.m) \
+		$(wildcard Reachability/*.xm) $(wildcard Reachability/*.mm) $(wildcard Reachability/*.m) \
 		$(wildcard widgets/*.xm) $(wildcard widgets/*.mm) $(wildcard widgets/*.m) \
 		$(wildcard widgets/Core/*.xm) $(wildcard widgets/Core/*.mm) $(wildcard widgets/Core/*.m) \
 		$(wildcard widgets/Reachability/*.xm) $(wildcard widgets/Reachability/*.mm) $(wildcard widgets/Reachability/*.m) \
 		$(wildcard Messaging/*.xm) $(wildcard Messaging/*.mm) $(wildcard Messaging/*.m) \
 		$(wildcard Keyboard/*.xm) $(wildcard Keyboard/*.mm) $(wildcard Keyboard/*.m) \
-		$(wildcard Windows/*.xm) $(wildcard Windows/*.mm) $(wildcard Windows/*.m) \
+		$(wildcard WindowedMultitasking/*.xm) $(wildcard WindowedMultitasking/*.mm) $(wildcard WindowedMultitasking/*.m) \
 		$(wildcard Theming/*.xm) $(wildcard Theming/*.mm) $(wildcard Theming/*.m)
 Zypen_FRAMEWORKS = UIKit QuartzCore CoreGraphics CoreImage
 Zypen_PRIVATE_FRAMEWORKS = GraphicsServices BackBoardServices AppSupport IOKit
@@ -27,7 +27,7 @@ after-install::
 
 SUBPROJECTS += zypen
 SUBPROJECTS += Backgrounding
-SUBPROJECTS += ZY_assertiond
+SUBPROJECTS += ZYassertiond
 SUBPROJECTS += ZYDaemon
 SUBPROJECTS += ZYFakePhoneMode
 
