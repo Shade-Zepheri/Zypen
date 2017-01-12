@@ -600,11 +600,6 @@ CGFloat startingY = -1;
         [ZYMessagingServer.sharedInstance resizeApp:targetIdentifier toSize:CGSizeMake(width, height) completion:nil];
     }
 
-    if ([view isKindOfClass:[%c(FBWindowContextHostWrapperView) class]] == NO && [view isKindOfClass:[ZYAppSliderProviderView class]] == NO) {
-      HBLogDebug(@"Is not FBWindowContextHostWrapperView or ZYAppSliderProviderView");
-      //return;  only resize when the app is being shown. That way it's more like native Reachability
-    }
-
     [ZYMessagingServer.sharedInstance setHosted:YES forIdentifier:currentBundleIdentifier completion:nil];
 
     [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
@@ -678,12 +673,9 @@ CGFloat startingY = -1;
         [w addSubview:view];
     }
 
-    //if ([ZYSettings.sharedSettings enableRotation] && ![ZYSettings.sharedSettings scalingRotationMode])
-    {
+    if ([ZYSettings.sharedInstance enableRotation] && ![ZYSettings.sharedInstance scalingRotationMode]) {
         [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
-    }
-    /*else if ([ZYSettings.sharedSettings scalingRotationMode] && [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
-    {
+    } else if ([ZYSettings.sharedSettings scalingRotationMode] && [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
         overrideDisableForStatusBar = YES;
         // Force portrait
         [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:UIInterfaceOrientationPortrait completion:nil];
@@ -694,14 +686,13 @@ CGFloat startingY = -1;
         MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scale, scale), CGAffineTransformMakeRotation(M_PI_2));
         pre_topAppFrame = MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame;
         MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.height);
-        UIWindow *window = MSHookIvar<UIWindow*>(self,"_reachabilityEffectWindow");
+        SBWindow *window = MSHookIvar<SBWindow*>(self,"_reachabilityEffectWindow");
         window.frame = (CGRect) { window.frame.origin, { window.frame.size.width, view.frame.size.width } };
-        window = MSHookIvar<UIWindow*>(self,"_reachabilityWindow");
+        window = MSHookIvar<SBWindow*>(self,"_reachabilityWindow");
         window.frame = (CGRect) { { window.frame.origin.x, view.frame.size.width }, { window.frame.size.width, view.frame.size.width } };
 
         SBApplication *currentApp = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:currentBundleIdentifier];
-        if ([currentApp mainScene]) // just checking...
-        {
+        if ([currentApp mainScene]) {
             MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scale, scale), CGAffineTransformMakeRotation(M_PI_2));
             MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").frame = CGRectMake(0, 0, window.frame.size.width, window.frame.size.height);
         }
@@ -709,7 +700,7 @@ CGFloat startingY = -1;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             overrideDisableForStatusBar = NO;
         });
-    }*/
+    }
     draggerView.hidden = NO;
     overrideDisableForStatusBar = NO;
 }
