@@ -238,7 +238,7 @@ id SBWorkspace$sharedInstance;
 
     %orig;
 
-    if (![ZYSettings.sharedSettings reachabilityEnabled] && wasEnabled == NO) {
+    if (![ZYSettings.sharedSettings reachabilityEnabled] && !wasEnabled) {
       return;
     }
 
@@ -292,7 +292,7 @@ id SBWorkspace$sharedInstance;
     if ([ZYSettings.sharedSettings showNCInstead]) {
         showingNC = YES;
 
-        if (ncViewController == nil)
+        if (!ncViewController)
             ncViewController = [[%c(SBNotificationCenterViewController) alloc] init];
         ncViewController.view.frame = (CGRect) { { 0, 0 }, w.frame.size };
         w.rootViewController = ncViewController;
@@ -317,7 +317,7 @@ id SBWorkspace$sharedInstance;
             SBApplication *app = nil;
             FBScene *scene = nil;
             NSMutableArray *bundleIdentifiers = [[ZYAppSwitcherModelWrapper appSwitcherAppIdentiferList] mutableCopy];
-            while (scene == nil && bundleIdentifiers.count > 0) {
+            while (!scene && bundleIdentifiers.count > 0) {
                 lastBundleIdentifier = bundleIdentifiers[0];
 
                 if ([lastBundleIdentifier isEqual:currentBundleIdentifier]) {
@@ -333,7 +333,7 @@ id SBWorkspace$sharedInstance;
                   }
                 }
             }
-            if (lastBundleIdentifier == nil || lastBundleIdentifier.length == 0) {
+            if (!lastBundleIdentifier || lastBundleIdentifier.length == 0) {
                 return;
             }
 
@@ -474,7 +474,26 @@ CGFloat startingY = -1;
     }
 
     [self handleReachabilityModeDeactivated];
-    [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
+    SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:ident];
+    // Close app
+    [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:app andCloseForegroundApp:NO];
+    FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:@"ActivateSpringBoard" handler:^{
+        SBDeactivationSettings *deactiveSets = [[%c(SBDeactivationSettings) alloc] init];
+        [deactiveSets setFlag:YES forDeactivationSetting:20];
+        [deactiveSets setFlag:NO forDeactivationSetting:2];
+        [app _setDeactivationSettings:deactiveSets];
+
+        // Open in window
+        ZYWindowBar *windowBar = [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
+        if (!ZYDesktopManager.sharedInstance.lastUsedWindow) {
+          ZYDesktopManager.sharedInstance.lastUsedWindow = windowBar;
+        }
+    }];
+    [(FBWorkspaceEventQueue*)[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
+
+    // Pop forced foreground backgrounding
+    [[%c(ZYBackgrounder) sharedInstance] queueRemoveTemporaryOverrideForIdentifier:ident];
+    [[%c(ZYBackgrounder) sharedInstance] removeTemporaryOverrideForIdentifier:ident];
 }
 
 %new - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -580,11 +599,12 @@ CGFloat startingY = -1;
         }
         [ZYMessagingServer.sharedInstance resizeApp:targetIdentifier toSize:CGSizeMake(width, height) completion:nil];
     }
-    /* Causing Problems for Now
+
     if ([view isKindOfClass:[%c(FBWindowContextHostWrapperView) class]] == NO && [view isKindOfClass:[ZYAppSliderProviderView class]] == NO) {
-        return; // only resize when the app is being shown. That way it's more like native Reachability
+      HBLogDebug(@"Is not FBWindowContextHostWrapperView or ZYAppSliderProviderView");
+      //return;  only resize when the app is being shown. That way it's more like native Reachability
     }
-    */
+
     [ZYMessagingServer.sharedInstance setHosted:YES forIdentifier:currentBundleIdentifier completion:nil];
 
     [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
@@ -616,7 +636,7 @@ CGFloat startingY = -1;
     SBWindow *w = MSHookIvar<SBWindow*>(self, "_reachabilityEffectWindow");
     SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:lastBundleIdentifier];
     FBScene *scene = [app mainScene];
-    if (app == nil) {
+    if (!app) {
         return;
     }
 
@@ -625,7 +645,7 @@ CGFloat startingY = -1;
     [ZYMessagingServer.sharedInstance rotateApp:app.bundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
     [ZYMessagingServer.sharedInstance forceStatusBarVisibility:YES forApp:app.bundleIdentifier completion:nil];
 
-    if (![app pid] || [app mainScene] == nil) {
+    if (![app pid] || ![app mainScene]) {
         overrideDisableForStatusBar = YES;
         [UIApplication.sharedApplication launchApplicationWithIdentifier:bundleIdentifier suspended:YES];
         [[%c(FBProcessManager) sharedInstance] createApplicationProcessForBundleID:bundleIdentifier];
