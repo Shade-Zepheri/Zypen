@@ -44,7 +44,7 @@
 	if (animated) {
 		[UIView animateWithDuration:0.5 animations:^{ windowBar.alpha = 1; }];
 	}
-	if (self.hidden == NO) {
+	if (!self.hidden) {
 		[view loadApp];
 	}
 	view.hideStatusBar = YES;
@@ -111,20 +111,23 @@
 				[appViews removeObject:view];
 				[self saveInfo];
 
-				if (dontClearForcedPhoneState == NO && [ZYFakePhoneMode shouldFakeForAppWithIdentifier:identifier]) {
+				if (!dontClearForcedPhoneState && [ZYFakePhoneMode shouldFakeForAppWithIdentifier:identifier]) {
 					[ZYMessagingServer.sharedInstance forcePhoneMode:NO forIdentifier:identifier andRelaunchApp:YES];
 				}
 			};
-			if (animated)
+			if (animated) {
 				[UIView animateWithDuration:0.3 animations:^{
 					view.superview.layer.transform = CATransform3DMakeScale(0.1, 0.1, 1);
 					view.superview.layer.position = CGPointMake(UIScreen.mainScreen._referenceBounds.size.width / 2, UIScreen.mainScreen._referenceBounds.size.height);
 					view.superview.layer.opacity = 0.0f;
 					[ZYDesktopManager.sharedInstance findNewForemostApp];
 				//view.superview.alpha = 0;
-				} completion:^(BOOL _) { destructor(); }];
-			else
+				} completion:^(BOOL _) {
+					destructor();
+				}];
+			} else {
 				destructor();
+			}
 			return;
 		}
 	}
@@ -213,7 +216,7 @@
 
 - (void)loadInfo {
 	NSInteger index = [ZYDesktopManager.sharedInstance.availableDesktops indexOfObject:self];
-	if ([ZYWindowStatePreservationSystemManager.sharedInstance hasDesktopInformationAtIndex:index] == NO) {
+	if (![ZYWindowStatePreservationSystemManager.sharedInstance hasDesktopInformationAtIndex:index]) {
 		return;
 	}
 	ZYPreservedDesktopInformation info = [ZYWindowStatePreservationSystemManager.sharedInstance desktopInformationForIndex:index];
@@ -295,7 +298,7 @@
 }
 
 - (void)loadInfo:(NSInteger)index {
-	if ([ZYWindowStatePreservationSystemManager.sharedInstance hasDesktopInformationAtIndex:index] == NO) {
+	if (![ZYWindowStatePreservationSystemManager.sharedInstance hasDesktopInformationAtIndex:index]) {
 		return;
 	}
 	ZYPreservedDesktopInformation info = [ZYWindowStatePreservationSystemManager.sharedInstance desktopInformationForIndex:index];

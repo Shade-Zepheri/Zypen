@@ -69,7 +69,7 @@
 	CGFloat currentY = VERTICAL_PADDING;
 
 	for (ZYWidgetSection* section in [self enabledSections]) {
-		if (section.enabled == NO) {
+		if (!section.enabled) {
 			continue;
 		}
 		@try {

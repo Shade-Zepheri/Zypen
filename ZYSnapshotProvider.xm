@@ -23,7 +23,7 @@
 
 	@autoreleasepool {
 
-		if ([imageCache objectForKey:identifier] != nil) {
+		if ([imageCache objectForKey:identifier]) {
 			return [imageCache objectForKey:identifier];
 		}
 		UIImage *image = nil;

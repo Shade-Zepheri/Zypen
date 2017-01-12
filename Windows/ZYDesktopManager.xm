@@ -63,13 +63,13 @@ BOOL overrideUIWindow = NO;
 	[currentDesktop unloadApps];
 	[newDesktop loadApps];
 
-	if (show == NO) {
+	if (!show) {
 		newDesktop.hidden = YES;
 	}
 	overrideUIWindow = NO;
 	[newDesktop makeKeyAndVisible];
 	overrideUIWindow = YES;
-	if (show == NO) {
+	if (!show) {
 		newDesktop.hidden = YES;
 	}
 

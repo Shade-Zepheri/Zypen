@@ -33,7 +33,7 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
   }
 	NSDictionary *dict = [[%c(ZYSettings) sharedSettings] rawCompiledBackgrounderSettingsForIdentifier:identifier];
 	BOOL enabled = [dict objectForKey:@"enabled"] ? [dict[@"enabled"] boolValue] : NO;
-	return [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled && ([dict objectForKey:@"autoLaunch"] == nil ? NO : [dict[@"autoLaunch"] boolValue]);
+	return [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled && (![dict objectForKey:@"autoLaunch"] ? NO : [dict[@"autoLaunch"] boolValue]);
 }
 
 - (BOOL)shouldAutoRelaunchApplication:(NSString*)identifier {
@@ -42,7 +42,7 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
   }
 	NSDictionary *dict = [[%c(ZYSettings) sharedSettings] rawCompiledBackgrounderSettingsForIdentifier:identifier];
 	BOOL enabled = [dict objectForKey:@"enabled"] ? [dict[@"enabled"] boolValue] : NO;
-	return [self killProcessOnExit:identifier] == NO && [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled && ([dict objectForKey:@"autoRelaunch"] == nil ? NO : [dict[@"autoRelaunch"] boolValue]);
+	return [self killProcessOnExit:identifier] == NO && [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled && (![dict objectForKey:@"autoRelaunch"] ? NO : [dict[@"autoRelaunch"] boolValue]);
 }
 
 - (NSInteger)popTemporaryOverrideForApplication:(NSString*)identifier {
@@ -96,7 +96,7 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
   }
 	NSDictionary *dict = [[%c(ZYSettings) sharedSettings] rawCompiledBackgrounderSettingsForIdentifier:identifier];
 	BOOL enabled = [dict objectForKey:@"enabled"] ? [dict[@"enabled"] boolValue] : NO;
-	return [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled && ([dict objectForKey:@"preventDeath"] == nil ? NO : [dict[@"preventDeath"] boolValue]);
+	return [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled && (![dict objectForKey:@"preventDeath"] ? NO : [dict[@"preventDeath"] boolValue]);
 }
 
 - (BOOL)shouldRemoveFromSwitcherWhenKilledOnExit:(NSString*)identifier {
@@ -105,12 +105,12 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
   }
 	NSDictionary *dict = [[%c(ZYSettings) sharedSettings] rawCompiledBackgrounderSettingsForIdentifier:identifier];
 	BOOL enabled = [dict objectForKey:@"removeFromSwitcher"] ? [dict[@"removeFromSwitcher"] boolValue] : NO;
-	return [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled && ([dict objectForKey:@"removeFromSwitcher"] == nil ? NO : [dict[@"removeFromSwitcher"] boolValue]);
+	return [[%c(ZYSettings) sharedSettings] backgrounderEnabled] && enabled && (![dict objectForKey:@"removeFromSwitcher"] ? NO : [dict[@"removeFromSwitcher"] boolValue]);
 }
 
 - (NSInteger)backgroundModeForIdentifier:(NSString*)identifier {
 	@autoreleasepool {
-		if (!identifier || [[%c(ZYSettings) sharedSettings] backgrounderEnabled] == NO) {
+		if (!identifier || ![[%c(ZYSettings) sharedSettings] backgrounderEnabled]) {
       return ZYBackgroundModeNative;
     }
 		NSInteger temporaryOverride = [self popTemporaryOverrideForApplication:identifier];
@@ -195,13 +195,13 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 - (BOOL)shouldShowIndicatorForIdentifier:(NSString*)identifier {
 	NSDictionary *dct = [[%c(ZYSettings) sharedSettings] rawCompiledBackgrounderSettingsForIdentifier:identifier];
 	BOOL globalSetting = [[%c(ZYSettings) sharedSettings] shouldShowIconIndicatorsGlobally];
-	return globalSetting ? ([dct objectForKey:@"showIndicatorOnIcon"] == nil ? YES : [dct[@"showIndicatorOnIcon"] boolValue]) : NO;
+	return globalSetting ? (![dct objectForKey:@"showIndicatorOnIcon"] ? YES : [dct[@"showIndicatorOnIcon"] boolValue]) : NO;
 }
 
 - (BOOL)shouldShowStatusBarIconForIdentifier:(NSString*)identifier {
 	NSDictionary *dct = [[%c(ZYSettings) sharedSettings] rawCompiledBackgrounderSettingsForIdentifier:identifier];
 	BOOL globalSetting = [[%c(ZYSettings) sharedSettings] shouldShowStatusBarIcons];
-	return globalSetting ? ([dct objectForKey:@"showStatusBarIcon"] == nil ? YES : [dct[@"showStatusBarIcon"] boolValue]) : NO;
+	return globalSetting ? (![dct objectForKey:@"showStatusBarIcon"] ? YES : [dct[@"showStatusBarIcon"] boolValue]) : NO;
 }
 
 @end

@@ -88,7 +88,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
         return;
     }
 
-    if (app == nil) {
+    if (!app) {
         return;
     }
     if (_isCurrentlyHosting) {
@@ -97,7 +97,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 
     isPreloading = YES;
 	  FBScene *scene = [app mainScene];
-    if (![app pid] || scene == nil) {
+    if (![app pid] || !scene) {
         [UIApplication.sharedApplication launchApplicationWithIdentifier:self.bundleIdentifier suspended:YES];
         [[%c(FBProcessManager) sharedInstance] createApplicationProcessForBundleID:self.bundleIdentifier]; // ummm...?
     }
@@ -237,7 +237,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 }
 
 - (void)verifyHostingAndRehostIfNecessary {
-    if (!isPreloading && _isCurrentlyHosting && (app.isRunning == NO || view.contextHosted == NO)) {
+    if (!isPreloading && _isCurrentlyHosting && (!app.isRunning || !view.contextHosted)) {
         //[activityView startAnimating];
         [self unloadApp];
         [self loadApp];
@@ -309,7 +309,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 
     disablePreload = YES;
 
-    if (_isCurrentlyHosting == NO) {
+    if (!_isCurrentlyHosting) {
         return;
     }
 

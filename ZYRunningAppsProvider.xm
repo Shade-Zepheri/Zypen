@@ -41,7 +41,7 @@
 - (void)addTarget:(__weak NSObject<ZYRunningAppsProviderDelegate>*)target {
 	[lock lock];
 
-	if ([targets containsObject:target] == NO) {
+	if (![targets containsObject:target]) {
 			[targets addObject:target];
 	}
 	[lock unlock];
@@ -69,7 +69,7 @@
 - (void)updateProcessState:(unsafe_id)arg1 {
 	%orig;
 
-	if (self.isRunning && [ZYRunningAppsProvider.sharedInstance.mutableRunningApplications containsObject:self] == NO) {
+	if (self.isRunning && ![ZYRunningAppsProvider.sharedInstance.mutableRunningApplications containsObject:self]) {
 		[ZYRunningAppsProvider.sharedInstance addRunningApp:self];
 	} else if (!self.isRunning && [ZYRunningAppsProvider.sharedInstance.mutableRunningApplications containsObject:self]) {
 		[ZYRunningAppsProvider.sharedInstance removeRunningApp:self];

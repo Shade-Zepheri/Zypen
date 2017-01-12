@@ -121,133 +121,132 @@ NSCache *backgrounderSettingsCache = [NSCache new];
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.shade.zypen/Respring"), nil, nil, YES);
 }
 
--(BOOL) enabled {
+- (BOOL)enabled {
 	return BOOL(@"enabled", YES);
 }
 
--(BOOL) reachabilityEnabled {
+- (BOOL)reachabilityEnabled {
 	return [self enabled] && BOOL(@"reachabilityEnabled", YES);
 }
 
--(BOOL) disableAutoDismiss {
+- (BOOL)disableAutoDismiss {
 	return BOOL(@"disableAutoDismiss", YES);
 }
 
--(BOOL) enableRotation {
+- (BOOL)enableRotation {
 	return BOOL(@"enableRotation", YES);
 }
 
--(BOOL) showNCInstead {
+- (BOOL)showNCInstead {
 	return BOOL(@"showNCInstead", NO);
 }
 
--(BOOL) homeButtonClosesReachability {
+- (BOOL)homeButtonClosesReachability {
 	return BOOL(@"homeButtonClosesReachability", YES);
 }
 
--(BOOL) showBottomGrabber {
+- (BOOL)showBottomGrabber {
 	return BOOL(@"showBottomGrabber", NO);
 }
 
--(BOOL) showWidgetSelector {
+- (BOOL)showWidgetSelector {
 	return BOOL(@"showAppSelector", YES);
 }
 
--(BOOL) scalingRotationMode {
+- (BOOL)scalingRotationMode {
 	return BOOL(@"rotationMode", NO);
 }
 
--(BOOL) autoSizeWidgetSelector {
+- (BOOL)autoSizeWidgetSelector {
 	return BOOL(@"autoSizeAppChooser", YES);
 }
 
--(BOOL) showAllAppsInWidgetSelector {
+- (BOOL)showAllAppsInWidgetSelector {
 	return BOOL(@"showAllAppsInAppChooser", YES);
 }
 
--(BOOL) showRecentAppsInWidgetSelector {
+- (BOOL)showRecentAppsInWidgetSelector {
 	return BOOL(@"showRecents", YES);
 }
 
--(BOOL) pagingEnabled {
+- (BOOL)pagingEnabled {
 	return BOOL(@"pagingEnabled", YES);
 }
 
--(BOOL) NCAppEnabled {
+- (BOOL)NCAppEnabled {
 	return [self enabled] && BOOL(@"ncAppEnabled", YES);
 }
 
--(BOOL) shouldShowStatusBarNativeIcons {
+- (BOOL)shouldShowStatusBarNativeIcons {
 	return BOOL(@"shouldShowStatusBarNativeIcons", NO);
 }
 
--(NSMutableArray*) favoriteApps {
+- (NSMutableArray*)favoriteApps {
 	NSMutableArray *favorites = [[NSMutableArray alloc] init];
-	for (NSString *key in _settings.allKeys)
-	{
-		if ([key hasPrefix:@"Favorites-"])
-		{
+	for (NSString *key in _settings.allKeys) {
+		if ([key hasPrefix:@"Favorites-"]) {
 			NSString *ident = [key substringFromIndex:10];
-			if ([_settings[key] boolValue])
+			if ([_settings[key] boolValue]) {
 				[favorites addObject:ident];
+			}
 		}
 	}
 	return favorites;
 }
 
--(BOOL) unifyStatusBar {
+- (BOOL)unifyStatusBar {
 	return BOOL(@"unifyStatusBar", YES);
 }
 
--(BOOL) flipTopAndBottom {
+- (BOOL)flipTopAndBottom {
 	return BOOL(@"flipTopAndBottom", NO);
 }
 
--(NSString*) NCApp {
+- (NSString*)NCApp {
 	return [_settings objectForKey:@"NCApp"] == nil ? @"com.apple.Preferences" : _settings[@"NCApp"];
 }
 
--(BOOL) alwaysEnableGestures {
+- (BOOL)alwaysEnableGestures {
 	return BOOL(@"alwaysEnableGestures", YES);
 }
 
--(BOOL) snapWindows {
+- (BOOL)snapWindows {
 	return BOOL(@"snapWindows", YES);
 }
 
--(BOOL) launchIntoWindows {
+- (BOOL)launchIntoWindows {
 	return BOOL(@"launchIntoWindows", NO);
 }
 
--(BOOL) openLinksInWindows {
+- (BOOL)openLinksInWindows {
 	return BOOL(@"openLinksInWindows", NO);
 }
 
--(BOOL) backgrounderEnabled {
+- (BOOL)backgrounderEnabled {
 	return [self enabled] && BOOL(@"backgrounderEnabled", YES);
 }
 
--(BOOL) shouldShowIconIndicatorsGlobally {
+- (BOOL)shouldShowIconIndicatorsGlobally {
 	return BOOL(@"showIconIndicators", YES);
 }
 
--(BOOL) showNativeStateIconIndicators {
+- (BOOL)showNativeStateIconIndicators {
 	return BOOL(@"showNativeStateIconIndicators", NO);
 }
 
--(BOOL) missionControlEnabled {
+- (BOOL)missionControlEnabled {
 	return [self enabled] && BOOL(@"missionControlEnabled", YES);
 }
 
--(BOOL) replaceAppSwitcherWithMC {
+- (BOOL)replaceAppSwitcherWithMC {
 	return BOOL(@"replaceAppSwitcherWithMC", NO);
 }
 
--(BOOL) missionControlKillApps {
+- (BOOL)missionControlKillApps {
 	return BOOL(@"mcKillApps", YES);
 }
 
--(BOOL) snapRotation {
+- (BOOL)snapRotation {
 	return BOOL(@"snapRotation", YES);
 }
 
@@ -255,15 +254,15 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	return [_settings objectForKey:@"globalBackgroundMode"] == nil ? ZYBackgroundModeNative : [_settings[@"globalBackgroundMode"] intValue];
 }
 
--(NSInteger) windowRotationLockMode {
+- (NSInteger)windowRotationLockMode {
 	return [_settings objectForKey:@"windowRotationLockMode"] == nil ? 0 : [_settings[@"windowRotationLockMode"] intValue];
 }
 
--(BOOL) shouldShowStatusBarIcons {
+- (BOOL)shouldShowStatusBarIcons {
 	return BOOL(@"shouldShowStatusBarIcons", YES);
 }
 
--(NSDictionary*) _createAndCacheBackgrounderSettingsForIdentifier:(NSString*)identifier {
+- (NSDictionary*)_createAndCacheBackgrounderSettingsForIdentifier:(NSString*)identifier {
 	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
 
 	ret[@"enabled"] = _settings[[NSString stringWithFormat:@"backgrounder-%@-enabled",identifier]] ?: @NO;
@@ -297,34 +296,34 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	return [backgrounderSettingsCache objectForKey:identifier] ?: [self _createAndCacheBackgrounderSettingsForIdentifier:identifier];
 }
 
--(BOOL) isFirstRun {
+- (BOOL)isFirstRun {
 	HBLogDebug(@"[ReachApp] %d", BOOL(@"isFirstRun", YES));
 	return BOOL(@"isFirstRun", YES);
 }
 
--(void) setFirstRun:(BOOL)value {
+- (void)setFirstRun:(BOOL)value {
 	CFPreferencesSetAppValue(CFSTR("isFirstRun"), value ? kCFBooleanTrue : kCFBooleanFalse, CFSTR("com.shade.zypen"));
 	CFPreferencesAppSynchronize(CFSTR("com.shade.zypen"));
 	[self reloadSettings];
 }
 
--(BOOL) alwaysShowSOGrabber {
+- (BOOL)alwaysShowSOGrabber {
 	return BOOL(@"alwaysShowSOGrabber", NO);
 }
 
--(BOOL) swipeOverEnabled {
+- (BOOL)swipeOverEnabled {
 	return [self enabled] && BOOL(@"swipeOverEnabled", YES);
 }
 
--(BOOL) windowedMultitaskingEnabled {
+- (BOOL)windowedMultitaskingEnabled {
 	return [self enabled] && BOOL(@"windowedMultitaskingEnabled", YES);
 }
 
--(BOOL) exitAppAfterUsingActivatorAction {
+- (BOOL)exitAppAfterUsingActivatorAction {
 	return BOOL(@"exitAppAfterUsingActivatorAction", YES);
 }
 
--(BOOL) windowedMultitaskingCompleteAnimations {
+- (BOOL)windowedMultitaskingCompleteAnimations {
 	return BOOL(@"windowedMultitaskingCompleteAnimations", NO);
 }
 
@@ -332,35 +331,35 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 	return _settings[@"currentThemeIdentifier"] ?: @"com.shade.zypen.themes.default";
 }
 
--(NSInteger) missionControlDesktopStyle {
+- (NSInteger)missionControlDesktopStyle {
 	return [_settings[@"missionControlDesktopStyle"] ?: @1 intValue];
 }
 
--(BOOL) missionControlPagingEnabled {
+- (BOOL)missionControlPagingEnabled {
 	return BOOL(@"missionControlPagingEnabled", NO);
 }
 
--(BOOL) showFavorites {
+- (BOOL)showFavorites {
 	return BOOL(@"showFavorites", YES);
 }
 
--(BOOL) onlyShowWindowBarIconsOnOverlay {
+- (BOOL)onlyShowWindowBarIconsOnOverlay {
 	return BOOL(@"onlyShowWindowBarIconsOnOverlay", NO);
 }
 
--(BOOL) quickAccessUseGenericTabLabel {
+- (BOOL)quickAccessUseGenericTabLabel {
 	return BOOL(@"quickAccessUseGenericTabLabel", NO);
 }
 
--(BOOL) ncAppHideOnLS {
+- (BOOL)ncAppHideOnLS {
 	return BOOL(@"ncAppHideOnLS", NO);
 }
 
--(BOOL) showSnapHelper {
+- (BOOL)showSnapHelper {
 	return BOOL(@"showSnapHelper", NO);
 }
 
-- (ZYGrabArea) windowedMultitaskingGrabArea {
+- (ZYGrabArea)windowedMultitaskingGrabArea {
 	return [_settings objectForKey:@"windowedMultitaskingGrabArea"] == nil ? ZYGrabAreaBottomLeftThird : (ZYGrabArea)[_settings[@"windowedMultitaskingGrabArea"] intValue];
 }
 

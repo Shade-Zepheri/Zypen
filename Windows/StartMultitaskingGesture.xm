@@ -113,7 +113,7 @@ BOOL locationIsInValidArea(CGFloat x) {
 
                         // Open in window
                         ZYWindowBar *windowBar = [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowForSBApplication:topApp animated:YES];
-                        if (ZYDesktopManager.sharedInstance.lastUsedWindow == nil) {
+                        if (!ZYDesktopManager.sharedInstance.lastUsedWindow) {
                           ZYDesktopManager.sharedInstance.lastUsedWindow = windowBar;
                         }
                     }];

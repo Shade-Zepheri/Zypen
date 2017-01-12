@@ -231,7 +231,7 @@ extern BOOL launchNextOpenIntoWindow;
 
 - (void)sendDataWithCurrentTries:(NSInteger)tries toAppWithBundleIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier];
-	if (!app.isRunning || [app mainScene] == nil) {
+	if (!app.isRunning || ![app mainScene]) {
 		if (tries > 4) {
 			[self alertUser:[NSString stringWithFormat:@"Unable to communicate with app that isn't running: %@ (%@)", app.displayName, identifier]];
 			if (callback) {
@@ -267,7 +267,7 @@ extern BOOL launchNextOpenIntoWindow;
 		});
 		asyncHandles[identifier] = [NSValue valueWithPointer:handle];
 
-		if ([waitingCompletions objectForKey:identifier] == nil) {
+		if (![waitingCompletions objectForKey:identifier]) {
 			//if (callback == nil)
 			//	callback = ^(BOOL _) { };
 			if (callback)

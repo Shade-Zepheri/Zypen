@@ -17,8 +17,8 @@ static Class $memorized$UITextEffectsWindow$class;
 
 %hook UIWindow
 - (void)setFrame:(CGRect)frame {
-    if ([self.class isEqual:$memorized$UITextEffectsWindow$class] == NO && [ZYMessagingClient.sharedInstance shouldResize]) {
-        if ([oldFrames objectForKey:@(self.hash)] == nil) {
+    if (![self.class isEqual:$memorized$UITextEffectsWindow$class] && [ZYMessagingClient.sharedInstance shouldResize]) {
+        if (![oldFrames objectForKey:@(self.hash)]) {
             [oldFrames setObject:[NSValue valueWithCGRect:frame] forKey:@(self.hash)];
         }
         frame.origin.x = ZYMessagingClient.sharedInstance.currentData.wantedClientOriginX == -1 ? 0 : ZYMessagingClient.sharedInstance.currentData.wantedClientOriginX;
@@ -108,7 +108,7 @@ static Class $memorized$UITextEffectsWindow$class;
 
 %new - (void)ZY_forceRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation isReverting:(BOOL)reverting {
     if (!reverting) {
-        if (setPreviousOrientation == NO) {
+        if (!setPreviousOrientation) {
             setPreviousOrientation = YES;
             prevousOrientation = UIApplication.sharedApplication.statusBarOrientation;
             if (wasStatusBarHidden == -1) {
@@ -163,14 +163,14 @@ static Class $memorized$UITextEffectsWindow$class;
     }
 
     if (size.width != -1) {
-        if ([oldFrames objectForKey:@"statusBar"] == nil) {
+        if (![oldFrames objectForKey:@"statusBar"]) {
             [oldFrames setObject:[NSValue valueWithCGRect:UIApplication.sharedApplication.statusBar.frame] forKey:@"statusBar"];
         }
         UIApplication.sharedApplication.statusBar.frame = CGRectMake(0, 0, size.width, UIApplication.sharedApplication.statusBar.frame.size.height);
     }
 
     for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
-        if ([oldFrames objectForKey:@(window.hash)] == nil) {
+        if (![oldFrames objectForKey:@(window.hash)]) {
             [oldFrames setObject:[NSValue valueWithCGRect:window.frame] forKey:@(window.hash)];
         }
         [UIView animateWithDuration:0.3 animations:^{

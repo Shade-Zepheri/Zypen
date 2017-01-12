@@ -56,9 +56,9 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 
 		if (
 			[self ZY_isIconIndicatorInhibited] ||
-			(text == nil || text.length == 0) || // OR info == ZYIconIndicatorViewInfoNone
-			(self.icon == nil || self.icon.application == nil || self.icon.application.isRunning == NO || ![ZYBackgrounder.sharedInstance shouldShowIndicatorForIdentifier:self.icon.application.bundleIdentifier]) ||
-			[[%c(ZYSettings) sharedSettings] backgrounderEnabled] == NO) {
+			(!text || text.length == 0) || // OR info == ZYIconIndicatorViewInfoNone
+			(!self.icon || !self.icon.application || !self.icon.application.isRunning || ![ZYBackgrounder.sharedInstance shouldShowIndicatorForIdentifier:self.icon.application.bundleIdentifier]) ||
+			![[%c(ZYSettings) sharedSettings] backgrounderEnabled]) {
 			[[self viewWithTag:9962] removeFromSuperview];
 			return;
 		}
@@ -146,7 +146,7 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 
 %new - (void)ZY_setIsIconIndicatorInhibited:(BOOL)value showAgainImmediately:(BOOL)value2 {
     objc_setAssociatedObject(self, @selector(ZY_isIconIndicatorInhibited), value ? (id)kCFBooleanTrue : (id)kCFBooleanFalse, OBJC_ASSOCIATION_ASSIGN);
-    if (value2 || value == YES) {
+    if (value2 || value) {
 			[self ZY_updateIndicatorViewWithExistingInfo];
 		}
 }
@@ -190,14 +190,14 @@ NSMutableDictionary *lsbitems = [[[NSMutableDictionary alloc] init] retain];
 %hook SBApplication
 
 %new - (void)ZY_addStatusBarIconForSelfIfOneDoesNotExist {
-	if (objc_getClass("LSStatusBarItem") && [lsbitems objectForKey:self.bundleIdentifier] == nil && [ZYBackgrounder.sharedInstance shouldShowStatusBarIconForIdentifier:self.bundleIdentifier]) {
+	if (objc_getClass("LSStatusBarItem") && ![lsbitems objectForKey:self.bundleIdentifier] && [ZYBackgrounder.sharedInstance shouldShowStatusBarIconForIdentifier:self.bundleIdentifier]) {
 		if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
 			if ([[[[%c(SBIconViewMap) homescreenMap] iconModel] visibleIconIdentifiers] containsObject:self.bundleIdentifier]) {
 				ZYIconIndicatorViewInfo info = [ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier];
 				BOOL native = (info & ZYIconIndicatorViewInfoNative);
-				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedSettings] shouldShowStatusBarNativeIcons])) {
+				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (!native || [[%c(ZYSettings) sharedSettings] shouldShowStatusBarNativeIcons])) {
 		    	LSStatusBarItem *item = [[%c(LSStatusBarItem) alloc] initWithIdentifier:[NSString stringWithFormat:@"multiplexer-%@",self.bundleIdentifier] alignment:StatusBarAlignmentLeft];
-		    	if ([item customViewClass] == nil) {
+		    	if (![item customViewClass]) {
 						item.customViewClass = @"ZYAppIconStatusBarIconView";
 					}
 	        item.imageName = [NSString stringWithFormat:@"multiplexer-%@",self.bundleIdentifier];
@@ -208,9 +208,9 @@ NSMutableDictionary *lsbitems = [[[NSMutableDictionary alloc] init] retain];
 			if ([[[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] visibleIconIdentifiers] containsObject:self.bundleIdentifier]) {
 				ZYIconIndicatorViewInfo info = [ZYBackgrounder.sharedInstance allAggregatedIndicatorInfoForIdentifier:self.bundleIdentifier];
 				BOOL native = (info & ZYIconIndicatorViewInfoNative);
-				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (native == NO || [[%c(ZYSettings) sharedSettings] shouldShowStatusBarNativeIcons])) {
+				if ((info & ZYIconIndicatorViewInfoNone) == 0 && (!native || [[%c(ZYSettings) sharedSettings] shouldShowStatusBarNativeIcons])) {
 			    	LSStatusBarItem *item = [[%c(LSStatusBarItem) alloc] initWithIdentifier:[NSString stringWithFormat:@"zypen-%@",self.bundleIdentifier] alignment:StatusBarAlignmentLeft];
-			    	if ([item customViewClass] == nil) {
+			    	if (![item customViewClass]) {
 							item.customViewClass = @"ZYAppIconStatusBarIconView";
 						}
 		        item.imageName = [NSString stringWithFormat:@"zypen-%@",self.bundleIdentifier];
@@ -224,7 +224,7 @@ NSMutableDictionary *lsbitems = [[[NSMutableDictionary alloc] init] retain];
 - (void)setApplicationState:(NSUInteger)arg1 {
     %orig;
 
-    if (self.isRunning == NO) {
+    if (!self.isRunning) {
     	[ZYBackgrounder.sharedInstance updateIconIndicatorForIdentifier:self.bundleIdentifier withInfo:ZYIconIndicatorViewInfoNone];
     	//SET_INFO_(self.bundleIdentifier, ZYIconIndicatorViewInfoNone);
     	[lsbitems removeObjectForKey:self.bundleIdentifier];

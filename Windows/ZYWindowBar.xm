@@ -378,7 +378,7 @@ extern BOOL allowOpenApp;
 	CGFloat rotation = atan2(self.transform.b, self.transform.a);
 
 	CGAffineTransform transform = CGAffineTransformMakeScale(scale, scale);
-	if (derotate == NO) {
+	if (!derotate) {
 		transform = CGAffineTransformRotate(transform, rotation);
 	}
 
@@ -467,7 +467,7 @@ extern BOOL allowOpenApp;
 }
 
 - (void)handleRotate:(UIRotationGestureRecognizer *)gesture {
-	if ([ZYSettings.sharedSettings alwaysEnableGestures] == NO && self.isOverlayShowing == NO) {
+	if (![ZYSettings.sharedSettings alwaysEnableGestures] && !self.isOverlayShowing) {
 		return;
 	}
 
@@ -580,7 +580,7 @@ extern BOOL allowOpenApp;
 }
 
 - (void)handlePinch:(UIPinchGestureRecognizer *)gesture {
-	if ([ZYSettings.sharedSettings alwaysEnableGestures] == NO && self.isOverlayShowing == NO) {
+	if (![ZYSettings.sharedSettings alwaysEnableGestures] && !self.isOverlayShowing) {
 		return;
 	}
 
@@ -622,7 +622,7 @@ extern BOOL allowOpenApp;
 
 	[super setTransform:trans];
 
-	if (isBeingTouched == NO) {
+	if (!isBeingTouched) {
 		if ([ZYWindowSnapDataProvider shouldSnapWindow:self]) {
 			[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES];
 		}

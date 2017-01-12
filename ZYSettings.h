@@ -68,7 +68,7 @@ typedef NS_ENUM(NSInteger, ZYGrabArea) {
 - (BOOL)windowedMultitaskingEnabled;
 - (NSInteger)windowRotationLockMode;
 - (ZYGrabArea)windowedMultitaskingGrabArea;
-- (ZYGrabArea) wipeOverGrabArea;
+- (ZYGrabArea)swipeOverGrabArea;
 - (BOOL)onlyShowWindowBarIconsOnOverlay;
 
 - (NSString*)currentThemeIdentifier;

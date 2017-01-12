@@ -64,7 +64,7 @@ extern BOOL allowClosingReachabilityNatively;
 }
 
 - (void)_requestUpdateFromServerWithTries:(NSInteger)tries {
-	if (allowedProcess == NO) {
+	if (!allowedProcess) {
 		return;
 	}
 
@@ -96,19 +96,19 @@ extern BOOL allowClosingReachabilityNatively;
 	/* THE REAL IMPORTANT BIT */
 	_currentData = data;
 
-	if (didStatusBarVisibilityChange && data.shouldForceStatusBar == NO){
+	if (didStatusBarVisibilityChange && !data.shouldForceStatusBar){
 		[UIApplication.sharedApplication ZY_forceStatusBarVisibility:_currentData.statusBarVisibility orRevert:YES];
 	} else if (data.shouldForceStatusBar) {
 		[UIApplication.sharedApplication ZY_forceStatusBarVisibility:_currentData.statusBarVisibility orRevert:NO];
 	}
 
-	if (didSizingChange && data.shouldForceSize == NO) {
+	if (didSizingChange && !data.shouldForceSize) {
 		[UIApplication.sharedApplication ZY_updateWindowsForSizeChange:CGSizeMake(data.wantedClientWidth, data.wantedClientHeight) isReverting:YES];
 	} else if (data.shouldForceSize) {
 		[UIApplication.sharedApplication ZY_updateWindowsForSizeChange:CGSizeMake(data.wantedClientWidth, data.wantedClientHeight) isReverting:NO];
 	}
 
-	if (didOrientationChange && data.shouldForceOrientation == NO) {
+	if (didOrientationChange && !data.shouldForceOrientation) {
 		[UIApplication.sharedApplication ZY_forceRotationToInterfaceOrientation:data.forcedOrientation isReverting:YES];
 	} else if (data.shouldForceOrientation) {
 		[UIApplication.sharedApplication ZY_forceRotationToInterfaceOrientation:data.forcedOrientation isReverting:NO];
@@ -148,7 +148,7 @@ extern BOOL allowClosingReachabilityNatively;
 	if (!ident) {
 		return;
 	}
-	if ([self isBeingHosted] && (self.knownFrontmostApp == nil || [self.knownFrontmostApp isEqual:ident] == NO)) {
+	if ([self isBeingHosted] && (!self.knownFrontmostApp || ![self.knownFrontmostApp isEqual:ident])) {
 		[serverCenter sendMessageName:ZYMessagingChangeFrontMostAppMessageName userInfo:@{ @"bundleIdentifier": ident }];
 	}
 }

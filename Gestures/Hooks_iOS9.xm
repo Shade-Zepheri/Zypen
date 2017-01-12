@@ -121,7 +121,7 @@ void touch_event(void *target, void *refcon, IOHIDServiceRef service, IOHIDEvent
 
             //HBLogDebug(@"[ReachApp] (%f, %d) %@ -> %@", density, isTracking, NSStringFromCGPoint(location), NSStringFromCGPoint(rotatedLocation));
 
-            if (isTracking == NO) {
+            if (!isTracking) {
                 for (_UIScreenEdgePanRecognizer *recognizer in gestureRecognizers) {
                   [recognizer incorporateTouchSampleAtLocation:location timestamp:CACurrentMediaTime() modifier:1 interfaceOrientation:interfaceOrientation forceState:0];
                 }

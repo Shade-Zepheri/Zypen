@@ -212,12 +212,12 @@ id SBWorkspace$sharedInstance;
                     FBSMutableSceneSettings *settings = [[scene mutableSettings] mutableCopy];
                     SET_BACKGROUNDED(settings, YES);
                     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
-                    //Dont Understand Purpose? MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
+                    //MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
                     MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
 
                     SBApplication *currentApp = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:currentBundleIdentifier];
                     if ([currentApp mainScene]) {
-                        //Dont Understand Purpose?  MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
+                        //MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
                         MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
                     }
 
@@ -409,8 +409,9 @@ id SBWorkspace$sharedInstance;
 
     if ([ZYSettings.sharedSettings autoSizeWidgetSelector]) {
         CGFloat moddedHeight = widgetSelectorView.frame.size.height;
-        if (old_grabberCenterY == -1)
-            old_grabberCenterY = UIScreen.mainScreen.bounds.size.height * 0.3;
+        if (old_grabberCenterY == -1) {
+          old_grabberCenterY = UIScreen.mainScreen.bounds.size.height * 0.3;
+        }
         old_grabberCenterY = grabberCenter_Y;
         grabberCenter_Y = moddedHeight;
     }
@@ -673,9 +674,10 @@ CGFloat startingY = -1;
         [w addSubview:view];
     }
 
-    if ([ZYSettings.sharedInstance enableRotation] && ![ZYSettings.sharedInstance scalingRotationMode]) {
+    if ([ZYSettings.sharedSettings enableRotation] && ![ZYSettings.sharedSettings scalingRotationMode]) {
         [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
     } else if ([ZYSettings.sharedSettings scalingRotationMode] && [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+        HBLogDebug(@"Ran Method");
         overrideDisableForStatusBar = YES;
         // Force portrait
         [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:UIInterfaceOrientationPortrait completion:nil];
