@@ -2,6 +2,7 @@
 #import "ZYSettings.h"
 #import "Zypen.h"
 
+
 NSString *FriendlyNameForBackgroundMode(ZYBackgroundMode mode) {
 	switch (mode) {
 		case ZYBackgroundModeNative:

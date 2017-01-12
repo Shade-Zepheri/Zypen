@@ -47,4 +47,5 @@ ZYUnlimitedBackgroundingAppWatcher *sharedInstance$ZYUnlimitedBackgroundingAppWa
         [processAssertions removeObjectForKey:app.bundleIdentifier];
     }
 }
+
 @end

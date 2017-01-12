@@ -36,7 +36,6 @@
         if ([ZYBackgrounder.sharedInstance shouldSuspendImmediately:identifier]) {
             if ((arg3 >= kProcessAssertionReasonAudio && arg3 <= kProcessAssertionReasonVOiP)) {
                 //HBLogDebug(@"[ReachApp] blocking BKSProcessAssertion");
-
                 //if (arg5)
                 //{
                     //void (^arg5fix)() = arg5;

@@ -11,7 +11,6 @@ NSMutableDictionary *indicatorStateDict = [[[NSMutableDictionary alloc] init] re
 #define SET_INFO(y)        if (self.icon && self.icon.application) SET_INFO_(self.icon.application.bundleIdentifier, y);
 #define GET_INFO           (self.icon && self.icon.application ? GET_INFO_(self.icon.application.bundleIdentifier) : ZYIconIndicatorViewInfoNone)
 
-
 NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 	NSString *ret = @"";
 

@@ -52,4 +52,5 @@ NSString *FriendlyNameForBackgroundMode(ZYBackgroundMode mode);
 - (void)updateIconIndicatorForIdentifier:(NSString*)identifier withInfo:(ZYIconIndicatorViewInfo)info;
 - (BOOL)shouldShowIndicatorForIdentifier:(NSString*)identifier;
 - (BOOL)shouldShowStatusBarIconForIdentifier:(NSString*)identifier;
+
 @end
