@@ -5,6 +5,7 @@
 
 @implementation ZYKeyboardWindow
 - (void)setupForKeyboardAndShow:(NSString*)identifier {
+	HBLogDebug(@"Setting Up Keyboard");
 	self.userInteractionEnabled = YES;
 	self.backgroundColor = UIColor.clearColor;
 

@@ -21,6 +21,7 @@
     _identifier = identifier;
 
     NSUInteger value = [ZYMessagingServer.sharedInstance getStoredKeyboardContextIdForApp:identifier];
+    HBLogDebug(@"Got stored ContextID %tu", value);
     self.layerHost.contextId = value;
 
     HBLogDebug(@"[ReachApp] loaded keyboard view with %tu", value);

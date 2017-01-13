@@ -10,17 +10,7 @@
 }
 
 - (UIImage*)snapshotForIdentifier:(NSString*)identifier orientation:(UIInterfaceOrientation)orientation {
-	/*if (![NSThread isMainThread])
-	{
-		__block id result = nil;
-		NSOperationQueue* targetQueue = [NSOperationQueue mainQueue];
-		[targetQueue addOperationWithBlock:^{
-		    result = [self snapshotForIdentifier:identifier orientation:orientation];
-		}];
-		[targetQueue waitUntilAllOperationsAreFinished];
-		return result;
-	}*/
-
+	HBLogDebug(@"Did this even run?");
 	@autoreleasepool {
 
 		if ([imageCache objectForKey:identifier]) {
@@ -46,6 +36,7 @@
 				[view performSelectorOnMainThread:@selector(_loadSnapshotSync) withObject:nil waitUntilDone:YES];
 				image = MSHookIvar<UIImageView*>(view, "_snapshotImageView").image;
 			} else {
+				HBLogDebug(@"Ran this method");
 				_SBAppSwitcherSnapshotContext *snapshotContext = MSHookIvar<_SBAppSwitcherSnapshotContext*>(view, "_snapshotContext");
 				SBSwitcherSnapshotImageView *snapshotImageView = snapshotContext.snapshotImageView;
 				image = snapshotImageView.image;
