@@ -2,7 +2,6 @@
 #import "ZYSettings.h"
 #import "Zypen.h"
 
-
 NSString *FriendlyNameForBackgroundMode(ZYBackgroundMode mode) {
 	switch (mode) {
 		case ZYBackgroundModeNative:
@@ -161,21 +160,21 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 - (ZYIconIndicatorViewInfo)allAggregatedIndicatorInfoForIdentifier:(NSString*)identifier {
 	NSInteger info = ZYIconIndicatorViewInfoNone;
 
-	if ([self backgroundModeForIdentifier:identifier] == ZYBackgroundModeNative)
+	if ([self backgroundModeForIdentifier:identifier] == ZYBackgroundModeNative) {
 		info |= ZYIconIndicatorViewInfoNative;
-	else if ([self backgroundModeForIdentifier:identifier] == ZYBackgroundModeForcedForeground)
+	}	else if ([self backgroundModeForIdentifier:identifier] == ZYBackgroundModeForcedForeground) {
 		info |= ZYIconIndicatorViewInfoForced;
-	else if ([self shouldSuspendImmediately:identifier])
+	}	else if ([self shouldSuspendImmediately:identifier]) {
 		info |= ZYIconIndicatorViewInfoSuspendImmediately;
-	else if ([self hasUnlimitedBackgroundTime:identifier])
+	}	else if ([self hasUnlimitedBackgroundTime:identifier]) {
 		info |= ZYIconIndicatorViewInfoUnlimitedBackgroundTime;
-
-	if ([self killProcessOnExit:identifier])
+	}
+	if ([self killProcessOnExit:identifier]) {
 		info |= ZYIconIndicatorViewInfoForceDeath;
-
-	if ([self preventKillingOfIdentifier:identifier])
+	}
+	if ([self preventKillingOfIdentifier:identifier]) {
 		info |= ZYIconIndicatorViewInfoUnkillable;
-
+	}
 	return (ZYIconIndicatorViewInfo)info;
 }
 

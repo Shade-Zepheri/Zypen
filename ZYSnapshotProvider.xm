@@ -42,8 +42,14 @@
 		});
 
 		if (view) {
-			[view performSelectorOnMainThread:@selector(_loadSnapshotSync) withObject:nil waitUntilDone:YES];
-			image = MSHookIvar<UIImageView*>(view, "_snapshotImageView").image;
+			if ([view respondsToSelector:@selector(_loadSnapshotSync)]) {
+				[view performSelectorOnMainThread:@selector(_loadSnapshotSync) withObject:nil waitUntilDone:YES];
+				image = MSHookIvar<UIImageView*>(view, "_snapshotImageView").image;
+			} else {
+				_SBAppSwitcherSnapshotContext *snapshotContext = MSHookIvar<_SBAppSwitcherSnapshotContext*>(view, "_snapshotContext");
+				SBSwitcherSnapshotImageView *snapshotImageView = snapshotContext.snapshotImageView;
+				image = snapshotImageView.image;
+			}
 		}
 
 		if (!image) {

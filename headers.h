@@ -1169,3 +1169,18 @@ typedef NS_ENUM(NSUInteger, ProcessAssertionFlags) {
 - (void)dealloc;
 - (id)init;
 @end
+
+@interface SBSwitcherSnapshotImageView : UIView
+@property (nonatomic,readonly) UIImage * image;
+- (UIImage *)image;
+@end
+
+@interface _SBAppSwitcherSnapshotContext : NSObject {
+	SBSwitcherSnapshotImageView* _snapshotImageView;
+}
+@property (nonatomic,retain) SBSwitcherSnapshotImageView * snapshotImageView;              //@synthesize snapshotImageView=_snapshotImageView - In the implementation block
+- (SBSwitcherSnapshotImageView *)snapshotImageView;
+- (void)setSnapshotImageView:(SBSwitcherSnapshotImageView *)arg1 ;
+- (CGRect)snapshotReferenceFrame;
+- (void)setSnapshotReferenceFrame:(CGRect)arg1 ;
+@end

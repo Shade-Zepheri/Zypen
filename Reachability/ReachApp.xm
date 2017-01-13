@@ -674,6 +674,7 @@ CGFloat startingY = -1;
     }
 
     [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
+
     draggerView.hidden = NO;
     overrideDisableForStatusBar = NO;
 }
