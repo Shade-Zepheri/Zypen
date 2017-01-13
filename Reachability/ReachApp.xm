@@ -213,12 +213,11 @@ id SBWorkspace$sharedInstance;
                     SET_BACKGROUNDED(settings, YES);
                     [scene _applyMutableSettings:settings withTransitionContext:nil completion:nil];
                     //MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
-                    MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
-
+                    //MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
                     SBApplication *currentApp = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:currentBundleIdentifier];
                     if ([currentApp mainScene]) {
                         //MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").frame = pre_topAppFrame;
-                        MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
+                        //MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").transform = pre_topAppTransform;
                     }
 
                     FBWindowContextHostManager *contextHostManager = [scene contextHostManager];
@@ -674,35 +673,7 @@ CGFloat startingY = -1;
         [w addSubview:view];
     }
 
-    if ([ZYSettings.sharedSettings enableRotation] && ![ZYSettings.sharedSettings scalingRotationMode]) {
-        [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
-    } else if ([ZYSettings.sharedSettings scalingRotationMode] && [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
-        HBLogDebug(@"Ran Method");
-        overrideDisableForStatusBar = YES;
-        // Force portrait
-        [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:UIInterfaceOrientationPortrait completion:nil];
-        [ZYMessagingServer.sharedInstance rotateApp:currentBundleIdentifier toOrientation:UIInterfaceOrientationPortrait completion:nil];
-        // Scale app
-        CGFloat scale = view.frame.size.width / UIScreen.mainScreen._referenceBounds.size.height;
-        pre_topAppTransform = MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform;
-        MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scale, scale), CGAffineTransformMakeRotation(M_PI_2));
-        pre_topAppFrame = MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame;
-        MSHookIvar<FBWindowContextHostView*>([app mainScene].contextHostManager, "_hostView").frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.height);
-        SBWindow *window = MSHookIvar<SBWindow*>(self,"_reachabilityEffectWindow");
-        window.frame = (CGRect) { window.frame.origin, { window.frame.size.width, view.frame.size.width } };
-        window = MSHookIvar<SBWindow*>(self,"_reachabilityWindow");
-        window.frame = (CGRect) { { window.frame.origin.x, view.frame.size.width }, { window.frame.size.width, view.frame.size.width } };
-
-        SBApplication *currentApp = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:currentBundleIdentifier];
-        if ([currentApp mainScene]) {
-            MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scale, scale), CGAffineTransformMakeRotation(M_PI_2));
-            MSHookIvar<FBWindowContextHostView*>([currentApp mainScene].contextHostManager, "_hostView").frame = CGRectMake(0, 0, window.frame.size.width, window.frame.size.height);
-        }
-        // Gotta for the animations to finish... ;_;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            overrideDisableForStatusBar = NO;
-        });
-    }
+    [ZYMessagingServer.sharedInstance rotateApp:lastBundleIdentifier toOrientation:[UIApplication sharedApplication].statusBarOrientation completion:nil];
     draggerView.hidden = NO;
     overrideDisableForStatusBar = NO;
 }

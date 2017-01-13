@@ -60,20 +60,6 @@
 				<key>PostNotification</key>
 				<string>com.shade.zypen/ReloadPrefs</string>
 				<key>key</key>
-				<string>enableRotation</string>
-				<key>label</key>
-				<string>Enable Rotation</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSSwitchCell</string>
-				<key>default</key>
-				<true/>
-				<key>defaults</key>
-				<string>com.shade.zypen</string>
-				<key>PostNotification</key>
-				<string>com.shade.zypen/ReloadPrefs</string>
-				<key>key</key>
 				<string>homeButtonClosesReachability</string>
 				<key>label</key>
 				<string>Home Button Closes Reachability</string>
@@ -117,26 +103,6 @@
 				<string>Options</string>
 				<key>detail</key>
 				<string>ZYPAppChooserOptionsListController</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSGroupCell</string>
-				<key>label</key>
-				<string>Experimental Feature(s). DO NOT EXPECT THESE TO WORK</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSSwitchCell</string>
-				<key>default</key>
-				<false/>
-				<key>defaults</key>
-				<string>com.shade.zypen</string>
-				<key>PostNotification</key>
-				<string>com.shade.zypen/ReloadPrefs</string>
-				<key>key</key>
-				<string>rotationMode</string>
-				<key>label</key>
-				<string>Use Scaling Rotation Mode</string>
 			</dict>
 		</array>
 		<key>title</key>
