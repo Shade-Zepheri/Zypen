@@ -248,29 +248,29 @@
 	UIInterfaceOrientation base = [self currentOrientation];
 
 	switch (base) {
-		case UIInterfaceOrientationLandscapeLeft:
-	    	if (currentRotation >= 315 || currentRotation <= 45) {
-					return UIInterfaceOrientationLandscapeLeft;
-				} else if (currentRotation > 45 && currentRotation <= 135) {
-					return UIInterfaceOrientationPortraitUpsideDown;
-				} else if (currentRotation > 135 && currentRotation <= 215) {
-					return UIInterfaceOrientationLandscapeRight;
-				} else {
-					return UIInterfaceOrientationPortrait;
-				}
-
-		case UIInterfaceOrientationLandscapeRight:
-	    	if (currentRotation >= 315 || currentRotation <= 45) {
-					return UIInterfaceOrientationLandscapeRight;
-				} else if (currentRotation > 45 && currentRotation <= 135) {
-					return UIInterfaceOrientationPortrait;
-				} else if (currentRotation > 135 && currentRotation <= 215) {
-					return UIInterfaceOrientationLandscapeLeft;
-				} else {
-					return UIInterfaceOrientationPortraitUpsideDown;
-				}
-
-		case UIInterfaceOrientationPortraitUpsideDown:
+		case UIInterfaceOrientationLandscapeLeft: {
+			if (currentRotation >= 315 || currentRotation <= 45) {
+				return UIInterfaceOrientationLandscapeLeft;
+			} else if (currentRotation > 45 && currentRotation <= 135) {
+				return UIInterfaceOrientationPortraitUpsideDown;
+			} else if (currentRotation > 135 && currentRotation <= 215) {
+				return UIInterfaceOrientationLandscapeRight;
+			} else {
+				return UIInterfaceOrientationPortrait;
+			}
+		}
+		case UIInterfaceOrientationLandscapeRight: {
+			if (currentRotation >= 315 || currentRotation <= 45) {
+				return UIInterfaceOrientationLandscapeRight;
+			} else if (currentRotation > 45 && currentRotation <= 135) {
+				return UIInterfaceOrientationPortrait;
+			} else if (currentRotation > 135 && currentRotation <= 215) {
+				return UIInterfaceOrientationLandscapeLeft;
+			} else {
+				return UIInterfaceOrientationPortraitUpsideDown;
+			}
+		}
+		case UIInterfaceOrientationPortraitUpsideDown: {
 			if (currentRotation >= 315 || currentRotation <= 45) {
 				return UIInterfaceOrientationPortraitUpsideDown;
 			} else if (currentRotation > 45 && currentRotation <= 135) {
@@ -280,7 +280,7 @@
 			} else {
 				return UIInterfaceOrientationLandscapeLeft;
 			}
-
+		}
 		case UIInterfaceOrientationPortrait:
 		default:
 			break;

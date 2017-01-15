@@ -2,8 +2,8 @@
 
 @interface ZYKeyboardStateListener : NSObject
 + (instancetype)sharedInstance;
-@property (nonatomic, readonly) BOOL visible;
-@property (nonatomic, readonly) CGSize size;
+@property (nonatomic, assign, readonly) BOOL visible;
+@property (nonatomic, assign, readonly) CGSize size;
 
 
 - (void)_setVisible:(BOOL)val;

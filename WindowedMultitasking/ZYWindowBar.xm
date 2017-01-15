@@ -585,31 +585,32 @@ extern BOOL allowOpenApp;
 	}
 
     switch (gesture.state) {
-        case UIGestureRecognizerStateBegan:
-        	enableDrag = NO; enableLongPress = NO;
-            break;
-        case UIGestureRecognizerStateChanged:
-            [self setTransform:CGAffineTransformScale(self.transform, gesture.scale, gesture.scale)];
-            //self.bounds = (CGRect){ self.bounds.origin, {self.bounds.size.width * gesture.scale, self.bounds.size.height * gesture.scale} };
-
-            gesture.scale = 1.0;
-            break;
-        case UIGestureRecognizerStateEnded:
-        	enableDrag = YES; enableLongPress = YES;
-
-			if ([ZYWindowSnapDataProvider shouldSnapWindow:self]) {
-				[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES];
-				isSnapped = YES;
-				// Force tap to fail
-				tapGesture.enabled = NO;
-				tapGesture.enabled = YES;
-				return;
+	    case UIGestureRecognizerStateBegan: {
+				enableDrag = NO; enableLongPress = NO;
+				break;
 			}
-			[self saveWindowInfo];
+	    case UIGestureRecognizerStateChanged: {
+				[self setTransform:CGAffineTransformScale(self.transform, gesture.scale, gesture.scale)];
+				//self.bounds = (CGRect){ self.bounds.origin, {self.bounds.size.width * gesture.scale, self.bounds.size.height * gesture.scale} };
+				gesture.scale = 1.0;
+				break;
+			}
+	    case UIGestureRecognizerStateEnded: {
+				enableDrag = YES; enableLongPress = YES;
 
-            break;
-        default:
-            break;
+				if ([ZYWindowSnapDataProvider shouldSnapWindow:self]) {
+					[ZYWindowSnapDataProvider snapWindow:self toLocation:[ZYWindowSnapDataProvider snapLocationForWindow:self] animated:YES];
+					isSnapped = YES;
+					// Force tap to fail
+					tapGesture.enabled = NO;
+					tapGesture.enabled = YES;
+					return;
+				}
+				[self saveWindowInfo];
+				break;
+			}
+	    default:
+	        break;
     }
 }
 

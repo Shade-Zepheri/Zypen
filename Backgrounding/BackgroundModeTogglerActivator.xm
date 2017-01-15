@@ -26,7 +26,7 @@ static ZYActivatorBackgrounderToggleModeListener *sharedInstance$ZYActivatorBack
     if (!app) {
       return;
     }
-    
+
     BOOL dismissApp = [[%c(ZYSettings) sharedSettings] exitAppAfterUsingActivatorAction];
 
     if (buttonIndex == [alertView cancelButtonIndex]) {

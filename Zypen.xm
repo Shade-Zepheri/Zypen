@@ -19,10 +19,10 @@
 }
 
 - (NSString*)currentVersion {
-  return @"0.7";
+  return @"0.7.2";
 }
 - (BOOL)isOnSupportedOS {
-  return SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"10.1.1");
+  return SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"10.2");
 }
 
 - (void)registerExtension:(NSString*)name forZypenVersion:(NSString*)version {

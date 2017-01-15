@@ -111,41 +111,46 @@ try_bottom:
 	BOOL adjustStatusBar = NO;
 
 	switch (location) {
-		case ZYWindowSnapLocationLeftTop:
+		case ZYWindowSnapLocationLeftTop: {
 			newCenter = CGPointMake(frame.size.width / 2, (frame.size.height / 2) + 20);
 			adjustStatusBar = YES;
 			break;
-		case ZYWindowSnapLocationLeftMiddle:
+		}
+		case ZYWindowSnapLocationLeftMiddle: {
 			newCenter.x = frame.size.width / 2;
 			break;
-		case ZYWindowSnapLocationLeftBottom:
+		}
+		case ZYWindowSnapLocationLeftBottom: {
 			newCenter = CGPointMake(frame.size.width / 2, height - (frame.size.height / 2));
 			break;
-
-		case ZYWindowSnapLocationRightTop:
+		}
+		case ZYWindowSnapLocationRightTop: {
 			newCenter = CGPointMake(width - (frame.size.width / 2), (frame.size.height / 2) + 20);
 			adjustStatusBar = YES;
 			break;
-		case ZYWindowSnapLocationRightMiddle:
+		}
+		case ZYWindowSnapLocationRightMiddle: {
 			newCenter.x = width - (frame.size.width / 2);
 			break;
-		case ZYWindowSnapLocationRightBottom:
+		}
+		case ZYWindowSnapLocationRightBottom: {
 			newCenter = CGPointMake(width - (frame.size.width / 2), height - (frame.size.height / 2));
 			break;
-
-		case ZYWindowSnapLocationTop:
+		}
+		case ZYWindowSnapLocationTop: {
 			newCenter.y = (frame.size.height / 2) + 20;
 			adjustStatusBar = YES;
 			break;
-		case ZYWindowSnapLocationBottom:
+		}
+		case ZYWindowSnapLocationBottom: {
 			newCenter.y = height - (frame.size.height / 2);
 			break;
-
-		case ZYWindowSnapLocationBottomCenter:
+		}
+		case ZYWindowSnapLocationBottomCenter: {
 			newCenter.x = width / 2.0;
 			newCenter.y = height - (frame.size.height / 2);
 			break;
-
+		}
 		case ZYWindowSnapLocationInvalid:
 		default:
 			break;

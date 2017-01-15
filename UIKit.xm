@@ -179,7 +179,7 @@ static Class $memorized$UITextEffectsWindow$class;
     }
 }
 
-// Hmm VPN bug should be around here
+// Its gotta be here
 - (BOOL)isNetworkActivityIndicatorVisible {
     if ([ZYMessagingClient.sharedInstance isBeingHosted]) {
         return [objc_getAssociatedObject(self, @selector(ZY_networkActivity)) boolValue];

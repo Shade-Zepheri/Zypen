@@ -13,9 +13,10 @@ BOOL locationIsInValidArea(CGFloat x) {
       return YES; // more than likely, UIGestureRecognizerStateEnded
     }
     switch ([ZYSettings.sharedSettings windowedMultitaskingGrabArea]) {
-        case ZYGrabAreaBottomLeftThird:
-        HBLogDebug(@"[ReachApp] StartMultitaskingGesture: %f %f", x, UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width);
+        case ZYGrabAreaBottomLeftThird: {
+            HBLogDebug(@"[ReachApp] StartMultitaskingGesture: %f %f", x, UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width);
             return x <= UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width / 3.0;
+        }
         case ZYGrabAreaBottomMiddleThird:
             return x >= UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width / 3.0 && x <= (UIScreen.mainScreen.ZY_interfaceOrientedBounds.size.width / 3.0) * 2;
         case ZYGrabAreaBottomRightThird:
