@@ -93,7 +93,7 @@ NSCache *backgrounderSettingsCache = [NSCache new];
 			HBLogDebug(@"[ReachApp] could not load settings from CFPreferences or NSDictionary");
 		}
 
-		if ([self shouldShowStatusBarIcons] == NO && [objc_getClass("SBApplication") respondsToSelector:@selector(ZY_clearAllStatusBarIcons)])
+		if (![self shouldShowStatusBarIcons] && [objc_getClass("SBApplication") respondsToSelector:@selector(ZY_clearAllStatusBarIcons)])
 			[objc_getClass("SBApplication") performSelector:@selector(ZY_clearAllStatusBarIcons)];
 
 		[ZYThemeManager.sharedInstance invalidateCurrentThemeAndReload:[self currentThemeIdentifier]];

@@ -194,7 +194,7 @@ static Class $memorized$UITextEffectsWindow$class;
         objc_setAssociatedObject(self, @selector(ZY_networkActivity), @(arg1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
         StatusBarData *data = [UIStatusBarServer getStatusBarData];
-        data->itemIsEnabled[24] = arg1; // 24 = activity indicator
+        data->itemIsEnabled[24] = arg1; // 24 = activity indicator (actually about)
         [UIApplication.sharedApplication.statusBar forceUpdateToData:data animated:YES];
     }
 }
