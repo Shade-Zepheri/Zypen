@@ -475,6 +475,8 @@ CGFloat startingY = -1;
 
     [self handleReachabilityModeDeactivated];
     SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:ident];
+    ZYIconIndicatorViewInfo indicatorInfo = [[%c(ZYBackgrounder) sharedInstance] allAggregatedIndicatorInfoForIdentifier:ident];
+
     // Close app
     [[%c(ZYBackgrounder) sharedInstance] temporarilyApplyBackgroundingMode:ZYBackgroundModeForcedForeground forApplication:app andCloseForegroundApp:NO];
     FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:@"ActivateSpringBoard" handler:^{
@@ -484,16 +486,14 @@ CGFloat startingY = -1;
         [app _setDeactivationSettings:deactiveSets];
 
         // Open in window
-        ZYWindowBar *windowBar = [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
-        if (!ZYDesktopManager.sharedInstance.lastUsedWindow) {
-          ZYDesktopManager.sharedInstance.lastUsedWindow = windowBar;
-        }
+        [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowWithIdentifier:ident animated:YES];
     }];
     [(FBWorkspaceEventQueue*)[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
 
     // Pop forced foreground backgrounding
     [[%c(ZYBackgrounder) sharedInstance] queueRemoveTemporaryOverrideForIdentifier:ident];
     [[%c(ZYBackgrounder) sharedInstance] removeTemporaryOverrideForIdentifier:ident];
+    [[%c(ZYBackgrounder) sharedInstance] updateIconIndicatorForIdentifier:ident withInfo:indicatorInfo];
 }
 
 %new - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
