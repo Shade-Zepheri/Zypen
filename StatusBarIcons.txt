@@ -1,8 +1,9 @@
+0. Time
 1. Do Not Disturb
 2. Airplane Mode
 3. Signal Strength
 4. Carrier
-5. ? (Blank but pushes signal to left)
+5. ? (Should be DataNetwork)
 6. Wifi
 7. Time (shows on right for me)
 8. Battery (plus bolt)
@@ -10,9 +11,9 @@
 10. Battery % again?
 11. Weird thin battery icon
 12. Bluetooth
-13. Weird phone icon
+13. TTY
 14. Alarm
-15. Slanted plus sign
+15. Plus
 16. ? (Crashes)
 17. Location
 18. Rotation Lock
@@ -22,7 +23,7 @@
 22. CarPlay
 23. Apple Classroom
 24. VPN
-25. Outgoing call?
+25. CallForward
 26. ? (Blank)
 27. Black Box
 28. ? (Blank but in center with clock)

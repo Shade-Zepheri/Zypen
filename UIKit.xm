@@ -194,7 +194,7 @@ static Class $memorized$UITextEffectsWindow$class;
         objc_setAssociatedObject(self, @selector(ZY_networkActivity), @(arg1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
         StatusBarData *data = [UIStatusBarServer getStatusBarData];
-        data->itemIsEnabled[24] = arg1; // 24 = activity indicator (actually about)
+        data->itemIsEnabled[26] = arg1; // 24 = activity indicator (actually about that)
         [UIApplication.sharedApplication.statusBar forceUpdateToData:data animated:YES];
     }
 }
@@ -210,7 +210,7 @@ static Class $memorized$UITextEffectsWindow$class;
 %hook UIStatusBar
 - (void)statusBarServer:(unsafe_id)arg1 didReceiveStatusBarData:(StatusBarData*)arg2 withActions:(int)arg3 {
     if ([ZYMessagingClient.sharedInstance isBeingHosted]) {
-        arg2->itemIsEnabled[24] = [UIApplication.sharedApplication isNetworkActivityIndicatorVisible];
+        arg2->itemIsEnabled[26] = [UIApplication.sharedApplication isNetworkActivityIndicatorVisible];
     }
     %orig;
 }
