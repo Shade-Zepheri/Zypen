@@ -3,7 +3,6 @@
 #import "ZYReachabilityManager.h"
 #import "ZYWidgetSectionManager.h"
 #import "ZYSettings.h"
-#import <AppList/AppList.h>
 
 @interface ZYAllAppsWidget () {
 	CGFloat savedX;
@@ -115,7 +114,7 @@
 }
 
 - (void)appViewItemTap:(UIGestureRecognizer*)gesture {
-	[GET_SBWORKSPACE appViewItemTap:gesture];
+	[[%c(SBMainWorkspace) sharedInstance] appViewItemTap:gesture];
 	//[[ZYReachabilityManager sharedInstance] launchTopAppWithIdentifier:gesture.view.restorationIdentifier];
 }
 

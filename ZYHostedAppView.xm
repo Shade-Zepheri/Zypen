@@ -49,8 +49,8 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     if (app) {
         if ([app mainScene]) {
             isPreloading = NO;
-            if (((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive && [GET_SBWORKSPACE respondsToSelector:@selector(ZY_updateViewSizes)]) {
-                [GET_SBWORKSPACE performSelector:@selector(ZY_updateViewSizes) withObject:nil afterDelay:0.5]; // App is launched using ReachApp - animations commence. We have to wait for those animations to finish or this won't work.
+            if (((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive && [[%c(SBMainWorkspace) sharedInstance] respondsToSelector:@selector(ZY_updateViewSizes)]) {
+                [[%c(SBMainWorkspace) sharedInstance] performSelector:@selector(ZY_updateViewSizes) withObject:nil afterDelay:0.5]; // App is launched using ReachApp - animations commence. We have to wait for those animations to finish or this won't work.
             }
         } else if (![app mainScene]) {
             if (disablePreload) {

@@ -37,8 +37,6 @@ CGFloat old_grabberCenterY = -1;
 
 BOOL wasEnabled = NO;
 
-%group hooks
-
 %hook SBReachabilityManager
 + (BOOL)reachabilitySupported {
     return YES;
@@ -104,7 +102,7 @@ BOOL wasEnabled = NO;
         if (currentBundleIdentifier) {
           [ZYMessagingServer.sharedInstance endResizingApp:currentBundleIdentifier completion:nil];
         }
-        [GET_SBWORKSPACE ZY_closeCurrentView];
+        [[%c(SBMainWorkspace) sharedInstance] ZY_closeCurrentView];
     }
 
 }
@@ -141,17 +139,7 @@ BOOL wasEnabled = NO;
 
 %end
 
-id SBWorkspace$sharedInstance;
-%hook SB_WORKSPACE_CLASS
-%new + (instancetype)sharedInstance {
-    return SBWorkspace$sharedInstance;
-}
-
-- (id)init {
-    SBWorkspace$sharedInstance = %orig;
-    return SBWorkspace$sharedInstance;
-}
-
+%hook SBMainWorkspace
 %new - (BOOL)isUsingReachApp {
     return (view || showingNC);
 }
@@ -755,11 +743,8 @@ CGFloat startingY = -1;
 }
 %end
 
-%end
-
 %ctor {
     IF_SPRINGBOARD {
-        Class c = objc_getClass("SBMainWorkspace") ?: objc_getClass("SBWorkspace");
-        %init(hooks, SB_WORKSPACE_CLASS=c);
+      %init;
     }
 }

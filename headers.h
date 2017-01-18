@@ -24,9 +24,6 @@
 #import "ZYThemeManager.h"
 #define THEMED(x) [[objc_getClass("ZYThemeManager") sharedInstance] currentTheme].x
 
-#import "ZYSBWorkspaceFetcher.h"
-#define GET_SBWORKSPACE [ZYSBWorkspaceFetcher getCurrentSBWorkspaceImplementationInstanceForThisOS]
-
 #define GET_STATUSBAR_ORIENTATION (UIApplication.sharedApplication._accessibilityFrontMostApplication == nil ? UIApplication.sharedApplication.statusBarOrientation : UIApplication.sharedApplication._accessibilityFrontMostApplication.statusBarOrientation)
 
 #if ZYPEN_CORE
@@ -414,7 +411,7 @@ return sharedInstance;
 - (void)_deactivateForReason:(int)arg1 notify:(BOOL)arg2;
 @end
 
-@interface SBWorkspace : NSObject
+@interface SBMainWorkspace : NSObject
 + (id)sharedInstance;
 - (BOOL)isUsingReachApp;
 - (void)_exitReachabilityModeWithCompletion:(id)arg1;
