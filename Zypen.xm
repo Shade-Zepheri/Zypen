@@ -36,7 +36,7 @@
 	[activeExtensions addObject:ext];
 }
 
-+ (id)createSBAppToAppWorkspaceTransactionForExitingApp:(SBApplication*)app {
++ (SBAppToAppWorkspaceTransaction*)createSBAppToAppWorkspaceTransactionForExitingApp:(SBApplication*)app {
 	if ([%c(SBAppToAppWorkspaceTransaction) respondsToSelector:@selector(initWithAlertManager:exitedApp:)]) {
 		return [[%c(SBAppToAppWorkspaceTransaction) alloc] initWithAlertManager:nil exitedApp:app];
 	} else {
@@ -46,11 +46,11 @@
     //set layout role to 'side' (deactivating)
     SBWorkspaceDeactivatingEntity *deactivatingEntity = [%c(SBWorkspaceDeactivatingEntity) entity];
     [deactivatingEntity setLayoutRole:3];
-    [transitionContext setEntity:deactivatingEntity forLayoutRole:2];
+    [transitionContext setEntity:deactivatingEntity forLayoutRole:3];
 
     //set layout role for 'primary' (activating)
     SBWorkspaceHomeScreenEntity *homescreenEntity = [[%c(SBWorkspaceHomeScreenEntity) alloc] init];
-    [transitionContext setEntity:homescreenEntity forLayoutRole:1];
+    [transitionContext setEntity:homescreenEntity forLayoutRole:2];
 
     [transitionContext setAnimationDisabled:YES];
 
