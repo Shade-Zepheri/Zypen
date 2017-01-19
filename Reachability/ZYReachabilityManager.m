@@ -11,24 +11,24 @@
 
 - (void)launchTopAppWithIdentifier:(NSString*)identifier {
 	//[[objc_getClass("SBWorkspace") sharedInstance] ZY_closeCurrentView];
-	[[objc_getClass("SBMainWorkspace") _instanceIfExists] ZY_launchTopAppWithIdentifier:identifier];
+	[[objc_getClass("SBMainWorkspace") ZY_sharedInstance] ZY_launchTopAppWithIdentifier:identifier];
 }
 
 - (void)launchWidget:(ZYWidget*)widget {
 	//[[objc_getClass("SBWorkspace") sharedInstance] ZY_closeCurrentView];
-	[[objc_getClass("SBMainWorkspace") _instanceIfExists] ZY_setView:[widget view] preferredHeight:[widget preferredHeight]];
+	[[objc_getClass("SBMainWorkspace") ZY_sharedInstance] ZY_setView:[widget view] preferredHeight:[widget preferredHeight]];
 }
 
 - (void)showWidgetSelector {
 	//[[objc_getClass("SBWorkspace") sharedInstance] ZY_closeCurrentView];
-	[[objc_getClass("SBMainWorkspace") _instanceIfExists] ZY_showWidgetSelector];
+	[[objc_getClass("SBMainWorkspace") ZY_sharedInstance] ZY_showWidgetSelector];
 }
 
 - (void)showAppWithSliderProvider:(__weak ZYAppSliderProviderView*)view {
 	//[[objc_getClass("SBWorkspace") sharedInstance] ZY_closeCurrentView];
 	[view updateCurrentView];
 	[view load];
-	[[objc_getClass("SBMainWorkspace") _instanceIfExists] ZY_setView:view preferredHeight:view.frame.size.height];
+	[[objc_getClass("SBMainWorkspace") ZY_sharedInstance] ZY_setView:view preferredHeight:view.frame.size.height];
 }
 
 @end

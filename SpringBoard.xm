@@ -20,7 +20,7 @@ extern BOOL overrideDisableForStatusBar;
 
 %hook SBUIController
 - (_Bool)clickedMenuButton {
-  if ([ZYSettings.sharedSettings homeButtonClosesReachability] && [[%c(SBMainWorkspace) _instanceIfExists] isUsingReachApp] && ((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive) {
+  if ([ZYSettings.sharedSettings homeButtonClosesReachability] && [[%c(SBMainWorkspace) ZY_sharedInstance] isUsingReachApp] && ((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive) {
       overrideDisableForStatusBar = NO;
       [[%c(SBReachabilityManager) sharedInstance] _handleReachabilityDeactivated];
       return YES;

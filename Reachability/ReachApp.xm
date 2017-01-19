@@ -102,7 +102,7 @@ BOOL wasEnabled = NO;
         if (currentBundleIdentifier) {
           [ZYMessagingServer.sharedInstance endResizingApp:currentBundleIdentifier completion:nil];
         }
-        [[%c(SBMainWorkspace) _instanceIfExists] ZY_closeCurrentView];
+        [[%c(SBMainWorkspace) ZY_sharedInstance] ZY_closeCurrentView];
     }
 
 }
@@ -139,7 +139,17 @@ BOOL wasEnabled = NO;
 
 %end
 
+id SBMainWorkspace$ZYsharedInstance;
 %hook SBMainWorkspace
+- (instancetype)init {
+    SBMainWorkspace$ZYsharedInstance = %orig;
+    return %orig;
+}
+
+%new + (instancetype)ZY_sharedInstance {
+    return SBMainWorkspace$ZYsharedInstance;
+}
+
 %new - (BOOL)isUsingReachApp {
     return (view || showingNC);
 }

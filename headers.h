@@ -413,6 +413,10 @@ return sharedInstance;
 
 @interface SBMainWorkspace : NSObject
 + (id)_instanceIfExists;
++ (id)_sharedInstanceWithNilCheckPolicy:(long long)arg1 ;
++ (id)sharedInstance;
++ (instancetype)ZY_sharedInstance;
++ (void)start;
 - (BOOL)isUsingReachApp;
 - (void)_exitReachabilityModeWithCompletion:(id)arg1;
 - (void)_disableReachabilityImmediately:(_Bool)arg1;
