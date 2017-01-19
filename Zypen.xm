@@ -19,7 +19,7 @@
 }
 
 - (NSString*)currentVersion {
-  return @"0.7.2";
+  return @"0.7.9";
 }
 - (BOOL)isOnSupportedOS {
   return SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"10.2");
@@ -59,7 +59,6 @@
     [transitionRequest setApplicationContext:transitionContext];
 
     return [[%c(SBAppToAppWorkspaceTransaction) alloc] initWithTransitionRequest:transitionRequest];
-    // ** //
     }
 }
 

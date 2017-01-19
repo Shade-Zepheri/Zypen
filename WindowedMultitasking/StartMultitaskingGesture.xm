@@ -137,6 +137,6 @@ BOOL locationIsInValidArea(CGFloat x) {
 
         return ZYGestureCallbackResultSuccess;
     } withCondition:^BOOL(CGPoint location, CGPoint velocity) {
-        return [ZYSettings.sharedSettings windowedMultitaskingEnabled] && (locationIsInValidArea(location.x) || appView) && ![[%c(SBUIController) sharedInstance] isAppSwitcherShowing] && ![[%c(SBLockScreenManager) sharedInstance] isUILocked] && [UIApplication.sharedApplication _accessibilityFrontMostApplication] != nil && ![[%c(SBNotificationCenterController) sharedInstance] isVisible];
-    } forEdge:UIRectEdgeBottom identifier:@"com.efrederickson.reachapp.windowedmultitasking.systemgesture" priority:ZYGesturePriorityDefault];
+        return [ZYSettings.sharedSettings windowedMultitaskingEnabled] && (locationIsInValidArea(location.x) || appView) && ![[%c(SBUIController) sharedInstance] isAppSwitcherShowing] && ![[%c(SBLockScreenManager) sharedInstance] isUILocked] && [UIApplication.sharedApplication _accessibilityFrontMostApplication] && ![[%c(SBNotificationCenterController) sharedInstance] isVisible];
+    } forEdge:UIRectEdgeBottom identifier:@"com.shade.zypen.empoleon.systemgesture" priority:ZYGesturePriorityDefault];
 }
