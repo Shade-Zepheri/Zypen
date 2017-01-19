@@ -1,9 +1,13 @@
 #import <dlfcn.h>
 #import <Foundation/Foundation.h>
 
-%hookf(int, "_BSAuditTokenTaskHasEntitlement", int unknownFlag, NSString *entitlement) {
+@interface BSAuditToken : NSObject
+- (int)pid;
+ @end
+
+%hookf(BOOL, "_BSAuditTokenTaskHasEntitlement", BSAuditToken *token, NSString *entitlement) {
 	if ([entitlement isEqualToString:@"com.apple.multitasking.unlimitedassertions"]) {
-		return 1;
+		return YES;
 	}
 	return %orig;
 }
