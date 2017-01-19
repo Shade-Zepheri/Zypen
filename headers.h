@@ -412,7 +412,7 @@ return sharedInstance;
 @end
 
 @interface SBMainWorkspace : NSObject
-+ (id)sharedInstance;
++ (id)_instanceIfExists;
 - (BOOL)isUsingReachApp;
 - (void)_exitReachabilityModeWithCompletion:(id)arg1;
 - (void)_disableReachabilityImmediately:(_Bool)arg1;

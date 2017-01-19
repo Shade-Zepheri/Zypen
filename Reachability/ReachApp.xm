@@ -102,7 +102,7 @@ BOOL wasEnabled = NO;
         if (currentBundleIdentifier) {
           [ZYMessagingServer.sharedInstance endResizingApp:currentBundleIdentifier completion:nil];
         }
-        [[%c(SBMainWorkspace) sharedInstance] ZY_closeCurrentView];
+        [[%c(SBMainWorkspace) _instanceIfExists] ZY_closeCurrentView];
     }
 
 }
