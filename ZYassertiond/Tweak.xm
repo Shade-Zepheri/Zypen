@@ -5,9 +5,16 @@
 - (int)pid;
  @end
 
-%hookf(BOOL, "_BSAuditTokenTaskHasEntitlement", BSAuditToken *token, NSString *entitlement) {
+%hookf(int, "_BSAuditTokenTaskHasEntitlement", BSAuditToken *token, NSString *entitlement) {
 	if ([entitlement isEqualToString:@"com.apple.multitasking.unlimitedassertions"]) {
-		return YES;
+		return 1;
+	}
+	return %orig;
+}
+
+%hookf(int, "_BSXPCConnectionHasEntitlement", id connection, NSString *entitlement) {
+	if ([entitlement isEqualToString:@"com.apple.multitasking.unlimitedassertions"]) {
+		return 1;
 	}
 	return %orig;
 }

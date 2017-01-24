@@ -1,5 +1,5 @@
 ARCHS = armv7 arm64
-CFLAGS = -I../ -I../Theming -O2 -fobjc-arc
+CFLAGS = -I../ -I../Theming -O2 
 
 include $(THEOS)/makefiles/common.mk
 
