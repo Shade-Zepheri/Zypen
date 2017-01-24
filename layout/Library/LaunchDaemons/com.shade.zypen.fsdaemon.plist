@@ -5,7 +5,7 @@
 	<key>Label</key>
 	<string>com.shade.zypen.fsdaemon</string>
 	<key>Program</key>
-	<string>/usr/bin/ReachAppFSDaemon</string>
+	<string>/usr/bin/ZypenDaemon</string>
 	<key>RunAtLoad</key>
 	<false/>
   <key>ExecuteAllowed</key>
