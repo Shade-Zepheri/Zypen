@@ -1,4 +1,3 @@
-
 #include <dlfcn.h>
 #include <notify.h>
 #include <stdio.h>
