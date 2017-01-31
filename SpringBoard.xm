@@ -29,6 +29,16 @@ extern BOOL overrideDisableForStatusBar;
   return %orig;
 }
 
+-(BOOL)isHandlingHomeButtonPress {
+  if ([ZYSettings.sharedSettings homeButtonClosesReachability] && [[%c(SBMainWorkspace) ZY_sharedInstance] isUsingReachApp] && ((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive) {
+      overrideDisableForStatusBar = NO;
+      [[%c(SBReachabilityManager) sharedInstance] _handleReachabilityDeactivated];
+      return YES;
+  }
+
+  return %orig;
+}
+
 // This should help fix the problems where closing an app with Tage or the iPad Gesture would cause the app to suspend(?) and lock up the device.
 - (void)_suspendGestureBegan {
     %orig;

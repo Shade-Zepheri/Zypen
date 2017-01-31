@@ -30,7 +30,7 @@ typedef struct {
 } VelocityData;
 
 %hook _UIScreenEdgePanRecognizer
-- (void)incorporateTouchSampleAtLocation:(CGPoint)location timestamp:(double)timestamp modifier:(NSInteger)modifier interfaceOrientation:(UIInterfaceOrientation)orientation forceState:(int)arg5 {
+- (void)incorporateTouchSampleAtLocation:(CGPoint)location timestamp:(double)timestamp modifier:(long long)modifier interfaceOrientation:(UIInterfaceOrientation)orientation forceState:(long long)arg5 {
     %orig;
 
     VelocityData newData;
@@ -177,9 +177,9 @@ __strong id __static$Hooks9$SBHandMotionExtractorReplacementByZypen;
         class_addProtocol(objc_getClass("Hooks9$SBHandMotionExtractorReplacementByZypen"), @protocol(_UIScreenEdgePanRecognizerDelegate));
 
         UIRectEdge edgesToWatch[] = { UIRectEdgeBottom, UIRectEdgeLeft, UIRectEdgeRight, UIRectEdgeTop };
-        NSInteger edgeCount = sizeof(edgesToWatch) / sizeof(UIRectEdge);
+        int edgeCount = sizeof(edgesToWatch) / sizeof(UIRectEdge);
         gestureRecognizers = [[NSMutableSet alloc] initWithCapacity:edgeCount];
-        for (NSInteger i = 0; i < edgeCount; i++) {
+        for (int i = 0; i < edgeCount; i++) {
             _UIScreenEdgePanRecognizer *recognizer = [[_UIScreenEdgePanRecognizer alloc] initWithType:2];
             recognizer.targetEdges = edgesToWatch[i];
             recognizer.screenBounds = UIScreen.mainScreen.bounds;

@@ -187,7 +187,6 @@ NSString *stringFromIndicatorInfo(ZYIconIndicatorViewInfo info) {
 NSMutableDictionary *lsbitems = [[[NSMutableDictionary alloc] init] retain];
 
 %hook SBApplication
-
 %new - (void)ZY_addStatusBarIconForSelfIfOneDoesNotExist {
 	if (objc_getClass("LSStatusBarItem") && [lsbitems objectForKey:self.bundleIdentifier] == nil && [ZYBackgrounder.sharedInstance shouldShowStatusBarIconForIdentifier:self.bundleIdentifier]) {
 		if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {

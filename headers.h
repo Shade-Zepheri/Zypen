@@ -1001,7 +1001,6 @@ typedef struct {
 @interface BKSProcess : NSObject { //BSBaseXPCClient  {
     int _pid;
     NSString *_bundlePath;
-    NSObject<OS_dispatch_queue> *_clientQueue;
     bool _workspaceLocked;
     bool _connectedToExternalAccessories;
     bool _nowPlayingWithAudio;

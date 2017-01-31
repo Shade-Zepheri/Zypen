@@ -9,10 +9,10 @@
 int main(int argc, char **argv, char **envp) {
 	@autoreleasepool {
 		NSString *filePath = @"/var/mobile/Library/.zypen.uiappexitsonsuspend.wantstochangerootapp";
-	    if ([NSFileManager.defaultManager fileExistsAtPath:filePath] == NO) {
-	        HBLogError(@"[ReachApp] FS Daemon: plist does not exist");
-	        return 0;
-	    }
+    if ([NSFileManager.defaultManager fileExistsAtPath:filePath] == NO) {
+        HBLogError(@"[ReachApp] FS Daemon: plist does not exist");
+        return 0;
+    }
 
 		NSDictionary *contents = [NSDictionary dictionaryWithContentsOfFile:filePath];
 

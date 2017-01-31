@@ -31,7 +31,7 @@
 
 - (void)forcePhoneMode:(BOOL)value forIdentifier:(NSString*)identifier andRelaunchApp:(BOOL)relaunch;
 
-- (NSUInteger)getStoredKeyboardContextIdForApp:(NSString*)identifier;
+- (unsigned int)getStoredKeyboardContextIdForApp:(NSString*)identifier;
 
 - (void)receiveShowKeyboardForAppWithIdentifier:(NSString*)identifier;
 - (void)receiveHideKeyboard;

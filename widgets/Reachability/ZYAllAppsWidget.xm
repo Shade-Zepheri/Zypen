@@ -114,7 +114,7 @@
 }
 
 - (void)appViewItemTap:(UIGestureRecognizer*)gesture {
-	[[%c(SBMainWorkspace) ZY_sharedInstance] appViewItemTap:gesture];
+	[[%c(SBMainWorkspace) sharedInstance] appViewItemTap:gesture];
 	//[[ZYReachabilityManager sharedInstance] launchTopAppWithIdentifier:gesture.view.restorationIdentifier];
 }
 

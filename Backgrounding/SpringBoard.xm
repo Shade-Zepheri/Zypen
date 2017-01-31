@@ -18,7 +18,7 @@
 
 // STAY IN "FOREGROUND"
 %hook FBUIApplicationResignActiveManager
--(void) _sendResignActiveForReason:(int)arg1 toProcess:(__unsafe_unretained FBApplicationProcess*)arg2 {
+- (void)_sendResignActiveForReason:(int)arg1 toProcess:(__unsafe_unretained FBApplicationProcess*)arg2 {
     if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg2.bundleIdentifier]) {
       return;
     }
@@ -52,6 +52,18 @@
         SET_BACKGROUNDED(arg5, NO);
     }
     return %orig(arg1, arg2, arg3, arg4, arg5, arg6);
+}
+
+- (id)initWithQueue:(id)arg1 identifier:(id)arg2 display:(id)arg3 settings:(id)arg4 clientSettings:(id)arg5 {
+  if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg2]) {
+      // what?
+      if (!arg4) {
+          UIMutableApplicationSceneSettings *fakeSettings = [[%c(UIMutableApplicationSceneSettings) alloc] init];
+          arg4 = fakeSettings;
+      }
+      SET_BACKGROUNDED(arg4, NO);
+  }
+  return %orig(arg1, arg2, arg3, arg4, arg5);
 }
 %end
 

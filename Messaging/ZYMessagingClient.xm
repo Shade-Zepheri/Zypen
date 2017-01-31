@@ -16,7 +16,7 @@ extern BOOL allowClosingReachabilityNatively;
 
 + (instancetype)sharedInstance {
 	IF_SPRINGBOARD {
-		@throw [NSException exceptionWithName:@"IsSpringBoardException" reason:@"Cannot use ZYMessagingClient in SpringBoard" userInfo:nil];
+		@throw [NSException exceptionWithName:@"IsSpringBoardException" reason:@"Cannot use RAMessagingClient in SpringBoard" userInfo:nil];
 	}
 
 	SHARED_INSTANCE2(ZYMessagingClient,
@@ -26,10 +26,12 @@ extern BOOL allowClosingReachabilityNatively;
 		if ([NSBundle.mainBundle.executablePath hasPrefix:@"/Applications"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/stash/appsstash"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/containers/Bundle/Application"] ||
+			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/db/stash"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/mobile/Applications"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/mobile/Applications"] ||
 			[NSBundle.mainBundle.executablePath hasPrefix:@"/var/mobile/Containers/Bundle/Application"] ||
-			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/mobile/Containers/Bundle/Application"]) {
+			[NSBundle.mainBundle.executablePath hasPrefix:@"/private/var/mobile/Containers/Bundle/Application"])
+		{
 			HBLogDebug(@"[ReachApp] valid process for ZYMessagingClient");
 			sharedInstance->allowedProcess = YES;
 		}
@@ -208,7 +210,7 @@ void updateFrontmostApp(CFNotificationCenterRef center,
 
 	} else {
 		[ZYMessagingClient sharedInstance];
-    	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadClientData, (__bridge CFStringRef)[NSString stringWithFormat:@"com.shade.zypen.clientupdate-%@",NSBundle.mainBundle.bundleIdentifier], NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-    	CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, &updateFrontmostApp, CFSTR("com.shade.zypen.frontmostAppDidUpdate"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadClientData, (__bridge CFStringRef)[NSString stringWithFormat:@"com.shade.zypen.clientupdate-%@",NSBundle.mainBundle.bundleIdentifier], NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, &updateFrontmostApp, CFSTR("com.shade.zypen.frontmostAppDidUpdate"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 	}
 }

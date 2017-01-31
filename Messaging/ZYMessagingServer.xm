@@ -12,6 +12,7 @@
 #import "ZYDesktopManager.h"
 #import "ZYWindowSnapDataProvider.h"
 #import "ZYHostManager.h"
+#import "Zypen.h"
 
 extern BOOL launchNextOpenIntoWindow;
 
@@ -127,34 +128,34 @@ extern BOOL launchNextOpenIntoWindow;
 
 - (void)handleKeyboardEvent:(NSString*)identifier userInfo:(NSDictionary*)info {
 	if ([identifier isEqual:ZYMessagingDetachCurrentAppMessageName]) {
-        SBApplication *topApp = UIApplication.sharedApplication._accessibilityFrontMostApplication;
+    SBApplication *topApp = UIApplication.sharedApplication._accessibilityFrontMostApplication;
 
-        if (topApp) {
-	        [[%c(SBWallpaperController) sharedInstance] beginRequiringWithReason:@"BeautifulAnimation"];
-	        [[%c(SBUIController) sharedInstance] restoreContentAndUnscatterIconsAnimated:NO];
+    if (topApp) {
+        [[%c(SBWallpaperController) sharedInstance] beginRequiringWithReason:@"BeautifulAnimation"];
+        [[%c(SBUIController) sharedInstance] restoreContentAndUnscatterIconsAnimated:NO];
 
-	        UIView *appView = [ZYHostManager systemHostViewForApplication:topApp].superview;
+        UIView *appView = [ZYHostManager systemHostViewForApplication:topApp].superview;
 
 		    [UIView animateWithDuration:0.2 animations:^{
 		        appView.transform = CGAffineTransformMakeScale(0.5, 0.5);
 		    } completion:^(BOOL _) {
 	       		[[%c(SBWallpaperController) sharedInstance] endRequiringWithReason:@"BeautifulAnimation"];
 		        FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:@"ActivateSpringBoard" handler:^{
-		            SBAppToAppWorkspaceTransaction *transaction = [[%c(SBAppToAppWorkspaceTransaction) alloc] initWithAlertManager:nil exitedApp:UIApplication.sharedApplication._accessibilityFrontMostApplication];
+								SBAppToAppWorkspaceTransaction *transaction = [Zypen createSBAppToAppWorkspaceTransactionForExitingApp:topApp];
 		            [transaction begin];
 		        }];
 		        [(FBWorkspaceEventQueue*)[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
 		        [ZYDesktopManager.sharedInstance.currentDesktop createAppWindowForSBApplication:topApp animated:YES];
 		    }];
-        }
+    }
 	} else if ([identifier isEqual:ZYMessagingGoToDesktopOnTheLeftMessageName]) {
-		NSInteger newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex - 1;
+		int newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex - 1;
 		BOOL isValid = newIndex >= 0 && newIndex <= ZYDesktopManager.sharedInstance.numberOfDesktops;
 		if (isValid) {
 			[ZYDesktopManager.sharedInstance switchToDesktop:newIndex];
 		}
 	} else if ([identifier isEqual:ZYMessagingGoToDesktopOnTheRightMessageName]) {
-		NSInteger newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex + 1;
+		int newIndex = ZYDesktopManager.sharedInstance.currentDesktopIndex + 1;
 		BOOL isValid = newIndex >= 0 && newIndex < ZYDesktopManager.sharedInstance.numberOfDesktops;
 		if (isValid) {
 			[ZYDesktopManager.sharedInstance switchToDesktop:newIndex];
@@ -229,7 +230,7 @@ extern BOOL launchNextOpenIntoWindow;
 	}
 }
 
-- (void)sendDataWithCurrentTries:(NSInteger)tries toAppWithBundleIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
+- (void)sendDataWithCurrentTries:(int)tries toAppWithBundleIdentifier:(NSString*)identifier completion:(ZYMessageCompletionCallback)callback {
 	SBApplication *app = [[%c(SBApplicationController) sharedInstance] ZY_applicationWithBundleIdentifier:identifier];
 	if (!app.isRunning || ![app mainScene]) {
 		if (tries > 4) {
@@ -422,12 +423,12 @@ extern BOOL launchNextOpenIntoWindow;
 	[ZYSpringBoardKeyboardActivation.sharedInstance hideKeyboard];
 }
 
-- (void)setKeyboardContextId:(NSUInteger)id forIdentifier:(NSString*)identifier {
+- (void)setKeyboardContextId:(unsigned int)id forIdentifier:(NSString*)identifier {
 	HBLogDebug(@"[ReachApp] got c id %tu", id);
 	contextIds[identifier] = @(id);
 }
 
-- (NSUInteger)getStoredKeyboardContextIdForApp:(NSString*)identifier {
+- (unsigned int)getStoredKeyboardContextIdForApp:(NSString*)identifier {
 	return [contextIds objectForKey:identifier] != nil ? [contextIds[identifier] unsignedIntValue] : 0;
 }
 @end

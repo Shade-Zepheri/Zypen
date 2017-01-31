@@ -4,8 +4,13 @@
 _/
 theos/
 theos
+.theos
+.theos/
 .theos/*
 obj/
 */obj/
 obj
 .DS_Store
+packages
+packages/
+packages/*

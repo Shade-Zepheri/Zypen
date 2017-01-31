@@ -11,16 +11,16 @@
 
 %hook FBApplicationInfo
 - (BOOL)supportsBackgroundMode:(__unsafe_unretained NSString *)mode {
-	NSInteger override = [ZYBackgrounder.sharedInstance application:self.bundleIdentifier overrideBackgroundMode:mode];
-    if (override == -1) {
-			return %orig;
-		}
+	int override = [ZYBackgrounder.sharedInstance application:self.bundleIdentifier overrideBackgroundMode:mode];
+  if (override == -1) {
+		return %orig;
+	}
 	return override;
 }
 %end
 
 %hook BKSProcessAssertion
-- (id)initWithPID:(NSInteger)arg1 flags:(NSUInteger)arg2 reason:(NSUInteger)arg3 name:(unsafe_id)arg4 withHandler:(unsafe_id)arg5 {
+- (id)initWithPID:(int)arg1 flags:(unsigned int)arg2 reason:(unsigned int)arg3 name:(unsafe_id)arg4 withHandler:(unsafe_id)arg5 {
     if ((arg3 == kProcessAssertionReasonViewServices) == NO && // whitelist this to allow share menu to work
         [arg4 isEqualToString:@"Called by Filza_main, from -[AppDelegate applicationDidEnterBackground:]"] == NO && // Whitelist filza to prevent iOS hang (?!)
         IS_SPRINGBOARD == NO) {

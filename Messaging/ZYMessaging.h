@@ -14,10 +14,10 @@ typedef struct {
 	// Can't use CGSize because it uses CGFloats which aren't able to be transferred between 32/64bit processes (because its float in one and something else (double? i can't remember) in the other).
 	// Also why we can't use CGFloat here?
 	// Well you can
-	CGFloat wantedClientOriginX;
-	CGFloat wantedClientOriginY;
-	CGFloat wantedClientWidth;
-	CGFloat wantedClientHeight;
+	float wantedClientOriginX;
+	float wantedClientOriginY;
+	float wantedClientWidth;
+	float wantedClientHeight;
 
 	BOOL statusBarVisibility;
 	BOOL shouldForceStatusBar;

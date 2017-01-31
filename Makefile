@@ -1,7 +1,7 @@
 ARCHS = armv7 arm64
 CFLAGS = -I./ -Iwidgets/ -Iwidgets/Core/ -Iwidgets/Reachability/ -IReachability/ -IGestures/ -IWindowedMultitasking/ -IMessaging/ -IKeyboard/ -ITheming/ -IBackgrounding/ -O2 -Wno-deprecated-declarations
 CFLAGS += -fobjc-arc
-TARGET = iphone:9.2
+TARGET = iphone:clang:9.2:10.2
 
 include $(THEOS)/makefiles/common.mk
 

@@ -23,7 +23,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     UILabel *authenticationDidFailLabel;
     UITapGestureRecognizer *authenticationFailedRetryTapGesture;
 
-    NSInteger startTries;
+    int startTries;
     BOOL disablePreload;
 
     NSTimer *loadedTimer;
@@ -31,7 +31,7 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
 @end
 
 @implementation ZYHostedAppView
-- (id)initWithBundleIdentifier:(NSString*)bundleIdentifier {
+- (instancetype)initWithBundleIdentifier:(NSString*)bundleIdentifier {
 	if (self = [super init]) {
 		self.bundleIdentifier = bundleIdentifier;
     self.autosizesApp = NO;
@@ -49,8 +49,8 @@ NSMutableDictionary *appsBeingHosted = [NSMutableDictionary dictionary];
     if (app) {
         if ([app mainScene]) {
             isPreloading = NO;
-            if (((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive && [[%c(SBMainWorkspace) ZY_sharedInstance] respondsToSelector:@selector(ZY_updateViewSizes)]) {
-                [[%c(SBMainWorkspace) ZY_sharedInstance] performSelector:@selector(ZY_updateViewSizes) withObject:nil afterDelay:0.5]; // App is launched using ReachApp - animations commence. We have to wait for those animations to finish or this won't work.
+            if (((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive && [[%c(SBMainWorkspace) sharedInstance] respondsToSelector:@selector(ZY_updateViewSizes)]) {
+                [[%c(SBMainWorkspace) sharedInstance] performSelector:@selector(ZY_updateViewSizes) withObject:nil afterDelay:0.5]; // App is launched using ReachApp - animations commence. We have to wait for those animations to finish or this won't work.
             }
         } else if (![app mainScene]) {
             if (disablePreload) {

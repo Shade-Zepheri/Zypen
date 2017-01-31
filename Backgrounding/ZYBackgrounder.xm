@@ -158,7 +158,7 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 }
 
 - (ZYIconIndicatorViewInfo)allAggregatedIndicatorInfoForIdentifier:(NSString*)identifier {
-	NSInteger info = ZYIconIndicatorViewInfoNone;
+	int info = ZYIconIndicatorViewInfoNone;
 
 	if ([self backgroundModeForIdentifier:identifier] == ZYBackgroundModeNative) {
 		info |= ZYIconIndicatorViewInfoNative;
@@ -181,14 +181,23 @@ NSMutableDictionary *temporaryShouldPop = [NSMutableDictionary dictionary];
 - (void)updateIconIndicatorForIdentifier:(NSString*)identifier withInfo:(ZYIconIndicatorViewInfo)info {
 	@autoreleasepool {
 		SBIconView *ret = nil;
-		if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
-			SBApplicationIcon *icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForBundleIdentifier:identifier];
-			ret = [[%c(SBIconViewMap) homescreenMap] mappedIconViewForIcon:icon];
-		} else {
-			SBApplicationIcon *icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:identifier];
-			ret = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] mappedIconViewForIcon:icon];
-		}
-    [ret ZY_updateIndicatorView:info];
+			if ([%c(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
+				if ([[[%c(SBIconViewMap) homescreenMap] iconModel] respondsToSelector:@selector(applicationIconForBundleIdentifier:)]) {
+						// iOS 8.0+
+
+						SBApplicationIcon *icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForBundleIdentifier:identifier];
+						ret = [[%c(SBIconViewMap) homescreenMap] mappedIconViewForIcon:icon];
+				} else {
+						// iOS 7.X
+						SBApplicationIcon *icon = [[[%c(SBIconViewMap) homescreenMap] iconModel] applicationIconForDisplayIdentifier:identifier];
+						ret = [[%c(SBIconViewMap) homescreenMap] mappedIconViewForIcon:icon];
+				}
+			} else {
+					SBApplicationIcon *icon = [[[[%c(SBIconController) sharedInstance] homescreenIconViewMap] iconModel] applicationIconForBundleIdentifier:identifier];
+					ret = [[[%c(SBIconController) sharedInstance] homescreenIconViewMap] mappedIconViewForIcon:icon];
+			}
+
+	    [ret ZY_updateIndicatorView:info];
 	}
 }
 

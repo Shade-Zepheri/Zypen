@@ -65,7 +65,7 @@
 }
 
 - (void)removeGestureWithIdentifier:(NSString*)identifier {
-	NSInteger i = 0;
+	int i = 0;
 	while (i < gestures.count) {
 		ZYGestureCallback *callback = [self callbackAtIndex:i];
 		if ([callback.identifier isEqual:identifier]) {
@@ -77,14 +77,14 @@
 	}
 }
 
--(ZYGestureCallback*) callbackAtIndex:(NSUInteger)index {
+- (ZYGestureCallback*)callbackAtIndex:(NSUInteger)index {
 	ZYGestureCallback *ret = gestures[index];
 	//[gestures[index] getValue:&ret];
 	return ret;
 }
 
 - (BOOL)canHandleMovementWithPoint:(CGPoint)point velocity:(CGPoint)velocity forEdge:(UIRectEdge)edge {
-	for (NSInteger i = 0; i < gestures.count; i++) {
+	for (int i = 0; i < gestures.count; i++) {
 		ZYGestureCallback *callback = [self callbackAtIndex:i];
 		if (callback.screenEdge & edge) {
 			if (callback.conditionBlock) {
@@ -113,7 +113,7 @@
 	}*/
 
 	BOOL ret = NO;
-	for (NSInteger i = 0; i < gestures.count; i++) {
+	for (int i = 0; i < gestures.count; i++) {
 		ZYGestureCallback *callback = [self callbackAtIndex:i];
 
 		NSValue *value = [ignoredAreas objectForKey:callback.identifier];

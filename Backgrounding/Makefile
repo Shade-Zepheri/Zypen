@@ -1,5 +1,4 @@
 ARCHS = armv7 arm64
-
 CFLAGS = -I../ -I../Theming/ -O2 -Wno-deprecated-declarations
 CFLAGS += -fobjc-arc
 
