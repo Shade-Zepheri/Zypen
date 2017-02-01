@@ -37,6 +37,8 @@ CGFloat old_grabberCenterY = -1;
 
 BOOL wasEnabled = NO;
 
+%group manager
+
 %hook SBReachabilityManager
 + (BOOL)reachabilitySupported {
     return YES;
@@ -122,6 +124,10 @@ BOOL wasEnabled = NO;
 }
 %end
 
+%end
+
+%group settings
+
 %hook SBReachabilitySettings
 - (CGFloat)reachabilityDefaultKeepAlive {
     if ([ZYSettings.sharedSettings disableAutoDismiss]) {
@@ -138,6 +144,10 @@ BOOL wasEnabled = NO;
 }
 
 %end
+
+%end
+
+%group workspace
 
 %hook SBMainWorkspace
 %new - (BOOL)isUsingReachApp {
@@ -737,14 +747,27 @@ CGFloat startingY = -1;
 }
 %end
 
+%end
+
+%group SpringBoard
+
 %hook SpringBoard
 - (UIInterfaceOrientation)activeInterfaceOrientation {
     return overrideOrientation ? UIInterfaceOrientationPortrait : %orig;
 }
+
+- (void)applicationDidFinishLaunching:(id)arg1 {
+  %init(workspace);
+  %orig;
+}
+%end
+
 %end
 
 %ctor {
     IF_SPRINGBOARD {
-      %init;
+      %init(manager);
+      %init(settings);
+      %init(SpringBoard);
     }
 }
