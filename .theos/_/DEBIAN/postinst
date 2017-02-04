@@ -1,9 +1,0 @@
-#!/bin/bash
-
-chgrp wheel /Library/LaunchDaemons/com.shade.zypen.fsdaemon.plist
-chown root /Library/LaunchDaemons/com.shade.zypen.fsdaemon.plist
-launchctl load -w /Library/LaunchDaemons/com.shade.zypen.fsdaemon.plist
-
-echo "Loading Daemon..."
-echo "Thanks for using Zypen!"
-echo "Email me any issues"

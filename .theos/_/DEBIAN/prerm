@@ -1,5 +1,0 @@
-#!/bin/bash
-
-launchctl unload -w /Library/LaunchDaemons/com.shade.zypen.fsdaemon.plist
-
-echo "Unloading Daemon..."
