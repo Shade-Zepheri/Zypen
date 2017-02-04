@@ -54,16 +54,16 @@
     return %orig(arg1, arg2, arg3, arg4, arg5, arg6);
 }
 
-- (id)initWithQueue:(id)arg1 identifier:(id)arg2 display:(id)arg3 settings:(id)arg4 clientSettings:(id)arg5 {
-  if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg2]) {
-      // what?
-      if (!arg4) {
-          UIMutableApplicationSceneSettings *fakeSettings = [[%c(UIMutableApplicationSceneSettings) alloc] init];
-          arg4 = fakeSettings;
-      }
-      SET_BACKGROUNDED(arg4, NO);
-  }
-  return %orig(arg1, arg2, arg3, arg4, arg5);
+- (id)initWithQueue:(unsafe_id)arg1 identifier:(unsafe_id)arg2 display:(unsafe_id)arg3 settings:(__unsafe_unretained UIMutableApplicationSceneSettings*)arg4 clientSettings:(unsafe_id)arg5 {
+    if ([ZYBackgrounder.sharedInstance shouldKeepInForeground:arg2]) {
+        // what?
+        if (!arg4) {
+            UIMutableApplicationSceneSettings *fakeSettings = [[%c(UIMutableApplicationSceneSettings) alloc] init];
+            arg4 = fakeSettings;
+        }
+        SET_BACKGROUNDED(arg4, NO);
+    }
+    return %orig(arg1, arg2, arg3, arg4, arg5);
 }
 %end
 

@@ -29,7 +29,7 @@ extern BOOL overrideDisableForStatusBar;
   return %orig;
 }
 
--(BOOL)isHandlingHomeButtonPress {
+- (BOOL)handleHomeButtonSinglePressUp {
   if ([ZYSettings.sharedSettings homeButtonClosesReachability] && [[%c(SBMainWorkspace) ZY_sharedInstance] isUsingReachApp] && ((SBReachabilityManager*)[%c(SBReachabilityManager) sharedInstance]).reachabilityModeActive) {
       overrideDisableForStatusBar = NO;
       [[%c(SBReachabilityManager) sharedInstance] _handleReachabilityDeactivated];
